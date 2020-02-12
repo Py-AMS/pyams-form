@@ -1,0 +1,54 @@
+<div class="${view.klass}">
+  <tal:loop repeat="widget view.widgets">
+    <div id="${widget.id}-row"
+		 class="row"
+         tal:define="key_widget view.key_widgets[repeat['widget'].index()];"
+         tal:condition="widget.mode != 'hidden'">
+      <tal:if condition="key_widget is not None">
+        <div class="label" tal:condition="view.show_label">
+          <label for="${key_widget.id}">
+            <span i18n:translate="">${key_widget.label}</span>
+            <span class="required"
+                  tal:condition="key_widget.required">*</span>
+          </label>
+        </div>
+        <tal:if condition="key_widget.error">
+          ${structure:key_widget.error.render()}
+        </tal:if>
+        <div class="widget">
+          <div class="multi-widget-input-key">
+            ${structure:key_widget.render()}
+          </div>
+        </div>
+      </tal:if>
+      <div class="label" tal:condition="view.show_label">
+        <label for="${widget.id}">
+          <span i18n:translate="">${widget.label}</span>
+          <span class="required"
+                tal:condition="widget.required">*</span>
+        </label>
+      </div>
+      <tal:if condition="widget.error">
+        ${structure:widget.error.render()}
+      </tal:if>
+      <div class="widget">
+        <div class="multi-widget-checkbox">
+          <input type="checkbox"
+                 id="${widget.id}-remove"
+                 name="${widget.name}.remove"
+                 class="multi-widget-checkbox checkbox-widget"
+                 value="1" />
+        </div>
+        <div class="multi-widget-input">
+          ${structure:widget.render()}
+        </div>
+      </div>
+    </div>
+  </tal:loop>
+  <div class="buttons">
+    <tal:loop repeat="action view.actions.values()">
+      ${structure:action.render()}
+    </tal:loop>
+  </div>
+</div>
+${structure:view.counter_marker}

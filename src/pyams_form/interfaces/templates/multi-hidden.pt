@@ -1,0 +1,9 @@
+<tal:loop repeat="widget view.widgets">
+  <tal:block define="key_widget view.key_widgets[repeat['widget'].index()];">
+    <tal:if condition="key_widget is not None">
+		${structure:key_widget.render()}
+	</tal:if>
+	${structure:widget.render()}
+  </tal:block>
+</tal:loop>
+${structure:view.counter_marker}

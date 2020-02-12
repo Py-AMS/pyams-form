@@ -1,0 +1,18 @@
+<div class="${view.klass}">
+	<tal:block repeat="widget view.widgets.values()">
+		<div class="label">
+			<label for="${widget.id}">
+				<span i18n:translate="">${widget.label}</span>
+				<span class="required"
+					  tal:condition="widget.required">*</span>
+			</label>
+		</div>
+		<tal:if condition="widget.error">
+			${structure:widget.error.render()}
+		</tal:if>
+		<div class="widget">
+			${structure:widget.render()}
+		</div>
+	</tal:block>
+	<input name="${view.name}-empty-marker" type="hidden" value="1"/>
+</div>

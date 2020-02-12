@@ -1,0 +1,7 @@
+<input tal:condition="item.checked" type="hidden"
+	   id="${item.id}"
+	   name="${item.name}"
+	   title="${view.title}"
+	   tabindex="${view.tabindex}"
+	   accesskey="${view.accesskey}"
+	   value="${item.value}" />

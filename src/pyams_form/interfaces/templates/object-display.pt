@@ -1,0 +1,14 @@
+<div class="${view.klass}">
+	<tal:block repeat="widget view.widgets.values()">
+		<div class="label">
+			<label for="${widget.id}">
+	            <span i18n:translate="">${widget.label}</span>
+				<span class="required"
+					  tal:condition="widget.required">*</span>
+			</label>
+		</div>
+		<div class="widget">
+			${structure:widget.render()}
+		</div>
+	</tal:block>
+</div>

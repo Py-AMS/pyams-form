@@ -1,0 +1,42 @@
+#
+# Copyright (c) 2015-2020 Thierry Florac <tflorac AT ulthar.net>
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+
+"""PyAMS_form.browser.text module
+
+This module provides default text widget.
+"""
+
+from zope.interface import implementer, implementer_only
+
+from pyams_form.browser.textarea import TextAreaWidget
+from pyams_form.interfaces.widget import IFieldWidget, ITextLinesWidget
+from pyams_form.widget import FieldWidget
+
+
+__docformat__ = 'restructuredtext'
+
+
+@implementer_only(ITextLinesWidget)
+class TextLinesWidget(TextAreaWidget):
+    """Input type sequence widget implementation."""
+
+
+@implementer(IFieldWidget)
+def TextLinesFieldWidget(field, request):
+    """IFieldWidget factory for TextLinesWidget."""
+    return FieldWidget(field, TextLinesWidget(request))
+
+
+@implementer(IFieldWidget)
+def TextLinesFieldWidgetFactory(field, value_type, request):
+    """IFieldWidget factory for TextLinesWidget."""
+    return TextLinesFieldWidget(field, request)

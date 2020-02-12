@@ -1,0 +1,8 @@
+<span class="option"
+	  tal:repeat="item view.items">
+  <label for="${item.id}">
+    ${structure:view.render_for_value(item['value'])}
+    <span class="label">${item.label}</span>
+  </label>
+</span>
+<input type="hidden" name="${view.name}-empty-marker" value="1" />

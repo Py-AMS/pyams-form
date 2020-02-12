@@ -1,0 +1,7 @@
+<input type="hidden"
+	   id="${view.id}"
+	   name="${view.name}"
+	   title="${view.title}"
+	   tabindex="${view.tabindex}"
+	   accesskey="${view.accesskey}"
+	   value="${view.value}" />

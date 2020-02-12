@@ -1,0 +1,1 @@
+<tal:loop repeat="item view.items">${structure:view.render_for_value(item['value'])}</tal:loop>

@@ -1,0 +1,21 @@
+<i tal:condition="view.status">${view.status}</i>
+<ul tal:condition="view.widgets.errors" id="form-errors">
+	<li tal:repeat="error view.widgets.errors">
+		<tal:if condition="error.widget">
+			${error.widget.label}:
+		</tal:if>
+		${structure:error.render()}
+	</li>
+</ul>
+<form action=".">
+	<div class="row"
+		 id="row-${widget.id}"
+		 tal:repeat="widget view.widgets.values()">
+		<b tal:condition="widget.error">${structure:widget.error.render()}</b>
+		<label for="${widget.id}">${widget.label}</label>
+		${structure:widget.render()}
+	</div>
+	<div class="action" tal:repeat="action view.actions.values()">
+		${structure:action.render()}
+	</div>
+</form>

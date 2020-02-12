@@ -1,0 +1,9 @@
+<div id="${view.id}-row"
+	 class="${view.get_css_class('row')}">
+	<div class="label">
+		<label for="${view.id}">
+    		<span i18n:translate="">${view.label}</span>
+		</label>
+	</div>
+	<div class="widget">${structure:view.render()}</div>
+</div>

@@ -1,0 +1,81 @@
+<script type="text/javascript" src="/++static++/pyams_form/js/orderedselect-input.js"></script>
+<table border="0" class="ordered-selection-field" id="${view.id}">
+  <tr>
+    <td>
+      <select id="${view.id}-from"
+              name="${view.name}.from"
+              class="${view.klass}"
+              style="${view.style}"
+              title="${view.title}"
+              lang="${view.lang}"
+              onclick="${view.onclick}"
+              ondblclick="${view.ondblclick}"
+              onmousedown="${view.onmousedown}"
+              onmouseup="${view.onmouseup}"
+              onmouseover="${view.onmouseover}"
+              onmousemove="${view.onmousemove}"
+              onmouseout="${view.onmouseout}"
+              onkeypress="${view.onkeypress}"
+              onkeydown="${view.onkeydown}"
+              onkeyup="${view.onkeyup}"
+              disabled="${view.disabled}"
+              tabindex="${view.tabindex}"
+              onfocus="${view.onfocus}"
+              onblur="${view.onblur}"
+              onchange="${view.onchange}"
+              multiple="${view.multiple}"
+              size="${view.size}">
+        <tal:loop repeat="entry view.notselected_items">
+          <option value="${entry['value']}">${entry['content']}</option>
+        </tal:loop>
+      </select>
+    </td>
+    <td>
+      <button name="from2toButton" type="button" value="&rarr;"
+              onClick="javascript:from2to('${view.id}')">&rarr;</button>
+      <br />
+      <button name="to2fromButton" type="button" value="&larr;"
+              onClick="javascript:to2from('${view.id}')">&larr;</button>
+    </td>
+    <td>
+      <select id="${view.id}-to"
+              name="${view.name}.to"
+              class="${view.klass}"
+              style="${view.style}"
+              title="${view.title}"
+              lang="${view.lang}"
+              onclick="${view.onclick}"
+              ondblclick="${view.ondblclick}"
+              onmousedown="${view.onmousedown}"
+              onmouseup="${view.onmouseup}"
+              onmouseover="${view.onmouseover}"
+              onmousemove="${view.onmousemove}"
+              onmouseout="${view.onmouseout}"
+              onkeypress="${view.onkeypress}"
+              onkeydown="${view.onkeydown}"
+              onkeyup="${view.onkeyup}"
+              disabled="${view.disabled}"
+              tabindex="${view.tabindex}"
+              onfocus="${view.onfocus}"
+              onblur="${view.onblur}"
+              onchange="${view.onchange}"
+              multiple="${view.multiple}"
+              size="${view.size}">
+        <tal:loop repeat="entry view.selected_items">
+          <option value="${entry['value']}">${entry['content']}</option>
+		</tal:loop>
+      </select>
+      <input name="${view.name}-empty-marker" type="hidden" />
+      <span id="${view.id}-toDataContainer" style="display: none">
+        <script type="text/javascript">copyDataForSubmit('${view.id}');</script>
+      </span>
+    </td>
+    <td>
+      <button name="upButton" type="button" value="&uarr;"
+              onClick="javascript:moveUp('${view.id}')">&uarr;</button>
+      <br />
+      <button name="downButton" type="button" value="&darr;"
+              onClick="javascript:moveDown('${view.id}')">&darr;</button>
+    </td>
+  </tr>
+</table>

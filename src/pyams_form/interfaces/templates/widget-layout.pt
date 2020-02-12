@@ -1,0 +1,15 @@
+<div id="${view.id}-row"
+	 class="${view.get_css_class('row')}">
+	<div class="label">
+		<label for="${view.id}">
+    		<span i18n:translate="">${view.label}</span>
+			<span class="required"
+				  tal:condition="view.required">*</span>
+		</label>
+	</div>
+	<div class="widget">${structure:view.render()}</div>
+	<div class="error"
+		 tal:condition="view.error">
+		${structure:view.error.render()}
+	</div>
+</div>

@@ -1,0 +1,8 @@
+<input type="image"
+	   disabled="disabled"
+       id="${view.id}"
+       name="${view.name}"
+       class="${view.klass}"
+       style="${view.style}"
+       value="${view.value}"
+	   src="${view.src}" />

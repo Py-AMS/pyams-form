@@ -1,0 +1,28 @@
+<i tal:condition="view.status" tal:content="view.status"/>
+<ul tal:condition="view.widgets.errors" metal:define-macro="errors">
+  <li tal:repeat="error view.widgets.errors">
+    <tal:if condition="error.widget">
+      ${error.widget.label}:
+    </tal:if>
+    ${structure:error.render()}
+  </li>
+</ul>
+<form action=".">
+  <metal:block define-macro="rows">
+    <div class="row" tal:repeat="widget view.widgets.values()">
+      <b tal:condition="widget.error">${structure:widget.error.render()}</b>
+      <label for="${widget.id}">${widget.label}</label>
+      ${structure:widget.render()}
+    </div>
+  </metal:block>
+  <fieldset tal:condition="view.groups | nothing"
+            tal:repeat="view view.groups">
+    <legend tal:condition="view.label">${view.label}</legend>
+    <div metal:use-macro="template.macros.errors" />
+    <div metal:use-macro="template.macros.rows" />
+  </fieldset>
+  <div class="action" tal:condition="view.actions | nothing"
+       tal:repeat="action view.actions.values()">
+      ${structure:action.render()}
+  </div>
+</form>
