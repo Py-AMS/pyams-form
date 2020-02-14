@@ -70,6 +70,17 @@ If nothing is found in the request, the default is returned:
   >>> widget.extract()
   <NO_VALUE>
 
+  >>> from pprint import pprint
+  >>> pprint(widget.json_data())
+  {'error': '',
+   'id': 'widget.id',
+   'label': '',
+   'mode': 'input',
+   'name': 'widget.name',
+   'required': False,
+   'type': 'submit',
+   'value': 'Submit'}
+
 
 Tests cleanup:
 
