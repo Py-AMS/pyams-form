@@ -76,6 +76,18 @@ If nothing is found in the request, the default is returned:
   >>> widget.extract()
   <NO_VALUE>
 
+  >>> from pprint import pprint
+  >>> pprint(widget.json_data())
+  {'error': '',
+   'id': 'widget.id',
+   'label': '',
+   'mode': 'input',
+   'name': 'widget.name',
+   'required': False,
+   'src': 'widget.png',
+   'type': 'image',
+   'value': None}
+
 
 Tests cleanup:
 
