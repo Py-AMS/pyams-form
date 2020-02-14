@@ -97,6 +97,17 @@ If we render them, we get a regular file upload widget:
   <input type="file" id="widget.id" name="widget.name"
          class="file-widget" />
 
+  >>> from pprint import pprint
+  >>> pprint(widget.json_data())
+  {'error': '',
+   'id': 'widget.id',
+   'label': '',
+   'mode': 'input',
+   'name': 'widget.name',
+   'required': False,
+   'type': 'file',
+   'value': <...FileUpload object at 0x...>}
+
 
 Tests cleanup:
 
