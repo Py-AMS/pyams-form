@@ -68,6 +68,7 @@ def apply_changes(form, content, data):
     """Apply form changes to content"""
     data = data.get(form, data)
     changes = {}
+    registry = form.request.registry
     for name, field in form.fields.items():
         # If the field is not in the data, then go on to the next one
         try:
@@ -80,7 +81,6 @@ def apply_changes(form, content, data):
             continue
         if changed_field(field.field, new_value, context=content):
             # Only update the data, if it is different
-            registry = form.request.registry
             dm = registry.getMultiAdapter((content, field.field), IDataManager)
             dm.set(new_value)
             # Record the change using information required later
