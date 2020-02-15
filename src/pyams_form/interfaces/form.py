@@ -18,7 +18,7 @@ Form related interfaces module.
 from zope.interface import Attribute, Interface
 from zope.schema import ASCIILine, Bool, Choice, Field, Object, Text, TextLine, Tuple, URI
 
-from pyams_form.interfaces import IContentProviders, IFields
+from pyams_form.interfaces import DISPLAY_MODE, IContentProviders, IFields, INPUT_MODE
 from pyams_form.interfaces.button import IActions, IButtonHandlers, IButtons
 from pyams_form.interfaces.widget import IWidgets
 
@@ -83,10 +83,10 @@ class IFormAware(Interface):
 class IForm(Interface):
     """Form interface"""
 
-    mode = Field(
-        title=_('Mode'),
-        description=_('The mode in which to render the widgets.'),
-        required=True)
+    mode = Choice(title=_('Mode'),
+                  description=_('The mode in which to render the widgets.'),
+                  values=(INPUT_MODE, DISPLAY_MODE),
+                  required=True)
 
     ignore_context = Bool(title=_('Ignore Context'),
                           description=_('If set the context is ignored to retrieve a value.'),
@@ -165,6 +165,28 @@ class IForm(Interface):
 class ISubForm(IForm):
     """A subform."""
 
+    parent_form = Attribute("Parent form")
+
+
+class IInnerForm(Interface):
+    """Inner form marker interface"""
+
+
+class IInnerSubForm(IInnerForm, ISubForm):
+    """Inner sub-form interface
+
+    Inner sub-forms are standard sub-forms, but which may be included dynamically
+    into a given form by using named adapters.
+    """
+
+
+class IInnerTabForm(IInnerForm, ISubForm):
+    """Inner tab-form interface
+
+    Inner tab-forms are standard sub-forms, but which may be included dynamically
+    into a given form by using named adapters.
+    """
+
 
 class IDisplayForm(IForm):
     """Mark a form as display form, used for templates."""
@@ -211,6 +233,15 @@ class IInputForm(Interface):
 class IAddForm(IForm):
     """A form to create and add a new component."""
 
+    def create_and_add(self, data):
+        """Call create and add.
+
+        This method can be used for keep all attributes internal during create
+        and add calls. On sucess we return the new created and added object.
+        If something fails, we return None. The default handleAdd method will
+        only set the _finished_add marker on sucess.
+        """
+
     def create(self, data):
         """Create the new object using the given data.
 
@@ -220,13 +251,10 @@ class IAddForm(IForm):
     def add(self, obj):
         """Add the object somewhere."""
 
-    def create_and_add(self, data):
-        """Call create and add.
+    def update_content(self, obj, data):
+        """Update content after creation
 
-        This method can be used for keep all attributes internal during create
-        and add calls. On sucess we return the new created and added object.
-        If something fails, we return None. The default handleAdd method will
-        only set the _finished_add marker on sucess.
+        This is actually used to apply updates in subforms to newly created content.
         """
 
 
@@ -265,17 +293,23 @@ class IButtonForm(IForm):
                      schema=IButtons)
 
 
-class IGroup(IForm):
-    """A group of fields/widgets within a form."""
-
-
-class IGroupForm(IForm):
-    """A form that supports groups."""
+class IGroupManager(IForm):
+    """Groups manager interface"""
 
     groups = Tuple(title='Groups',
                    description=('Initially a collection of group classes, which are '
                                 'converted to group instances when the form is '
                                 'updated.'))
+
+
+class IGroup(IGroupManager):
+    """A group of fields/widgets within a form."""
+
+    parent_form = Attribute("Parent form")
+
+
+class IGroupForm(IGroupManager):
+    """A form that supports groups."""
 
 
 class IFormSecurityContext(Interface):
@@ -291,7 +325,7 @@ class IFormContextPermissionChecker(Interface):
     multi-adapter.
     """
 
-    edit_permission = Attribute("Permission required to modify content")
+    edit_permission = Attribute("Permission required to update form's content")
 
 
 class IDataExtractedEvent(Interface):

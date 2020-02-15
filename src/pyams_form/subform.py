@@ -20,13 +20,40 @@ from zope.lifecycleevent import ObjectModifiedEvent
 
 from pyams_form.button import handler
 from pyams_form.form import BaseForm, EditForm, apply_changes
+from pyams_form.interfaces import DISPLAY_MODE
 from pyams_form.interfaces.button import IActionHandler
-from pyams_form.interfaces.form import IHandlerForm, ISubForm
+from pyams_form.interfaces.form import IHandlerForm, IInnerForm, ISubForm
 
 
 __docformat__ = 'restructuredtext'
 
 from pyams_form import _
+
+
+@implementer(ISubForm, IInnerForm)
+class BaseInnerForm(BaseForm):
+    """Base inner subform"""
+
+    def __init__(self, context, request, parent_form):
+        self.context = context
+        self.request = request
+        self.parent_form = self.__parent__ = parent_form
+
+
+class InnerAddForm(BaseInnerForm):
+    """Inner subform into an add form"""
+
+    ignore_context = True
+
+
+class InnerEditForm(BaseInnerForm):
+    """Inner edit subform into a main edit form"""
+
+
+class InnerDisplayForm(BaseInnerForm):
+    """Inner display form"""
+
+    _mode = DISPLAY_MODE
 
 
 @implementer(ISubForm, IHandlerForm)

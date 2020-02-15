@@ -18,11 +18,14 @@ This module defines all main forms management classes.
 import json
 import sys
 
+from persistent import IPersistent
+from pyramid.decorator import reify
 from pyramid.events import subscriber
 from pyramid.response import Response
 from pyramid_chameleon.interfaces import IChameleonTranslate
 from zope.interface import implementer
 from zope.lifecycleevent import Attributes, ObjectCreatedEvent, ObjectModifiedEvent
+from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_form.button import Buttons, Handlers, button_and_handler
@@ -32,14 +35,17 @@ from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, IEditForm, \
-    IFieldsForm, IForm, IFormAware, IHandlerForm, IInputForm
+    IFieldsForm, IForm, IFormAware, IFormContextPermissionChecker, IGroup, IGroupManager, \
+    IHandlerForm, IInnerSubForm, IInnerTabForm, IInputForm
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
+from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
 from pyams_template.interfaces import IContentTemplate, ILayoutTemplate
 from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import ContextRequestAdapter
+from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
-from pyams_utils.registry import get_current_registry, query_utility
+from pyams_utils.registry import query_utility
 
 
 __docformat__ = 'restructuredtext'
@@ -50,8 +56,17 @@ from pyams_form import _
 REDIRECT_STATUS_CODES = (300, 301, 302, 303, 304, 305, 307)
 
 
+def get_form_weight(form):
+    """Try to get form weight attribute"""
+    try:
+        return form.weight
+    except AttributeError:
+        return 0
+
+
 def apply_changes(form, content, data):
     """Apply form changes to content"""
+    data = data.get(form, data)
     changes = {}
     for name, field in form.fields.items():
         # If the field is not in the data, then go on to the next one
@@ -89,6 +104,12 @@ def extends(*args, **kwargs):
         f_locals['handlers'] = Handlers()
         for arg in args:
             f_locals['handlers'] += getattr(arg, 'handlers', Handlers())
+
+
+def merge_changes(source, changes):
+    """Merge new changes with existing ones"""
+    for intf, field_names in changes.items():
+        source[intf] = source.get(intf, []) + field_names
 
 
 @subscriber(IActionErrorEvent)
@@ -135,19 +156,96 @@ class BaseForm(ContextRequestAdapter):
     template = get_content_template()
     widgets = None
 
-    mode = INPUT_MODE
+    _mode = INPUT_MODE
+    _edit_permission = None
 
     ignore_context = False
     ignore_request = False
     ignore_readonly = False
     ignore_required_on_extract = False
 
+    @property
+    def mode(self):
+        mode = self._mode
+        if mode == DISPLAY_MODE:  # already updated mode
+            return mode
+        permission = self.edit_permission
+        if permission:
+            if permission == FORBIDDEN_PERMISSION:
+                mode = DISPLAY_MODE
+            else:
+                content = self.get_content()
+                if not self.request.has_permission(permission, content):
+                    mode = DISPLAY_MODE
+        return mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+
+    @property
+    def edit_permission(self):
+        permission = self._edit_permission
+        if permission is not None:  # locally defined edit permission
+            return permission
+        registry = self.request.registry
+        content = self.get_content()
+        checker = registry.queryMultiAdapter((content, self.request, self),
+                                             IFormContextPermissionChecker)
+        if checker is None:
+            checker = registry.queryAdapter(content, IFormContextPermissionChecker)
+        if checker is not None:
+            return checker.edit_permission
+        return None
+
     def get_content(self):
-        '''See interfaces.IForm'''
+        """See interfaces.IForm"""
         return self.context
 
+    @property
+    def required_info(self):
+        if (self.label_required is not None and
+                self.widgets is not None and
+                self.widgets.has_required_fields):
+            return self.request.localizer.translate(self.label_required)
+
+    @reify
+    def subforms(self):
+        """Get list of internal sub-forms"""
+        registry = self.request.registry
+        return sorted((adapter
+                       for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                                 IInnerSubForm)),
+                      key=get_form_weight)
+
+    @reify
+    def tabforms(self):
+        registry = self.request.registry
+        return sorted((adapter
+                       for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                                 IInnerTabForm)),
+                      key=get_form_weight)
+
+    def get_forms(self, include_self=True):
+        """Get all forms associated with this form"""
+        if include_self:
+            yield self
+        if IGroupManager.providedBy(self):
+            for group in self.groups:
+                yield from group.get_forms()
+        for form in self.subforms:
+            yield from form.get_forms()
+        for form in self.tabforms:
+            yield from form.get_forms()
+
+    def update(self):
+        """See interfaces.IForm"""
+        self.update_widgets()
+        [subform.update() for subform in self.subforms]
+        [tabform.update() for tabform in self.tabforms]
+
     def update_widgets(self, prefix=None):
-        '''See interfaces.IForm'''
+        """See interfaces.IForm"""
         registry = self.request.registry
         self.widgets = registry.getMultiAdapter((self, self.request, self.get_content()),
                                                 IWidgets)
@@ -159,24 +257,20 @@ class BaseForm(ContextRequestAdapter):
         self.widgets.ignore_readonly = self.ignore_readonly
         self.widgets.update()
 
-    @property
-    def required_info(self):
-        if (self.label_required is not None and
-                self.widgets is not None and
-                self.widgets.has_required_fields):
-            return self.request.localizer.translate(self.label_required)
-
     def extract_data(self, set_errors=True):
         """See interfaces.IForm"""
         self.widgets.set_errors = set_errors
         self.widgets.ignore_required_on_extract = self.ignore_required_on_extract
         data, errors = self.widgets.extract()
-        get_current_registry().notify(DataExtractedEvent(data, errors, self))
+        self.request.registry.notify(DataExtractedEvent(data, errors, self))
         return data, errors
 
-    def update(self):
-        """See interfaces.IForm"""
-        self.update_widgets()
+    def get_errors(self):
+        """Get all errors, including groups and inner forms"""
+        result = []
+        for form in self.get_forms():
+            result.extend(form.widgets.errors)
+        return result
 
     def render(self):
         """See interfaces.IForm"""
@@ -239,7 +333,7 @@ class BaseForm(ContextRequestAdapter):
 @implementer(IDisplayForm)
 class DisplayForm(BaseForm):
 
-    mode = DISPLAY_MODE
+    _mode = DISPLAY_MODE
     ignore_request = True
 
 
@@ -298,7 +392,14 @@ class AddForm(Form):
 
     @button_and_handler(_('Add'), name='add')
     def handle_add(self, action):
-        data, errors = self.extract_data()
+        data, errors = {}, {}
+        for form in self.get_forms():
+            form_data, form_errors = form.extract_data()
+            if form_errors:
+                if not IGroup.providedBy(form):
+                    form.status = getattr(form, 'form_errors_message', self.form_errors_message)
+                errors[form] = form_errors
+            data[form] = form_data
         if errors:
             self.status = self.form_errors_message
             return
@@ -308,9 +409,12 @@ class AddForm(Form):
             self._finished_add = True
 
     def create_and_add(self, data):
-        obj = self.create(data)
-        get_current_registry().notify(ObjectCreatedEvent(obj))
+        obj = self.create(data.get(self, {}))
+        self.request.registry.notify(ObjectCreatedEvent(obj))
+        if IPersistent.providedBy(obj):  # temporary locate to fix raising of INotYet exceptions
+            locate(obj, self.context)
         self.add(obj)
+        self.update_content(obj, data)
         return obj
 
     def create(self, data):
@@ -318,6 +422,14 @@ class AddForm(Form):
 
     def add(self, object):
         raise NotImplementedError
+
+    def update_content(self, obj, data):
+        changes = {}
+        for form in self.get_forms():
+            if form.mode == DISPLAY_MODE:
+                continue
+            merge_changes(changes, apply_changes(form, obj, data))
+        return changes
 
     def next_url(self):
         return self.action
@@ -337,24 +449,17 @@ class EditForm(Form):
     success_message = _('Data successfully updated.')
     no_changes_message = _('No changes were applied.')
 
-    def apply_changes(self, data):
-        """Apply updates to form context"""
-        content = self.get_content()
-        changes = apply_changes(self, content, data)
-        # ``changes`` is a dictionary; if empty, there were no changes
-        if changes:
-            # Construct change-descriptions for the object-modified event
-            descriptions = []
-            for interface, names in changes.items():
-                descriptions.append(Attributes(interface, *names))
-            # Send out a detailed object-modified event
-            get_current_registry().notify(ObjectModifiedEvent(content, *descriptions))
-        return changes
-
     @button_and_handler(_('Apply'), name='apply')
     def handle_apply(self, action):
         """Apply action handler"""
-        data, errors = self.extract_data()
+        data, errors = {}, {}
+        for form in self.get_forms():
+            form_data, form_errors = form.extract_data()
+            if form_errors:
+                if not IGroup.providedBy(form):
+                    form.status = getattr(form, 'form_errors_message', self.form_errors_message)
+                errors[form] = form_errors
+            data[form] = form_data
         if errors:
             self.status = self.form_errors_message
             return
@@ -363,3 +468,28 @@ class EditForm(Form):
             self.status = self.success_message
         else:
             self.status = self.no_changes_message
+
+    def apply_changes(self, data):
+        """Apply updates to form context"""
+        changes = {}
+        contents, changed_contents = {}, {}
+        for form in self.get_forms():
+            if form.mode == DISPLAY_MODE:
+                continue
+            content = form.get_content()
+            form_changes = apply_changes(form, content, data)
+            if form_changes:
+                merge_changes(changes, form_changes)
+                content_hash = ICacheKeyValue(content)
+                contents[content_hash] = content
+                merge_changes(changed_contents.setdefault(content_hash, {}), form_changes)
+        if changes:
+            # Construct change-descriptions for the object-modified event
+            for content_hash, content_changes in changed_contents.items():
+                descriptions = []
+                for interface, names in content_changes.items():
+                    descriptions.append(Attributes(interface, *names))
+                # Send out a detailed object-modified event
+                self.request.registry.notify(ObjectModifiedEvent(contents[content_hash],
+                                                                 *descriptions))
+        return changes

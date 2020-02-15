@@ -62,13 +62,13 @@ create edit forms for it:
 
   >>> @zope.interface.implementer(IOwner)
   ... class Owner:
-  ...     def __init__(self, name, license):
+  ...     def __init__(self, name=None, license=None):
   ...         self.name = name
   ...         self.license = license
 
   >>> @zope.interface.implementer(ICar)
   ... class Car:
-  ...     def __init__(self, model, make, owner):
+  ...     def __init__(self, model=None, make=None, owner=None):
   ...         self.model = model
   ...         self.make = make
   ...         self.owner = owner
@@ -597,7 +597,7 @@ Next we define the car form, which has the owner form as a sub-form.
 Let's now instantiate the form and render it. but first set up a simple
 container which we can use for the add form context:
 
-  >>> class Container:
+  >>> class Container(dict):
   ...    """Simple context simulating a container."""
   >>> container = Container()
 
@@ -684,6 +684,505 @@ Now get the form values. This is normally done in a action handler:
 
   >>> pprint(carForm.owner.widgets.extract())
   ({'license': 'MA-991723FDG', 'name': 'Stephan Richter'}, ())
+
+
+Subforms adapters
+-----------------
+
+Instead of defining static subforms as attributes, you can use adapters to define sub-forms; this
+allows you to extend an initial form without modifying the original form; the only requirement is
+to use a form template which will include these subforms.
+
+There are two inner sub-forms interfaces, which are IInnerSubForm and IInnerTabForm; they are
+separated only to be able to separate these two kinds of forms on rendering, the second ones
+being displayed as tabs instead of "plain" sub-forms.
+
+Let's start by using another form template:
+
+  >>> class CarAddForm(form.AddForm):
+  ...     fields = field.Fields(ICar).select('model', 'make')
+  ...     prefix = 'car'
+  ...
+  ...     def create(self, data):
+  ...         return Car(data['model'], data['make'])
+  ...
+  ...     def add(self, obj):
+  ...         self.context[obj.model] = obj
+
+  >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
+  ...                           'templates', 'simple-caredit-subforms.pt'), 'text/html')
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, CarAddForm), IContentTemplate)
+
+  >>> request = TestRequest()
+  >>> carForm = CarAddForm(container, request)
+  >>> carForm.update()
+
+Until now, the rendered HTML should still be the same, without the "owner" subform:
+
+  >>> print(format_html(carForm.render()))
+  <form action=".">
+    <div class="row">
+      <label for="car-widgets-model">Model</label>
+      <input type="text"
+         id="car-widgets-model"
+         name="car.widgets.model"
+         class="text-widget required textline-field"
+         value="" />
+    </div>
+    <div class="row">
+      <label for="car-widgets-make">Make</label>
+      <input type="text"
+         id="car-widgets-make"
+         name="car.widgets.make"
+         class="text-widget required textline-field"
+         value="" />
+    </div>
+    <div class="action">
+      <input type="submit"
+         id="car-buttons-add"
+         name="car.buttons.add"
+         class="submit-widget"
+         value="Add" />
+    </div>
+  </form>
+
+So let's create another subform and register it using an adapter; this subform will be used
+to edit car parking attributes:
+
+  >>> def car_owner_factory(context):
+  ...     owner = getattr(context, 'owner', None)
+  ...     if owner is None:
+  ...         owner = context.owner = Owner()
+  ...     return owner
+  >>> config.registry.registerAdapter(car_owner_factory, (ICar,), IOwner)
+
+  >>> class IParking(zope.interface.Interface):
+  ...     name = zope.schema.TextLine(title='Name')
+  ...     number = zope.schema.TextLine(title='Place number')
+
+  >>> @zope.interface.implementer(IParking)
+  ... class Parking:
+  ...     def __init__(self, name=None, number=None):
+  ...         self.name = name
+  ...         self.number = number
+
+  >>> def car_parking_factory(context):
+  ...     parking = getattr(context, 'parking', None)
+  ...     if parking is None:
+  ...         parking = context.parking = Parking()
+  ...     return parking
+  >>> config.registry.registerAdapter(car_parking_factory, (ICar,), IParking)
+
+Let's now create and register our subforms:
+
+  >>> class OwnerAddForm(subform.InnerAddForm):
+  ...     fields = field.Fields(IOwner)
+  ...     prefix = 'owner'
+  ...     weight = 1
+
+  >>> class ParkingAddForm(subform.InnerAddForm):
+  ...     fields = field.Fields(IParking)
+  ...     prefix = 'parking'
+  ...     label = 'Parking'
+  ...     weight = 2
+
+
+  >>> from pyams_form.interfaces.form import IInnerSubForm
+  >>> config.registry.registerAdapter(OwnerAddForm,
+  ...       required=(None, IFormLayer, CarAddForm),
+  ...       provided=IInnerSubForm, name='owner')
+  >>> config.registry.registerAdapter(ParkingAddForm,
+  ...       required=(None, IFormLayer, CarAddForm),
+  ...       provided=IInnerSubForm, name='parking')
+
+The subform can't use the same template as the parent form, because these subforms actually
+don't have actions:
+
+  >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
+  ...                           'templates', 'simple-subedit.pt'), 'text/html')
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, OwnerAddForm), IContentTemplate)
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, ParkingAddForm), IContentTemplate)
+
+As adapters are not registered dynamically, subforms list are reified into form attributes,
+so we have to create a new form:
+
+  >>> carAddForm = CarAddForm(container, request)
+  >>> carAddForm.update()
+  >>> carAddForm.subforms
+  [<...OwnerAddForm object at 0x...>, <...ParkingAddForm object at 0x...>]
+
+  >>> print(format_html(carAddForm.render()))
+  <form action=".">
+    <div class="row">
+      <label for="car-widgets-model">Model</label>
+      <input type="text"
+         id="car-widgets-model"
+         name="car.widgets.model"
+         class="text-widget required textline-field"
+         value="" />
+    </div>
+    <div class="row">
+      <label for="car-widgets-make">Make</label>
+      <input type="text"
+         id="car-widgets-make"
+         name="car.widgets.make"
+         class="text-widget required textline-field"
+         value="" />
+    </div>
+    <fieldset>
+      <legend></legend>
+  <div class="row">
+    <label for="owner-widgets-name">Name</label>
+    <input type="text"
+         id="owner-widgets-name"
+         name="owner.widgets.name"
+         class="text-widget required textline-field"
+         value="" />
+  </div>
+  <div class="row">
+    <label for="owner-widgets-license">License</label>
+    <input type="text"
+         id="owner-widgets-license"
+         name="owner.widgets.license"
+         class="text-widget required textline-field"
+         value="" />
+  </div>
+    </fieldset>
+    <fieldset>
+      <legend>Parking</legend>
+  <div class="row">
+    <label for="parking-widgets-name">Name</label>
+    <input type="text"
+         id="parking-widgets-name"
+         name="parking.widgets.name"
+         class="text-widget required textline-field"
+         value="" />
+  </div>
+  <div class="row">
+    <label for="parking-widgets-number">Place number</label>
+    <input type="text"
+         id="parking-widgets-number"
+         name="parking.widgets.number"
+         class="text-widget required textline-field"
+         value="" />
+  </div>
+    </fieldset>
+    <div class="action">
+      <input type="submit"
+         id="car-buttons-add"
+         name="car.buttons.add"
+         class="submit-widget"
+         value="Add" />
+    </div>
+  </form>
+
+Let's show how we can extract the input values of the form and the subform.
+First give them some input:
+
+  >>> request = TestRequest(params={
+  ...     'car.widgets.model': 'Ford',
+  ...     'car.widgets.make': 'F150',
+  ...     'car.buttons.add': 'Add',
+  ...     'owner.widgets.name': 'Stephan Richter',
+  ...     'owner.widgets.license': 'MA-991723FDG',
+  ...     })
+  >>> carForm = CarAddForm(container, request)
+  >>> carForm.update()
+
+Now get the form values. This is normally done in a action handler:
+
+  >>> pprint(carForm.widgets.extract())
+  ({'make': 'F150', 'model': 'Ford'}, ())
+
+  >>> pprint(list([form.widgets.extract() for form in carForm.get_forms()]))
+  [({'make': 'F150', 'model': 'Ford'}, ()),
+   ({'license': 'MA-991723FDG', 'name': 'Stephan Richter'}, ()),
+   ({},
+    (<ErrorViewSnippet for RequiredMissing>,
+     <ErrorViewSnippet for RequiredMissing>))]
+
+  >>> pprint(carForm.get_errors())
+  [<ErrorViewSnippet for RequiredMissing>, <ErrorViewSnippet for RequiredMissing>]
+  >>> carForm.status
+  'There were some errors.'
+
+Errors snippets are present because of missing inputs:
+
+  >>> request = TestRequest(params={
+  ...     'car.widgets.model': 'Ford',
+  ...     'car.widgets.make': 'F150',
+  ...     'owner.widgets.name': 'Stephan Richter',
+  ...     'owner.widgets.license': 'MA-991723FDG',
+  ...     'parking.widgets.name': 'City Center',
+  ...     'parking.widgets.number': 'THX-1138',
+  ...     'car.buttons.add': 'Add'
+  ... })
+  >>> carForm = CarAddForm(container, request)
+  >>> carForm.update()
+
+  >>> pprint(list([form.widgets.extract() for form in carForm.get_forms()]))
+  [({'make': 'F150', 'model': 'Ford'}, ()),
+   ({'license': 'MA-991723FDG', 'name': 'Stephan Richter'}, ()),
+   ({'name': 'City Center', 'number': 'THX-1138'}, ())]
+
+  >>> pprint(carForm.get_errors())
+  []
+
+  >>> container['Ford']
+  <...Car object at 0x...>
+
+  >>> car = container['Ford']
+  >>> car.model
+  'Ford'
+  >>> car.owner
+  <...Owner object at 0x...>
+  >>> car.owner.name
+  'Stephan Richter'
+  >>> car.parking
+  <...Parking object at 0x...>
+  >>> car.parking.name
+  'City Center'
+  >>> car.parking.number
+  'THX-1138'
+
+
+Let's now create an edit form for our car:
+
+  >>> class CarEditForm(form.EditForm):
+  ...     fields = field.Fields(ICar).select('model', 'make')
+  ...     prefix = 'car'
+
+  >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
+  ...                           'templates', 'simple-caredit-subforms.pt'), 'text/html')
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, CarEditForm), IContentTemplate)
+
+  >>> class OwnerEditForm(subform.InnerEditForm):
+  ...     fields = field.Fields(IOwner)
+  ...     prefix = 'owner'
+  ...     weight = 1
+
+  >>> class ParkingEditForm(subform.InnerEditForm):
+  ...     fields = field.Fields(IParking)
+  ...     prefix = 'parking'
+  ...     label = 'Parking'
+  ...     weight = 2
+  ...
+  ...     def get_content(self):
+  ...         return IParking(self.context)
+
+  >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
+  ...                           'templates', 'simple-subedit.pt'), 'text/html')
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, OwnerEditForm), IContentTemplate)
+  >>> config.registry.registerAdapter(factory, (None, IFormLayer, ParkingEditForm), IContentTemplate)
+
+  >>> config.registry.registerAdapter(OwnerEditForm,
+  ...       required=(None, IFormLayer, CarEditForm),
+  ...       provided=IInnerSubForm, name='owner')
+  >>> config.registry.registerAdapter(ParkingEditForm,
+  ...       required=(None, IFormLayer, CarEditForm),
+  ...       provided=IInnerSubForm, name='parking')
+
+  >>> request = TestRequest()
+  >>> carForm = CarEditForm(car, request)
+  >>> carForm.update()
+  >>> print(format_html(carForm.render()))
+  <form action=".">
+    <div class="row">
+      <label for="car-widgets-model">Model</label>
+      <input type="text"
+         id="car-widgets-model"
+         name="car.widgets.model"
+         class="text-widget required textline-field"
+         value="Ford" />
+    </div>
+    <div class="row">
+      <label for="car-widgets-make">Make</label>
+      <input type="text"
+         id="car-widgets-make"
+         name="car.widgets.make"
+         class="text-widget required textline-field"
+         value="F150" />
+    </div>
+    <fieldset>
+      <legend></legend>
+  <div class="row">
+    <label for="owner-widgets-name">Name</label>
+    <input type="text"
+         id="owner-widgets-name"
+         name="owner.widgets.name"
+         class="text-widget required textline-field"
+         value="Stephan Richter" />
+  </div>
+  <div class="row">
+    <label for="owner-widgets-license">License</label>
+    <input type="text"
+         id="owner-widgets-license"
+         name="owner.widgets.license"
+         class="text-widget required textline-field"
+         value="MA-991723FDG" />
+  </div>
+    </fieldset>
+    <fieldset>
+      <legend>Parking</legend>
+  <div class="row">
+    <label for="parking-widgets-name">Name</label>
+    <input type="text"
+         id="parking-widgets-name"
+         name="parking.widgets.name"
+         class="text-widget required textline-field"
+         value="City Center" />
+  </div>
+  <div class="row">
+    <label for="parking-widgets-number">Place number</label>
+    <input type="text"
+         id="parking-widgets-number"
+         name="parking.widgets.number"
+         class="text-widget required textline-field"
+         value="THX-1138" />
+  </div>
+    </fieldset>
+    <div class="action">
+      <input type="submit"
+         id="car-buttons-apply"
+         name="car.buttons.apply"
+         class="submit-widget"
+         value="Apply" />
+    </div>
+  </form>
+
+Let's start by submitting this form with errors:
+
+  >>> request = TestRequest(params={
+  ...     'car.widgets.model': 'Ford',
+  ...     'car.widgets.make': 'F150',
+  ...     'owner.widgets.name': 'Stephan Richter',
+  ...     'owner.widgets.license': 'MA-991723FDG',
+  ...     'parking.widgets.name': 'City Center',
+  ...     'parking.widgets.number': '',
+  ...     'car.buttons.apply': 'Apply'
+  ... })
+  >>> carForm = CarEditForm(car, request)
+  >>> carForm.update()
+
+  >>> carForm.status
+  'There were some errors.'
+  >>> pprint(carForm.get_errors())
+  [<ErrorViewSnippet for RequiredMissing>]
+
+Of course, contents shouldn't be updated yet:
+
+  >>> car.parking.number
+  'THX-1138'
+
+  >>> print(format_html(carForm.render()))
+  <i>There were some errors.</i>
+  ...
+  <fieldset>
+    <legend>Parking</legend>
+    <i>There were some errors.</i>
+    <ul>
+      <li>
+        Place number:
+        <div class="error">Required input is missing.</div>
+      </li>
+    </ul>
+    <div class="row">
+      <label for="parking-widgets-name">Name</label>
+      <input type="text"
+           id="parking-widgets-name"
+           name="parking.widgets.name"
+           class="text-widget required textline-field"
+           value="City Center" />
+    </div>
+    <div class="row">
+      <b><div class="error">Required input is missing.</div></b>
+      <label for="parking-widgets-number">Place number</label>
+      <input type="text"
+           id="parking-widgets-number"
+           name="parking.widgets.number"
+           class="text-widget required textline-field"
+           value="" />
+    </div>
+  </fieldset>
+  ...
+
+SO let's provide correct values:
+
+  >>> request = TestRequest(params={
+  ...     'car.widgets.model': 'Ford',
+  ...     'car.widgets.make': 'F150',
+  ...     'owner.widgets.name': 'Stephan Richter',
+  ...     'owner.widgets.license': 'MA-991723FDG',
+  ...     'parking.widgets.name': 'City Center',
+  ...     'parking.widgets.number': '123456',
+  ...     'car.buttons.apply': 'Apply'
+  ... })
+  >>> carForm = CarEditForm(car, request)
+  >>> carForm.update()
+
+  >>> carForm.status
+  'Data successfully updated.'
+  >>> car.parking.number
+  '123456'
+
+If we provide a security manager for a given context, a subform in display mode will not update
+it's context:
+
+  >>> from pyams_utils.adapter import ContextAdapter
+  >>> from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
+  >>> from pyams_form.interfaces.form import IFormContextPermissionChecker
+
+  >>> @zope.interface.implementer(IFormContextPermissionChecker)
+  ... class ForbiddenSecurityChecker(ContextAdapter):
+  ...     @property
+  ...     def edit_permission(self):
+  ...         return FORBIDDEN_PERMISSION
+
+  >>> config.registry.registerAdapter(ForbiddenSecurityChecker,
+  ...       required=(IParking,),
+  ...       provided=IFormContextPermissionChecker)
+
+  >>> request = TestRequest()
+  >>> carForm = CarEditForm(car, request)
+  >>> carForm.update()
+
+  >>> print(format_html(carForm.render()))
+  <form...>
+    ...
+    <fieldset>
+      <legend>Parking</legend>
+      <div class="row">
+        <label for="parking-widgets-name">Name</label>
+        <span id="parking-widgets-name"
+              class="text-widget textline-field">City Center</span>
+      </div>
+      <div class="row">
+        <label for="parking-widgets-number">Place number</label>
+        <span id="parking-widgets-number"
+              class="text-widget textline-field">123456</span>
+      </div>
+    </fieldset>
+    ...
+  </form>
+
+Event if providing new values, content shouldn't be updated:
+
+  >>> request = TestRequest(params={
+  ...     'car.widgets.model': 'Ford',
+  ...     'car.widgets.make': 'F150',
+  ...     'owner.widgets.name': 'Stephan Richter',
+  ...     'owner.widgets.license': 'MA-991723FDG',
+  ...     'parking.widgets.name': 'City Center',
+  ...     'parking.widgets.number': 'THX-1138',
+  ...     'car.buttons.apply': 'Apply'
+  ... })
+  >>> carForm = CarEditForm(car, request)
+  >>> carForm.update()
+
+  >>> carForm.status
+  'No changes were applied.'
+  >>> car.parking.number
+  '123456'
 
 
 Tests cleanup:
