@@ -493,3 +493,31 @@ class EditForm(Form):
                 self.request.registry.notify(ObjectModifiedEvent(contents[content_hash],
                                                                  *descriptions))
         return changes
+
+
+class FormSelector:
+    """Form event selector
+
+    This predicate can be used by subscribers to filter form events
+    """
+
+    def __init__(self, ifaces, config):  # pylint: disable=unused-argument
+        if not isinstance(ifaces, (list, tuple)):
+            ifaces = (ifaces,)
+        self.interfaces = ifaces
+
+    def text(self):
+        """Form's selector text"""
+        return 'form_selector = %s' % str(self.interfaces)
+
+    phash = text
+
+    def __call__(self, event):
+        for intf in self.interfaces:
+            try:
+                if intf.providedBy(event.form):
+                    return True
+            except (AttributeError, TypeError):
+                if isinstance(event.form, intf):
+                    return True
+        return False

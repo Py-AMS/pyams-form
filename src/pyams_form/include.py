@@ -15,7 +15,8 @@
 This module is used for Pyramid integration
 """
 
-import os.path
+from pyams_form.form import FormSelector
+from pyams_form.widget import WidgetSelector
 
 
 __docformat__ = 'restructuredtext'
@@ -26,5 +27,9 @@ def include_package(config):
 
     # add translations
     config.add_translation_dirs('pyams_form:locales')
+
+    # custom subscribers predicates
+    config.add_subscriber_predicate('form_selector', FormSelector)
+    config.add_subscriber_predicate('widget_selector', WidgetSelector)
 
     config.scan()

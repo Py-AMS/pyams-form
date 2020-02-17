@@ -579,3 +579,31 @@ class WidgetEvent:
 @implementer_only(IAfterWidgetUpdateEvent)
 class AfterWidgetUpdateEvent(WidgetEvent):
     """Widget after update event"""
+
+
+class WidgetSelector:
+    """Widget event selector
+
+    This predicate can be used by subscribers to filter widgets events.
+    """
+
+    def __init__(self, ifaces, config):  # pylint: disable=unused-argument
+        if not isinstance(ifaces, (list, tuple)):
+            ifaces = (ifaces,)
+        self.interfaces = ifaces
+
+    def text(self):
+        """Widget's selector text"""
+        return 'widget_selector = %s' % str(self.interfaces)
+
+    phash = text
+
+    def __call__(self, event):
+        for intf in self.interfaces:
+            try:
+                if intf.providedBy(event.widget):
+                    return True
+            except (AttributeError, TypeError):
+                if isinstance(event.widget, intf):
+                    return True
+        return False
