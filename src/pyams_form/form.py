@@ -267,10 +267,8 @@ class BaseForm(ContextRequestAdapter):
 
     def get_errors(self):
         """Get all errors, including groups and inner forms"""
-        result = []
         for form in self.get_forms():
-            result.extend(form.widgets.errors)
-        return result
+            yield from form.widgets.errors
 
     def render(self):
         """See interfaces.IForm"""
@@ -388,6 +386,7 @@ class AddForm(Form):
     ignore_context = True
     ignore_readonly = True
 
+    _finished_obj = None
     _finished_add = False
 
     @button_and_handler(_('Add'), name='add')
@@ -406,6 +405,7 @@ class AddForm(Form):
         obj = self.create_and_add(data)
         if obj is not None:
             # mark only as finished if we get the new object
+            self._finished_obj = obj
             self._finished_add = True
 
     def create_and_add(self, data):

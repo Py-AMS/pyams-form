@@ -901,7 +901,7 @@ Now get the form values. This is normally done in a action handler:
     (<ErrorViewSnippet for RequiredMissing>,
      <ErrorViewSnippet for RequiredMissing>))]
 
-  >>> pprint(carForm.get_errors())
+  >>> pprint([error for error in carForm.get_errors()])
   [<ErrorViewSnippet for RequiredMissing>, <ErrorViewSnippet for RequiredMissing>]
   >>> carForm.status
   'There were some errors.'
@@ -925,7 +925,7 @@ Errors snippets are present because of missing inputs:
    ({'license': 'MA-991723FDG', 'name': 'Stephan Richter'}, ()),
    ({'name': 'City Center', 'number': 'THX-1138'}, ())]
 
-  >>> pprint(carForm.get_errors())
+  >>> pprint([error for error in carForm.get_errors()])
   []
 
   >>> container['Ford']
@@ -1066,7 +1066,7 @@ Let's start by submitting this form with errors:
 
   >>> carForm.status
   'There were some errors.'
-  >>> pprint(carForm.get_errors())
+  >>> pprint([error for error in carForm.get_errors()])
   [<ErrorViewSnippet for RequiredMissing>]
 
 Of course, contents shouldn't be updated yet:
