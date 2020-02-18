@@ -48,6 +48,13 @@ class IErrorViewSnippet(Interface):
 
 
 class IMultipleErrors(Interface):
-    """An error that contains many errors"""
+    """An error that contains many status"""
 
-    errors = Attribute("List of errors")
+    errors = Attribute("List of status")
+
+
+class IAJAXErrorsRenderer(Interface):
+    """AJAX error manager"""
+
+    def render(self, errors):
+        """Render error message in AJAX"""

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2020-02-12 16:19+0100\n"
+"POT-Creation-Date: 2020-02-18 23:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,10 @@ msgstr ""
 
 #: ./src/pyams_form/error.py:98
 msgid "The system could not process the given value."
+msgstr ""
+
+#: ./src/pyams_form/ajax.py:88
+msgid "No data was created."
 msgstr ""
 
 #: ./src/pyams_form/util.py:177
@@ -36,27 +40,27 @@ msgstr ""
 msgid "Bytes data are not a file object"
 msgstr ""
 
-#: ./src/pyams_form/subform.py:35 ./src/pyams_form/form.py:260
+#: ./src/pyams_form/subform.py:62 ./src/pyams_form/form.py:360
 msgid "There were some errors."
 msgstr ""
 
-#: ./src/pyams_form/subform.py:36 ./src/pyams_form/form.py:336
+#: ./src/pyams_form/subform.py:63 ./src/pyams_form/form.py:465
 msgid "Data successfully updated."
 msgstr ""
 
-#: ./src/pyams_form/subform.py:37 ./src/pyams_form/form.py:337
+#: ./src/pyams_form/subform.py:64 ./src/pyams_form/form.py:466
 msgid "No changes were applied."
 msgstr ""
 
-#: ./src/pyams_form/form.py:130
+#: ./src/pyams_form/form.py:152
 msgid "<span class=\"required\">*</span>&ndash; required"
 msgstr ""
 
-#: ./src/pyams_form/form.py:298 ./src/pyams_form/browser/multi.py:74
+#: ./src/pyams_form/form.py:408 ./src/pyams_form/browser/multi.py:74
 msgid "Add"
 msgstr ""
 
-#: ./src/pyams_form/form.py:353
+#: ./src/pyams_form/form.py:468
 msgid "Apply"
 msgstr ""
 
@@ -83,7 +87,7 @@ msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:58
 #: ./src/pyams_form/interfaces/button.py:50
-#: ./src/pyams_form/interfaces/form.py:181
+#: ./src/pyams_form/interfaces/form.py:224
 msgid "Name"
 msgstr ""
 
@@ -92,7 +96,7 @@ msgid "The name the widget is known under"
 msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:62
-#: ./src/pyams_form/interfaces/form.py:118
+#: ./src/pyams_form/interfaces/form.py:119
 msgid "Label"
 msgstr ""
 
@@ -145,7 +149,7 @@ msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:95
 #: ./src/pyams_form/interfaces/widget.py:425
-#: ./src/pyams_form/interfaces/form.py:96
+#: ./src/pyams_form/interfaces/form.py:97
 msgid "Ignore Request"
 msgstr ""
 
@@ -181,7 +185,7 @@ msgstr ""
 #: ./src/pyams_form/interfaces/widget.py:118
 #: ./src/pyams_form/interfaces/__init__.py:168
 msgid ""
-"A flag, when set, makes the widget to displayfield|adapter provided default "
+"A flag, when set, makes the widget to display field|adapter provided default "
 "values"
 msgstr ""
 
@@ -237,7 +241,7 @@ msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:404
 #: ./src/pyams_form/interfaces/widget.py:409
-#: ./src/pyams_form/interfaces/form.py:128
+#: ./src/pyams_form/interfaces/form.py:129
 #: ./src/pyams_form/interfaces/__init__.py:144
 msgid "Prefix"
 msgstr ""
@@ -256,8 +260,8 @@ msgid "The collection of errors that occured during validation"
 msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:420
-#: ./src/pyams_form/interfaces/form.py:66
-#: ./src/pyams_form/interfaces/form.py:91
+#: ./src/pyams_form/interfaces/form.py:67
+#: ./src/pyams_form/interfaces/form.py:92
 #: ./src/pyams_form/interfaces/__init__.py:156
 msgid "Ignore Context"
 msgstr ""
@@ -271,7 +275,7 @@ msgid "If set the request is ignored to retrieve a value"
 msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:430
-#: ./src/pyams_form/interfaces/form.py:101
+#: ./src/pyams_form/interfaces/form.py:102
 msgid "Ignore Readonly"
 msgstr ""
 
@@ -280,12 +284,12 @@ msgid "If set then readonly fields will also be shown"
 msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:435
-#: ./src/pyams_form/interfaces/form.py:107
+#: ./src/pyams_form/interfaces/form.py:108
 msgid "Ignore Required validation on extract"
 msgstr ""
 
 #: ./src/pyams_form/interfaces/widget.py:436
-#: ./src/pyams_form/interfaces/form.py:108
+#: ./src/pyams_form/interfaces/form.py:109
 msgid ""
 "If set then required fields will pass validation on extract regardless "
 "whether they're filled in or not"
@@ -336,7 +340,7 @@ msgid "The action title."
 msgstr ""
 
 #: ./src/pyams_form/interfaces/button.py:70
-#: ./src/pyams_form/interfaces/form.py:176
+#: ./src/pyams_form/interfaces/form.py:219
 msgid "Action"
 msgstr ""
 
@@ -372,42 +376,42 @@ msgstr ""
 msgid "A relative image path to the root of the resources"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:34
+#: ./src/pyams_form/interfaces/form.py:35
 msgid "Handlers"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:35
+#: ./src/pyams_form/interfaces/form.py:36
 msgid "A list of action handlers defined on the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:43
+#: ./src/pyams_form/interfaces/form.py:44
 msgid "Actions"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:44
+#: ./src/pyams_form/interfaces/form.py:45
 msgid "A list of actions defined on the form"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:48
+#: ./src/pyams_form/interfaces/form.py:49
 msgid "Refresh actions"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:49
+#: ./src/pyams_form/interfaces/form.py:50
 msgid ""
 "A flag, when set, causes form actions to be updated again after their "
 "execution."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:62
+#: ./src/pyams_form/interfaces/form.py:63
 #: ./src/pyams_form/interfaces/__init__.py:92
 msgid "Context"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:63
+#: ./src/pyams_form/interfaces/form.py:64
 msgid "The context in which the widget is displayed."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:67
+#: ./src/pyams_form/interfaces/form.py:68
 msgid ""
 "A flag, when set, forces the widget not to look at the context for a value."
 msgstr ""
@@ -416,123 +420,123 @@ msgstr ""
 msgid "The mode in which to render the widgets."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:92
+#: ./src/pyams_form/interfaces/form.py:93
 msgid "If set the context is ignored to retrieve a value."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:97
+#: ./src/pyams_form/interfaces/form.py:98
 msgid "If set the request is ignored to retrieve a value."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:102
+#: ./src/pyams_form/interfaces/form.py:103
 msgid "If set then readonly fields will also be shown."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:113
+#: ./src/pyams_form/interfaces/form.py:114
 msgid "Widgets"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:114
+#: ./src/pyams_form/interfaces/form.py:115
 msgid "A widget manager containing the widgets to be used in the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:119
+#: ./src/pyams_form/interfaces/form.py:120
 msgid "A human readable text describing the form that can be used in the UI."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:123
+#: ./src/pyams_form/interfaces/form.py:124
 msgid "Label required"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:124
+#: ./src/pyams_form/interfaces/form.py:125
 msgid ""
 "A human readable text describing the form that can be used in the UI for "
 "rendering a required info legend."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:129
+#: ./src/pyams_form/interfaces/form.py:130
 msgid "The prefix of the form used to uniquely identify it."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:132
+#: ./src/pyams_form/interfaces/form.py:133
 msgid "Status"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:133
+#: ./src/pyams_form/interfaces/form.py:134
 msgid "The status message of the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:177
+#: ./src/pyams_form/interfaces/form.py:220
 msgid "The action defines the URI to which the form data are sent."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:182
+#: ./src/pyams_form/interfaces/form.py:225
 msgid "The name of the form used to identify it."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:185
+#: ./src/pyams_form/interfaces/form.py:228
 msgid "Id"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:186
+#: ./src/pyams_form/interfaces/form.py:229
 msgid "The id of the form used to identify it."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:189
+#: ./src/pyams_form/interfaces/form.py:232
 msgid "Method"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:190
+#: ./src/pyams_form/interfaces/form.py:233
 msgid "The HTTP method used to submit the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:195
+#: ./src/pyams_form/interfaces/form.py:238
 msgid "Encoding Type"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:196
+#: ./src/pyams_form/interfaces/form.py:239
 msgid "The data encoding used to submit the data safely."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:200
+#: ./src/pyams_form/interfaces/form.py:243
 msgid "Accepted Character Sets"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:201
+#: ./src/pyams_form/interfaces/form.py:244
 msgid ""
 "This is a list of character sets the server accepts. By default this is "
 "unknown."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:205
+#: ./src/pyams_form/interfaces/form.py:248
 msgid "Accepted Content Types"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:206
+#: ./src/pyams_form/interfaces/form.py:249
 msgid "This is a list of content types the server can safely handle."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:243
+#: ./src/pyams_form/interfaces/form.py:316
 msgid "Fields"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:244
+#: ./src/pyams_form/interfaces/form.py:317
 msgid "A field manager describing the fields to be used for the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:252
+#: ./src/pyams_form/interfaces/form.py:325
 msgid "Content providers"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:253
+#: ./src/pyams_form/interfaces/form.py:326
 msgid "A manager describing the content providers to be used for the form."
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:262
+#: ./src/pyams_form/interfaces/form.py:335
 msgid "Buttons"
 msgstr ""
 
-#: ./src/pyams_form/interfaces/form.py:263
+#: ./src/pyams_form/interfaces/form.py:336
 msgid "A button manager describing the buttons to be used for the form."
 msgstr ""
 

@@ -46,6 +46,7 @@ from pyams_utils.adapter import ContextRequestAdapter
 from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
 from pyams_utils.registry import query_utility
+from pyams_utils.url import absolute_url
 
 
 __docformat__ = 'restructuredtext'
@@ -349,8 +350,16 @@ class Form(BaseForm):
     actions = FieldProperty(IActionForm['actions'])
     refresh_actions = FieldProperty(IActionForm['refresh_actions'])
 
+    # AJAX related form properties
+    ajax_form_handler = FieldProperty(IInputForm['ajax_form_handler'])
+    ajax_form_options = FieldProperty(IInputForm['ajax_form_options'])
+    ajax_form_target = FieldProperty(IInputForm['ajax_form_target'])
+    ajax_form_callback = FieldProperty(IInputForm['ajax_form_callback'])
+
     # common string for use in validation status messages
     form_errors_message = _('There were some errors.')
+
+    _finished_obj = None
 
     @property
     def action(self):
@@ -378,6 +387,14 @@ class Form(BaseForm):
         if self.refresh_actions:
             self.update_actions()
 
+    def get_ajax_handler(self):
+        """Get absolute URL of AJAX handler"""
+        return absolute_url(self.context, self.request, self.ajax_form_handler)
+
+    def get_form_options(self):
+        """Get form options in JSON format"""
+        return json.dumps(self.ajax_form_options) if self.ajax_form_options else None
+
 
 @implementer(IAddForm)
 class AddForm(Form):
@@ -386,7 +403,6 @@ class AddForm(Form):
     ignore_context = True
     ignore_readonly = True
 
-    _finished_obj = None
     _finished_add = False
 
     @button_and_handler(_('Add'), name='add')
@@ -468,6 +484,7 @@ class EditForm(Form):
             self.status = self.success_message
         else:
             self.status = self.no_changes_message
+        self._finished_obj = changes
 
     def apply_changes(self, data):
         """Apply updates to form context"""

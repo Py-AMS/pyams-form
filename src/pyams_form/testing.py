@@ -26,14 +26,17 @@ from pyramid.testing import DummyRequest
 from zope.component import adapts
 from zope.i18n.locales import locales
 from zope.interface import Interface, implementer, provider
-from zope.schema import Bool, Choice, Date, Int, List, Object, TextLine, Dict
+from zope.schema import Bool, Choice, Date, Dict, Int, List, Object, TextLine
 from zope.schema.fieldproperty import FieldProperty
 from zope.schema.interfaces import IBytes
 from zope.security import checker
 from zope.security.interfaces import IInteraction, ISecurityPolicy
 
-from pyams_form import browser, outputchecker
+from pyams_form import browser, field, outputchecker
+from pyams_form.ajax import ajax_form_config
 from pyams_form.converter import FileUploadDataConverter
+from pyams_form.form import AddForm, EditForm
+from pyams_form.interfaces.form import IAJAXForm
 from pyams_form.interfaces.widget import IFileWidget
 from pyams_layer.interfaces import ISkin, PYAMS_BASE_SKIN_NAME
 from pyams_layer.skin import PyAMSSkin, apply_skin
@@ -521,237 +524,51 @@ class MultiWidgetDictIntegration(IntegrationBase):
 def setup_form_defaults(registry):
     # Generic utilities
     registry.registerUtility(PyAMSSkin, provided=ISkin, name=PYAMS_BASE_SKIN_NAME)
-    # # Validator adapters
-    # registry.registerAdapter(SimpleFieldValidator,
-    #                          required=(Interface, Interface, Interface, IField, Interface),
-    #                          provided=IValidator)
-    # registry.registerAdapter(InvariantsValidator,
-    #                          required=(Interface, Interface, Interface, IInterface, Interface),
-    #                          provided=IManagerValidator)
-    # # Data manager adapter to get and set values to content
-    # registry.registerAdapter(AttributeField,
-    #                          required=(Interface, IField),
-    #                          provided=IDataManager)
-    # # Adapter to use form.fields to generate widgets
-    # registry.registerAdapter(FieldWidgets,
-    #                          required=(IFieldsForm, IFormLayer, Interface),
-    #                          provided=IWidgets)
-    # # Adapter that uses form.fields to generate widgets
-    # # AND interlace content providers
-    # registry.registerAdapter(FieldWidgetsAndProviders,
-    #                          required=(IFieldsAndContentProvidersForm, IFormLayer, Interface),
-    #                          provided=IWidgets)
-    # Adapters to lookup the widget for a field
-    # # Text Field Widget
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IField, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IASCIILine, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(ITextLine, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IId, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IInt, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IFloat, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IDecimal, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IDate, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IDatetime, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(ITime, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(ITimedelta, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextFieldWidget,
-    #                          required=(IURI, IFormLayer),
-    #                          provided=IFieldWidget)
 
-    # # Widget Layout
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'widget-layout.pt'), 'text/html'),
-    #                          (IWidget, IFormLayer),
-    #                          IWidgetLayoutTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'widget-layout.pt'), 'text/html'),
-    #                          (IWidget, IFormLayer),
-    #                          IWidgetLayoutTemplate, name=DISPLAY_MODE)
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'widget-layout-hidden.pt'), 'text/html'),
-    #                          (IWidget, IFormLayer),
-    #                          IWidgetLayoutTemplate, name=HIDDEN_MODE)
 
-    # # Text Field Widget
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'text-input.pt'), 'text/html'),
-    #                          (ITextWidget, IFormLayer),
-    #                          IPageTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'text-display.pt'), 'text/html'),
-    #                          (ITextWidget, IFormLayer),
-    #                          IPageTemplate, name=DISPLAY_MODE)
-    # registry.registerAdapter(WidgetTemplateFactory(get_path('../interfaces/templates/'
-    #                                                         'text-hidden.pt'), 'text/html'),
-    #                          (ITextWidget, IFormLayer),
-    #                          IPageTemplate, name=HIDDEN_MODE)
+import sys
+if sys.argv[-1].endswith('/bin/test'):
 
-    # # Textarea Field Widget
-    # registry.registerAdapter(TextAreaFieldWidget,
-    #                          required=(IASCII, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(TextAreaFieldWidget,
-    #                          required=(IText, IFormLayer),
-    #                          provided=IFieldWidget)
-    # registry.registerAdapter(WidgetTemplateFactory(get_path('../interfaces/templates/'
-    #                                                         'textarea-input.pt'), 'text/html'),
-    #                          (ITextAreaWidget, IFormLayer),
-    #                          IPageTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(WidgetTemplateFactory(get_path('../interfaces/templates/'
-    #                                                         'textarea-display.pt'), 'text/html'),
-    #                          (ITextAreaWidget, IFormLayer),
-    #                          IPageTemplate, name=DISPLAY_MODE)
+    class IAJAXTestContent(Interface):
+        """AJAX test content interface"""
+        name = TextLine(title="Name")
+        value = Int(title="Value")
 
-    # # Radio Field Widget
-    # registry.registerAdapter(radio.RadioFieldWidget)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('radio_input.pt'), 'text/html'),
-    #                (None, None, None, None, IRadioWidget),
-    #                IPageTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('radio_display.pt'), 'text/html'),
-    #                (None, None, None, None, IRadioWidget),
-    #                IPageTemplate, name=DISPLAY_MODE)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('radio_input_single.pt'),
-    #                                             'text/html'),
-    #                (None, None, None, None, IRadioWidget),
-    #                IPageTemplate, name='input_single')
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('radio_hidden_single.pt'),
-    #                                             'text/html'),
-    #                (None, None, None, None, IRadioWidget),
-    #                IPageTemplate, name='hidden_single')
 
-    # # Select Widget
-    # registry.registerAdapter(select.ChoiceWidgetDispatcher)
-    # registry.registerAdapter(select.SelectFieldWidget)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('select_input.pt'), 'text/html'),
-    #                (None, None, None, None, ISelectWidget),
-    #                IPageTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('select_display.pt'), 'text/html'),
-    #                (None, None, None, None, ISelectWidget),
-    #                IPageTemplate, name=DISPLAY_MODE)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('select_hidden.pt'), 'text/html'),
-    #                (None, None, None, None, ISelectWidget),
-    #                IPageTemplate, name=HIDDEN_MODE)
-    #
-    # # Checkbox Field Widget; register only templates
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('checkbox_input.pt'), 'text/html'),
-    #                (None, None, None, None, ICheckBoxWidget),
-    #                IPageTemplate, name=INPUT_MODE)
-    # registry.registerAdapter(widget.WidgetTemplateFactory(
-    #     getPath('checkbox_display.pt'), 'text/html'),
-    #     (None, None, None, None, ICheckBoxWidget),
-    #     IPageTemplate, name=DISPLAY_MODE)
-    # # Submit Field Widget
-    # registry.registerAdapter(widget.WidgetTemplateFactory(getPath('submit_input.pt'), 'text/html'),
-    #                (None, None, None, None, ISubmitWidget),
-    #                IPageTemplate, name=INPUT_MODE)
-    # # selectwidget helper adapters
-    # registry.registerAdapter(select.CollectionSelectFieldWidget)
-    # registry.registerAdapter(select.CollectionChoiceSelectFieldWidget)
-    # # Adapter to  convert between field/internal and widget values
-    # registry.registerAdapter(FieldDataConverter,
-    #                          required=(IField, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(SequenceDataConverter,
-    #                          required=(IField, ISequenceWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(CollectionSequenceDataConverter,
-    #                          required=(ICollection, ISequenceWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(FieldWidgetDataConverter,
-    #                          required=(IFieldWidget, ),
-    #                          provided=IDataConverter)
-    # # special data converter
-    # registry.registerAdapter(IntegerDataConverter,
-    #                          required=(IInt, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(FloatDataConverter,
-    #                          required=(IFloat, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(DecimalDataConverter,
-    #                          required=(IDecimal, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(DateDataConverter,
-    #                          required=(IDate, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(TimeDataConverter,
-    #                          required=(ITime, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(DatetimeDataConverter,
-    #                          required=(IDatetime, IWidget),
-    #                          provided=IDataConverter)
-    # registry.registerAdapter(TimedeltaDataConverter,
-    #                          required=(ITimedelta, IWidget),
-    #                          provided=IDataConverter)
-    # # Adapter for providing terms to radio list and other widgets
-    # registry.registerAdapter(BoolTerms,
-    #                          required=(Interface, IFormLayer, Interface, IBool, IWidget),
-    #                          provided=IBoolTerms)
-    # registry.registerAdapter(ChoiceTerms,
-    #                          required=(Interface, IFormLayer, Interface, IChoice, IWidget),
-    #                          provided=ITerms)
-    # registry.registerAdapter(ChoiceTermsVocabulary,
-    #                          required=(Interface, IFormLayer, Interface, IChoice,
-    #                                    IBaseVocabulary, IWidget),
-    #                          provided=ITerms)
-    # registry.registerAdapter(ChoiceTermsSource,
-    #                          required=(Interface, IFormLayer, Interface, IChoice,
-    #                                    IIterableSource, IWidget),
-    #                          provided=ITerms)
-    # registry.registerAdapter(CollectionTerms,
-    #                          required=(Interface, IFormLayer, Interface, ICollection, IWidget),
-    #                          provided=ITerms)
-    # registry.registerAdapter(CollectionTermsVocabulary,
-    #                          required=(Interface, IFormLayer, Interface, ICollection,
-    #                                    IBaseVocabulary, IWidget),
-    #                          provided=ITerms)
-    # registry.registerAdapter(CollectionTermsSource,
-    #                          required=(Interface, IFormLayer, Interface, ICollection,
-    #                                    IIterableSource, IWidget),
-    #                          provided=ITerms)
-    # # Adapter to create an action from a button
-    # registry.registerAdapter(ButtonAction,
-    #                          required=(IFormLayer, IButton),
-    #                          provided=IButtonAction)
-    # # Adapter to use form.buttons to generate actions
-    # registry.registerAdapter(ButtonActions,
-    #                          required=(IButtonForm, Interface, Interface),
-    #                          provided=IActions)
-    # # Adapter to use form.handlers to generate handle actions
-    # registry.registerAdapter(ButtonActionHandler,
-    #                          required=(IHandlerForm, Interface, Interface, ButtonAction),
-    #                          provided=IActionHandler)
-    # # # Subscriber handling action execution error events
-    # # provideHandler(form.handleActionError)
-    # # Error View(s)
-    # registry.registerAdapter(ErrorViewSnippet,
-    #                          required=(ValidationError, None, None, None, None, None),
-    #                          provided=IErrorViewSnippet)
-    # registry.registerAdapter(InvalidErrorViewSnippet,
-    #                          required=(Invalid, None, None, None, None, None),
-    #                          provided=IErrorViewSnippet)
-    # registry.registerAdapter(TemplateFactory(get_path('../interfaces/templates/'
-    #                                                   'error.pt'), 'text/html'),
-    #                          required=(IErrorViewSnippet, IFormLayer),
-    #                          provided=IPageTemplate)
+    @implementer(IAJAXTestContent)
+    class AJAXTestContent:
+        """AJAX test content"""
+        name = FieldProperty(IAJAXTestContent['name'])
+        value = FieldProperty(IAJAXTestContent['value'])
+
+        def __init__(self, **data):
+            self.name = data.get('name')
+            self.value = data.get('value')
+
+
+    class ITestAddForm(IAJAXForm):
+        """Test add form marker interface"""
+
+
+    @ajax_form_config(name='test-add-form.html',
+                      ajax_implements=ITestAddForm, ajax_method=None, ajax_xhr=None)
+    class TestAddForm(AddForm):
+        """Test add form"""
+        fields = field.Fields(IAJAXTestContent)
+
+        def create(self, data):
+            return AJAXTestContent(**data)
+
+        def add(self, object):
+            self.context[object.name.lower()] = object
+
+
+    class ITestEditForm(IAJAXForm):
+        """Test edit form marker interface"""
+
+
+    @ajax_form_config(name='test-edit-form.html', context=IAJAXTestContent,
+                      ajax_implements=ITestEditForm, ajax_method=None, ajax_xhr=None)
+    class TestEditForm(EditForm):
+        """Test edit form"""
+        fields = field.Fields(IAJAXTestContent)

@@ -16,7 +16,8 @@ Form related interfaces module.
 """
 
 from zope.interface import Attribute, Interface
-from zope.schema import ASCIILine, Bool, Choice, Field, Object, Text, TextLine, Tuple, URI
+from zope.lifecycleevent import IObjectCreatedEvent
+from zope.schema import ASCIILine, Bool, Choice, Field, Object, Text, TextLine, Tuple, URI, Dict
 
 from pyams_form.interfaces import DISPLAY_MODE, IContentProviders, IFields, INPUT_MODE
 from pyams_form.interfaces.button import IActions, IButtonHandlers, IButtons
@@ -162,6 +163,26 @@ class IForm(Interface):
         """Returns the form in json format"""
 
 
+class IAJAXForm(IForm):
+    """A form interface for handling AJAX calls"""
+
+    def get_ajax_handler(self):
+        """Get absolute URL of AJAX handler"""
+
+    def get_form_options(self):
+        """Get form options in JSON format"""
+
+    def get_ajax_errors(self):
+        """Get AJAX status"""
+
+    def get_ajax_output(self, changes):
+        """Get AJAX POST output in JSON"""
+
+
+class IAJAXFormRenderer(Interface):
+    """AJAX form JSON renderer"""
+
+
 class ISubForm(IForm):
     """A subform."""
 
@@ -228,6 +249,30 @@ class IInputForm(Interface):
                        description=_('This is a list of content types the server can '
                                      'safely handle.'),
                        required=False)
+
+    # AJAX related form settings
+
+    ajax_form_handler = TextLine(title="Name of AJAX form handler",
+                                 required=False)
+
+    ajax_form_options = Dict(title="AJAX form submit's data options",
+                             required=False)
+
+    ajax_form_target = TextLine(title="Form submit target",
+                                description="Form content target, used for HTML and text content "
+                                            "types",
+                                required=False,
+                                default='#content')
+
+    ajax_form_callback = TextLine(title="AJAX submit callback",
+                                  description="Name of a custom form submit callback",
+                                  required=False)
+
+    def get_ajax_handler(self):
+        """Get absolute URL of AJAX handler"""
+
+    def get_form_options(self):
+        """Get form options in JSON format"""
 
 
 class IAddForm(IForm):
@@ -328,10 +373,16 @@ class IFormContextPermissionChecker(Interface):
     edit_permission = Attribute("Permission required to update form's content")
 
 
+class IFormCreatedEvent(IObjectCreatedEvent):
+    """Form created event interface"""
+
+    request = Attribute("Form request")
+
+
 class IDataExtractedEvent(Interface):
-    """Event sent after data and errors are extracted from widgets.
+    """Event sent after data and status are extracted from widgets.
     """
     data = Attribute("Extracted form data. Usually, the widgets extract field names from "
                      "the request and return a dictionary of field names and field values.")
-    errors = Attribute("Tuple of errors providing IErrorViewSnippet.")
+    errors = Attribute("Tuple of status providing IErrorViewSnippet.")
     form = Attribute("Form instance.")

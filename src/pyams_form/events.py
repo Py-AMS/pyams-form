@@ -16,11 +16,21 @@ Data extraction event.
 """
 
 from zope.interface import implementer
+from zope.lifecycleevent import ObjectCreatedEvent
 
-from pyams_form.interfaces.form import IDataExtractedEvent
+from pyams_form.interfaces.form import IDataExtractedEvent, IFormCreatedEvent
 
 
 __docformat__ = 'restructuredtext'
+
+
+@implementer(IFormCreatedEvent)
+class FormCreatedEvent(ObjectCreatedEvent):
+    """Form created event"""
+
+    def __init__(self, form):
+        super(FormCreatedEvent, self).__init__(form)
+        self.request = form.request
 
 
 @implementer(IDataExtractedEvent)
