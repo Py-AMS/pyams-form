@@ -50,7 +50,6 @@ if sys.argv[-1].endswith('/bin/test'):
 
     lxml.doctestcompare.NOPARSE_MARKUP = register_optionflag('NOPARSE_MARKUP')
 
-
     OUTPUT_CHECKER = outputchecker.OutputChecker(
         patterns=(
             (re.compile(r"u('.*?')"), r"\1"),
@@ -61,6 +60,15 @@ if sys.argv[-1].endswith('/bin/test'):
         )
     )
 
+    INT_LABEL = 'Int label'
+    BOOL_LABEL = 'Bool label'
+    CHOICE_LABEL = 'Choice label'
+    CHOICE_OPT_LABEL = 'ChoiceOpt label'
+    TEXTLINE_LABEL = 'TextLine label'
+    DATE_LABEL = 'Date label'
+    READONLY_LABEL = 'ReadOnly label'
+    OBJECT_LABEL = 'Object label'
+    
 
     def TestRequest(**kwargs):  # pylint: disable=invalid-name
         """Test request helper"""
@@ -337,24 +345,17 @@ if sys.argv[-1].endswith('/bin/test'):
 
     class IObjectWidgetSingleSubIntegration(Interface):
         """Sub-integration interface"""
-        single_int = Int(
-            title='Int label')
-        single_bool = Bool(
-            title='Bool label')
-        single_choice = Choice(
-            title='Choice label',
-            values=('one', 'two', 'three'))
-        single_choice_opt = Choice(
-            title='ChoiceOpt label',
-            values=('four', 'five', 'six'),
-            required=False)
-        single_textline = TextLine(
-            title='TextLine label')
-        single_date = Date(
-            title='Date label')
-        single_readonly = TextLine(
-            title='ReadOnly label',
-            readonly=True)
+        single_int = Int(title=INT_LABEL)
+        single_bool = Bool(title=BOOL_LABEL)
+        single_choice = Choice(title=CHOICE_LABEL,
+                               values=('one', 'two', 'three'))
+        single_choice_opt = Choice(title=CHOICE_OPT_LABEL,
+                                   values=('four', 'five', 'six'),
+                                   required=False)
+        single_textline = TextLine(title=TEXTLINE_LABEL)
+        single_date = Date(title=DATE_LABEL)
+        single_readonly = TextLine(title=READONLY_LABEL,
+                                   readonly=True)
 
 
     @implementer(IObjectWidgetSingleSubIntegration)
@@ -374,7 +375,7 @@ if sys.argv[-1].endswith('/bin/test'):
 
     class IObjectWidgetSingleIntegration(Interface):
         """Single integration interface"""
-        subobj = Object(title='Object label',
+        subobj = Object(title=OBJECT_LABEL,
                         schema=IObjectWidgetSingleSubIntegration)
 
 
@@ -386,15 +387,15 @@ if sys.argv[-1].endswith('/bin/test'):
 
     class IObjectWidgetMultiSubIntegration(Interface):
         """Multi sub-integration interface"""
-        multi_int = Int(title='Int label')
-        multi_bool = Bool(title='Bool label')
-        multi_choice = Choice(title='Choice label',
+        multi_int = Int(title=INT_LABEL)
+        multi_bool = Bool(title=BOOL_LABEL)
+        multi_choice = Choice(title=CHOICE_LABEL,
                               values=('one', 'two', 'three'))
-        multi_choice_opt = Choice(title='ChoiceOpt label',
+        multi_choice_opt = Choice(title=CHOICE_OPT_LABEL,
                                   values=('four', 'five', 'six'),
                                   required=False)
-        multi_textline = TextLine(title='TextLine label')
-        multi_date = Date(title='Date label')
+        multi_textline = TextLine(title=TEXTLINE_LABEL)
+        multi_date = Date(title=DATE_LABEL)
 
 
     @implementer(IObjectWidgetMultiSubIntegration)
@@ -412,7 +413,7 @@ if sys.argv[-1].endswith('/bin/test'):
 
     class IObjectWidgetMultiIntegration(Interface):
         """Multi-integration interface"""
-        subobj = Object(title='Object label',
+        subobj = Object(title=OBJECT_LABEL,
                         schema=IObjectWidgetMultiSubIntegration)
 
 
@@ -425,18 +426,18 @@ if sys.argv[-1].endswith('/bin/test'):
     class IMultiWidgetListIntegration(Interface):
         """Multi-list interface"""
         list_of_int = List(title="ListOfInt label",
-                           value_type=Int(title='Int label'))
+                           value_type=Int(title=INT_LABEL))
         list_of_bool = List(title="ListOfBool label",
-                            value_type=Bool(title='Bool label'))
+                            value_type=Bool(title=BOOL_LABEL))
         list_of_choice = List(title="ListOfChoice label",
-                              value_type=Choice(title='Choice label',
+                              value_type=Choice(title=CHOICE_LABEL,
                                                 values=('one', 'two', 'three')))
         list_of_textline = List(title="ListOfTextLine label",
-                                value_type=TextLine(title='TextLine label'), )
+                                value_type=TextLine(title=TEXTLINE_LABEL), )
         list_of_date = List(title="ListOfDate label",
-                            value_type=Date(title='Date label'))
+                            value_type=Date(title=DATE_LABEL))
         list_of_objects = List(title="ListOfObject label",
-                               value_type=Object(title='Object label',
+                               value_type=Object(title=OBJECT_LABEL,
                                                  schema=IObjectWidgetMultiSubIntegration))
 
 
@@ -455,24 +456,24 @@ if sys.argv[-1].endswith('/bin/test'):
         """Multi-dict interface"""
         dict_of_int = Dict(title="DictOfInt label",
                            key_type=Int(title='Int key'),
-                           value_type=Int(title='Int label'))
+                           value_type=Int(title=INT_LABEL))
         dict_of_bool = Dict(title="DictOfBool label",
                             key_type=Bool(title='Bool key'),
-                            value_type=Bool(title='Bool label'))
+                            value_type=Bool(title=BOOL_LABEL))
         dict_of_choice = Dict(title="DictOfChoice label",
                               key_type=Choice(title='Choice key',
                                               values=('key1', 'key2', 'key3')),
-                              value_type=Choice(title='Choice label',
+                              value_type=Choice(title=CHOICE_LABEL,
                                                 values=('one', 'two', 'three')))
         dict_of_textline = Dict(title="DictOfTextLine label",
                                 key_type=TextLine(title='TextLine key'),
-                                value_type=TextLine(title='TextLine label'))
+                                value_type=TextLine(title=TEXTLINE_LABEL))
         dict_of_date = Dict(title="DictOfDate label",
                             key_type=Date(title='Date key'),
-                            value_type=Date(title='Date label'))
+                            value_type=Date(title=DATE_LABEL))
         dict_of_objects = Dict(title="DictOfObject label",
                                key_type=TextLine(title='Object key'),
-                               value_type=Object(title='Object label',
+                               value_type=Object(title=OBJECT_LABEL,
                                                  schema=IObjectWidgetMultiSubIntegration))
 
 
