@@ -32,11 +32,10 @@ from pyams_form.template import get_widget_layout, get_widget_template
 from pyams_form.util import sorted_none
 from pyams_form.value import ComputedValueCreator, StaticValueCreator
 from pyams_utils.interfaces.form import IDataManager, NO_VALUE
+from pyams_utils.registry import query_utility
 
 
 __docformat__ = 'restructuredtext'
-
-from pyams_utils.registry import query_utility
 
 
 PLACEHOLDER = object()
@@ -50,6 +49,36 @@ StaticWidgetAttribute = StaticValueCreator(
 ComputedWidgetAttribute = ComputedValueCreator(
     discriminators=('context', 'request', 'view', 'field', 'widget')
 )
+
+
+def apply_value_to_widget(parent, widget, value):
+    """Apply given value to widget"""
+    if value is not NO_VALUE:
+        request = parent.request
+        registry = request.registry
+        try:
+            # convert widget value to field value
+            converter = IDataConverter(widget)
+            # pylint: disable=assignment-from-no-return
+            fvalue = converter.to_field_value(value)
+            # validate field value
+            registry.getMultiAdapter((parent.context, request, parent.form,
+                                      getattr(widget, 'field', None), widget),
+                                     IValidator).validate(fvalue)
+            # convert field value back to widget value
+            # that will probably format the value too
+            # pylint: disable=assignment-from-no-return
+            widget.value = converter.to_widget_value(fvalue)
+        except (ValidationError, ValueError) as error:
+            # on exception, setup the widget error message
+            view = registry.getMultiAdapter((error, request, widget,
+                                             widget.field, parent.form, parent.context),
+                                            IErrorViewSnippet)
+            view.update()
+            widget.error = view
+            # set the wrong value as value despite it's wrong
+            # we want to re-show wrong values
+            widget.value = value
 
 
 @implementer(IWidget)
@@ -412,29 +441,7 @@ class MultiWidget(Widget):
         nothing outside this multi widget does know something about our
         internal sub widgets.
         """
-        if value is not NO_VALUE:
-            registry = self.request.registry
-            try:
-                # convert widget value to field value
-                converter = IDataConverter(widget)
-                # pylint: disable=assignment-from-no-return
-                fvalue = converter.to_field_value(value)
-                # validate field value
-                registry.getMultiAdapter((self.context, self.request, self.form,
-                                          getattr(widget, 'field', None), widget),
-                                         IValidator).validate(fvalue)
-                # convert field value to widget value
-                # pylint: disable=assignment-from-no-return
-                widget.value = converter.to_widget_value(fvalue)
-            except (ValidationError, ValueError) as error:
-                # on exception, setup the widget error message
-                view = registry.getMultiAdapter((error, self.request, widget,
-                                                 widget.field, self.form, self.context),
-                                                IErrorViewSnippet)
-                view.update()
-                widget.error = view
-                # set the wrong value as value
-                widget.value = value
+        apply_value_to_widget(self, widget, value)
 
     def update_widgets(self):  # pylint: disable=too-many-branches
         """Setup internal widgets based on the value_type for each value item.

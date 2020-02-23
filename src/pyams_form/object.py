@@ -17,18 +17,16 @@ This module defines ObjectWidget related classes.
 
 from zope.interface import Interface, alsoProvides, implementer
 from zope.lifecycleevent import Attributes, ObjectCreatedEvent, ObjectModifiedEvent
-from zope.schema import ValidationError, getFieldsInOrder
+from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import IObject
 
 from pyams_form.converter import BaseDataConverter
 from pyams_form.error import MultipleErrors
 from pyams_form.field import FieldWidgets, Fields
-from pyams_form.interfaces import DISPLAY_MODE, IDataConverter, INPUT_MODE, \
-    IObjectFactory, IValidator
-from pyams_form.interfaces.error import IErrorViewSnippet
+from pyams_form.interfaces import DISPLAY_MODE, IDataConverter, INPUT_MODE, IObjectFactory
 from pyams_form.interfaces.form import IFormAware
 from pyams_form.interfaces.widget import IFieldWidget, IObjectWidget, IWidget
-from pyams_form.widget import Widget
+from pyams_form.widget import Widget, apply_value_to_widget
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
 from pyams_utils.factory import get_interface_name
@@ -259,31 +257,7 @@ class ObjectWidget(Widget):
         nothing outside this widget does know something about our
         internal sub widgets.
         """
-        if value is not NO_VALUE:
-            registry = self.request.registry
-            try:
-                # convert widget value to field value
-                converter = IDataConverter(widget)
-                # pylint: disable=assignment-from-no-return
-                fvalue = converter.to_field_value(value)
-                # validate field value
-                registry.getMultiAdapter((self.context, self.request, self.form,
-                                          getattr(widget, 'field', None), widget),
-                                         IValidator).validate(fvalue)
-                # convert field value back to widget value
-                # that will probably format the value too
-                # pylint: disable=assignment-from-no-return
-                widget.value = converter.to_widget_value(fvalue)
-            except (ValidationError, ValueError) as error:
-                # on exception, setup the widget error message
-                view = registry.getMultiAdapter((error, self.request, widget,
-                                                 widget.field, self.form, self.context),
-                                                IErrorViewSnippet)
-                view.update()
-                widget.error = view
-                # set the wrong value as value despite it's wrong
-                # we want to re-show wrong values
-                widget.value = value
+        apply_value_to_widget(self, widget, value)
 
     def update(self):
         """Update widget contents"""
