@@ -72,7 +72,6 @@ comparison to a regular add form, you only need to add the ``GroupForm`` as
 one of the base classes. The groups are specified in a simple tuple:
 
   >>> import os
-  >>> from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
   >>> from pyams_form import form, tests
 
   >>> class RegistrationAddForm(group.GroupForm, form.AddForm):
