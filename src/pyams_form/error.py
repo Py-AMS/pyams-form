@@ -127,7 +127,7 @@ class MultipleErrorViewSnippet(ErrorViewSnippet):
     """Error view snippet for multiple errors."""
 
     def update(self):
-        pass
+        """Snippet update"""
 
     def render(self):
         """Render multiple errors"""
