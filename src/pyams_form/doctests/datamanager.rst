@@ -124,7 +124,7 @@ provide security declarations for our person:
   >>> import pyams_form.testing
   >>> endInteraction()
   >>> newPolicy = pyams_form.testing.SimpleSecurityPolicy()
-  >>> newPolicy.allowedPermissions = ('View', 'Edit')
+  >>> newPolicy.allowed_permissions = ('View', 'Edit')
   >>> oldpolicy = setSecurityPolicy(newPolicy)
   >>> newInteraction()
 
@@ -160,8 +160,8 @@ Clearly, this also means that ``get()`` and ``set()`` are also shut off:
 
 Now we have to setup the security system and "log in" as a user:
 
-  >>> newPolicy.allowedPermissions = ('View', 'Edit')
-  >>> newPolicy.loggedIn = True
+  >>> newPolicy.allowed_permissions = ('View', 'Edit')
+  >>> newPolicy.logged_in = True
 
 The created principal, with which we are logged in now, can only access the
 attribute:

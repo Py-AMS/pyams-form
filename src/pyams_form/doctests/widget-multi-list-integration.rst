@@ -31,7 +31,7 @@ Checking components on the highest possible level.
   ...     form.extends(form.EditForm)
   ...     fields = field.Fields(
   ...         testing.IMultiWidgetListIntegration).omit(
-  ...             'listOfChoice', 'listOfObject')
+  ...             'list_of_choice', 'list_of_objects')
 
 Our single content object:
 
@@ -80,20 +80,20 @@ All blank and empty values:
 Some valid default values
 #########################
 
-  >>> obj.listOfInt = [-100, 1, 100]
-  >>> obj.listOfBool = [True, False, True]
-  >>> obj.listOfChoice = ['two', 'three']
-  >>> obj.listOfTextLine = ['some text one', 'some txt two']
-  >>> obj.listOfDate = [date(2014, 6, 20)]
+  >>> obj.list_of_int = [-100, 1, 100]
+  >>> obj.list_of_bool = [True, False, True]
+  >>> obj.list_of_choice = ['two', 'three']
+  >>> obj.list_of_textline = ['some text one', 'some txt two']
+  >>> obj.list_of_date = [date(2014, 6, 20)]
 
   >>> from pprint import pprint
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
   >>> content = getForm(request)
 
@@ -133,21 +133,21 @@ Some valid default values
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
-listOfInt
+list_of_int
 #########
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfInt.1'] = 'foobar'
+  >>> submit['form.widgets.list_of_int.1'] = 'foobar'
 
-  >>> submit['form.widgets.listOfInt.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_int.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -157,7 +157,7 @@ for "foobar" and a new input.
   >>> content = getForm(request)
 
   >>> print(testing.plain_text(content,
-  ...       './/div[@id="row-form-widgets-listOfInt"]'))
+  ...       './/div[@id="row-form-widgets-list_of_int"]'))
   ListOfInt label Int label *
   [ ]
   [-100]
@@ -179,20 +179,20 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfInt"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-list_of_int"]//div[@class="error"]'))
   The entered value is not a valid integer literal.
   Required input is missing.
 
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfInt.1.remove'] = '1'
-  >>> submit['form.widgets.listOfInt.2.remove'] = '1'
-  >>> submit['form.widgets.listOfInt.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_int.1.remove'] = '1'
+  >>> submit['form.widgets.list_of_int.2.remove'] = '1'
+  >>> submit['form.widgets.list_of_int.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfInt"]'))
+  ...     './/div[@id="row-form-widgets-list_of_int"]'))
   ListOfInt label
   <BLANKLINE>
   Int label *
@@ -209,27 +209,27 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
 
-listOfBool
+list_of_bool
 ##########
 
 Add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfBool.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_bool.buttons.add'] = 'Add'
   >>> request = testing.TestRequest(params=submit)
 
 Important is that we get a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfBool"]'))
+  ...     './/div[@id="row-form-widgets-list_of_bool"]'))
   ListOfBool label
   <BLANKLINE>
   Bool label *
@@ -257,19 +257,19 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfBool"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-list_of_bool"]//div[@class="error"]'))
   Required input is missing.
 
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfBool.1.remove'] = '1'
-  >>> submit['form.widgets.listOfBool.2.remove'] = '1'
-  >>> submit['form.widgets.listOfBool.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_bool.1.remove'] = '1'
+  >>> submit['form.widgets.list_of_bool.2.remove'] = '1'
+  >>> submit['form.widgets.list_of_bool.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfBool"]'))
+  ...     './/div[@id="row-form-widgets-list_of_bool"]'))
   ListOfBool label
   <BLANKLINE>
   Bool label *
@@ -286,22 +286,22 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
 
-listOfTextLine
+list_of_textline
 ##############
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfTextLine.1'] = 'foo\nbar'
+  >>> submit['form.widgets.list_of_textline.1'] = 'foo\nbar'
 
-  >>> submit['form.widgets.listOfTextLine.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_textline.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -310,7 +310,7 @@ for "foo\nbar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfTextLine"]'))
+  ...     './/div[@id="row-form-widgets-list_of_textline"]'))
   ListOfTextLine label
   <BLANKLINE>
   TextLine label *
@@ -336,19 +336,19 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfTextLine"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-list_of_textline"]//div[@class="error"]'))
   Constraint not satisfied
   Required input is missing.
 
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfTextLine.0.remove'] = '1'
-  >>> submit['form.widgets.listOfTextLine.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_textline.0.remove'] = '1'
+  >>> submit['form.widgets.list_of_textline.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfTextLine"]'))
+  ...     './/div[@id="row-form-widgets-list_of_textline"]'))
   ListOfTextLine label
   <BLANKLINE>
   TextLine label *
@@ -367,22 +367,22 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
 
-listOfDate
+list_of_date
 ##########
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfDate.0'] = 'foobar'
+  >>> submit['form.widgets.list_of_date.0'] = 'foobar'
 
-  >>> submit['form.widgets.listOfDate.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_date.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -391,7 +391,7 @@ for "foobar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfDate"]'))
+  ...     './/div[@id="row-form-widgets-list_of_date"]'))
   ListOfDate label
   <BLANKLINE>
   Date label *
@@ -412,25 +412,25 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfDate"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-list_of_date"]//div[@class="error"]'))
   The datetime string did not match the pattern 'M/d/yy'.
   Required input is missing.
 
 Add one more field:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfDate.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_date.buttons.add'] = 'Add'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
 
 And fill in a valid value:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfDate.2'] = '6/21/14'
+  >>> submit['form.widgets.list_of_date.2'] = '6/21/14'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfDate"]'))
+  ...     './/div[@id="row-form-widgets-list_of_date"]'))
   ListOfDate label Date label *
   <BLANKLINE>
   The datetime string did not match the pattern 'M/d/yy'.
@@ -451,12 +451,12 @@ And fill in a valid value:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfDate.2.remove'] = '1'
-  >>> submit['form.widgets.listOfDate.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_date.2.remove'] = '1'
+  >>> submit['form.widgets.list_of_date.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-listOfDate"]'))
+  ...     './/div[@id="row-form-widgets-list_of_date"]'))
   ListOfDate label
   <BLANKLINE>
   Date label *
@@ -474,11 +474,11 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
 
 And apply
@@ -497,21 +497,21 @@ And apply
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False, True]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 20)]
-    listOfInt: [-100, 1, 100]
-    listOfTextLine: ['some text one', 'some txt two']>
+    list_of_bool: [True, False, True]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 20)]
+    list_of_int: [-100, 1, 100]
+    list_of_textline: ['some text one', 'some txt two']>
 
 Let's fix the values
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfInt.1'] = '42'
-  >>> submit['form.widgets.listOfBool.1'] = 'false'
-  >>> submit['form.widgets.listOfTextLine.0'] = 'ipsum lorem'
-  >>> submit['form.widgets.listOfTextLine.1'] = 'lorem ipsum'
-  >>> submit['form.widgets.listOfDate.0'] = '6/25/14'
-  >>> submit['form.widgets.listOfDate.1'] = '6/24/14'
+  >>> submit['form.widgets.list_of_int.1'] = '42'
+  >>> submit['form.widgets.list_of_bool.1'] = 'false'
+  >>> submit['form.widgets.list_of_textline.0'] = 'ipsum lorem'
+  >>> submit['form.widgets.list_of_textline.1'] = 'lorem ipsum'
+  >>> submit['form.widgets.list_of_date.0'] = '6/25/14'
+  >>> submit['form.widgets.list_of_date.1'] = '6/24/14'
   >>> submit['form.buttons.apply'] = 'Apply'
 
   >>> request = testing.TestRequest(params=submit)
@@ -522,11 +522,11 @@ Let's fix the values
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
-    listOfBool: [True, False]
-    listOfChoice: ['two', 'three']
-    listOfDate: [datetime.date(2014, 6, 25), datetime.date(2014, 6, 24)]
-    listOfInt: [-100, 42]
-    listOfTextLine: ['ipsum lorem', 'lorem ipsum']>
+    list_of_bool: [True, False]
+    list_of_choice: ['two', 'three']
+    list_of_date: [datetime.date(2014, 6, 25), datetime.date(2014, 6, 24)]
+    list_of_int: [-100, 42]
+    list_of_textline: ['ipsum lorem', 'lorem ipsum']>
 
 
 Tests cleanup:

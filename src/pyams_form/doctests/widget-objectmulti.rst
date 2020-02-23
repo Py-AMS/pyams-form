@@ -1152,9 +1152,9 @@ We create the form and try to update it:
 As usual, the form contains a widget manager with the expected widget
 
   >>> list(myaddform.widgets.keys())
-  ['listOfObject', 'name']
+  ['list_of_objects', 'name']
   >>> list(myaddform.widgets.values())
-  [<MultiWidget 'form.widgets.listOfObject'>, <TextWidget 'form.widgets.name'>]
+  [<MultiWidget 'form.widgets.list_of_objects'>, <TextWidget 'form.widgets.name'>]
 
 If we want to render the addform, we must give it a template:
 
@@ -1172,17 +1172,17 @@ Now rendering the addform renders no items yet:
   >>> print(format_html(myaddform.render()))
   <form action=".">
     <div class="row">
-      <label for="form-widgets-listOfObject">My list field</label>
+      <label for="form-widgets-list_of_objects">My list field</label>
       <div class="multi-widget required">
     <div class="buttons">
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-add"
-         name="form.widgets.listOfObject.buttons.add"
+         id="form-widgets-list_of_objects-buttons-add"
+         name="form.widgets.list_of_objects.buttons.add"
          class="submit-widget"
          value="Add" />
     </div>
   </div>
-  <input type="hidden" name="form.widgets.listOfObject.count" value="0" />
+  <input type="hidden" name="form.widgets.list_of_objects.count" value="0" />
     </div>
     <div class="row">
       <label for="form-widgets-name">name</label>
@@ -1211,8 +1211,8 @@ We don't have the object (yet) in the root:
 Add a row to the multi widget:
 
   >>> request = TestRequest(params={
-  ...     'form.widgets.listOfObject.count':'0',
-  ...     'form.widgets.listOfObject.buttons.add':'Add'})
+  ...     'form.widgets.list_of_objects.count':'0',
+  ...     'form.widgets.list_of_objects.buttons.add':'Add'})
   >>> myaddform.request = request
 
 Update with the request:
@@ -1224,12 +1224,12 @@ Render the form:
   >>> print(format_html(myaddform.render()))
   <form action=".">
     <div class="row">
-      <label for="form-widgets-listOfObject">My list field</label>
+      <label for="form-widgets-list_of_objects">My list field</label>
       <div class="multi-widget required">
-      <div id="form-widgets-listOfObject-0-row"
+      <div id="form-widgets-list_of_objects-0-row"
                class="row">
         <div class="label">
-          <label for="form-widgets-listOfObject-0">
+          <label for="form-widgets-list_of_objects-0">
             <span>my object widget</span>
             <span class="required">*</span>
           </label>
@@ -1237,57 +1237,57 @@ Render the form:
         <div class="widget">
           <div class="multi-widget-checkbox">
             <input type="checkbox"
-                   id="form-widgets-listOfObject-0-remove"
-                   name="form.widgets.listOfObject.0.remove"
+                   id="form-widgets-list_of_objects-0-remove"
+                   name="form.widgets.list_of_objects.0.remove"
                    class="multi-widget-checkbox checkbox-widget"
                    value="1" />
           </div>
           <div class="multi-widget-input">
             <div class="object-widget required">
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-foofield">
+                      <label for="form-widgets-list_of_objects-0-widgets-foofield">
                               <span>My foo field</span>
                               <span class="required">*</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-foofield"
-         name="form.widgets.listOfObject.0.widgets.foofield"
+         id="form-widgets-list_of_objects-0-widgets-foofield"
+         name="form.widgets.list_of_objects.0.widgets.foofield"
          class="text-widget required int-field"
          value="" />
               </div>
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-barfield">
+                      <label for="form-widgets-list_of_objects-0-widgets-barfield">
                               <span>My dear bar</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-barfield"
-         name="form.widgets.listOfObject.0.widgets.barfield"
+         id="form-widgets-list_of_objects-0-widgets-barfield"
+         name="form.widgets.list_of_objects.0.widgets.barfield"
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="form.widgets.listOfObject.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
   </div>
           </div>
         </div>
       </div>
     <div class="buttons">
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-add"
-         name="form.widgets.listOfObject.buttons.add"
+         id="form-widgets-list_of_objects-buttons-add"
+         name="form.widgets.list_of_objects.buttons.add"
          class="submit-widget"
          value="Add" />
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-remove"
-         name="form.widgets.listOfObject.buttons.remove"
+         id="form-widgets-list_of_objects-buttons-remove"
+         name="form.widgets.list_of_objects.buttons.remove"
          class="submit-widget"
          value="Remove selected" />
     </div>
   </div>
-  <input type="hidden" name="form.widgets.listOfObject.count" value="1" />
+  <input type="hidden" name="form.widgets.list_of_objects.count" value="1" />
     </div>
     <div class="row">
       <label for="form-widgets-name">name</label>
@@ -1309,10 +1309,10 @@ Render the form:
 Now we can fill in some values to the object, and a name to the whole schema:
 
   >>> request = TestRequest(params={
-  ...     'form.widgets.listOfObject.count':'1',
-  ...     'form.widgets.listOfObject.0.widgets.foofield':'66',
-  ...     'form.widgets.listOfObject.0.widgets.barfield':'99',
-  ...     'form.widgets.listOfObject.0-empty-marker':'1',
+  ...     'form.widgets.list_of_objects.count':'1',
+  ...     'form.widgets.list_of_objects.0.widgets.foofield':'66',
+  ...     'form.widgets.list_of_objects.0.widgets.barfield':'99',
+  ...     'form.widgets.list_of_objects.0-empty-marker':'1',
   ...     'form.widgets.name':'first',
   ...     'form.buttons.add':'Add'})
   >>> myaddform.request = request
@@ -1321,7 +1321,7 @@ Update the form with the request:
 
   >>> myaddform.update()
   MyAddForm.create
-  {'listOfObject': [<pyams_form.testing.MySubObjectMulti ...],
+  {'list_of_objects': [<pyams_form.testing.MySubObjectMulti ...],
    'name': 'first'}
 
 Wow, it got added:
@@ -1329,14 +1329,14 @@ Wow, it got added:
   >>> root['first']
   <pyams_form.testing.MyMultiObject object at ...>
 
-  >>> root['first'].listOfObject
+  >>> root['first'].list_of_objects
   [<pyams_form.testing.MySubObjectMulti object at ...>]
 
 Field values need to be right:
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   66
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   99
 
 Let's see our event log:
@@ -1375,12 +1375,12 @@ Watch for the widget values in the HTML:
   >>> print(format_html(editform.render()))
   <form action=".">
     <div class="row">
-      <label for="form-widgets-listOfObject">My list field</label>
+      <label for="form-widgets-list_of_objects">My list field</label>
       <div class="multi-widget required">
-      <div id="form-widgets-listOfObject-0-row"
+      <div id="form-widgets-list_of_objects-0-row"
                class="row">
         <div class="label">
-          <label for="form-widgets-listOfObject-0">
+          <label for="form-widgets-list_of_objects-0">
             <span>my object widget</span>
             <span class="required">*</span>
           </label>
@@ -1388,57 +1388,57 @@ Watch for the widget values in the HTML:
         <div class="widget">
           <div class="multi-widget-checkbox">
             <input type="checkbox"
-                   id="form-widgets-listOfObject-0-remove"
-                   name="form.widgets.listOfObject.0.remove"
+                   id="form-widgets-list_of_objects-0-remove"
+                   name="form.widgets.list_of_objects.0.remove"
                    class="multi-widget-checkbox checkbox-widget"
                    value="1" />
           </div>
           <div class="multi-widget-input">
             <div class="object-widget required">
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-foofield">
+                      <label for="form-widgets-list_of_objects-0-widgets-foofield">
                               <span>My foo field</span>
                               <span class="required">*</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-foofield"
-         name="form.widgets.listOfObject.0.widgets.foofield"
+         id="form-widgets-list_of_objects-0-widgets-foofield"
+         name="form.widgets.list_of_objects.0.widgets.foofield"
          class="text-widget required int-field"
          value="66" />
               </div>
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-barfield">
+                      <label for="form-widgets-list_of_objects-0-widgets-barfield">
                               <span>My dear bar</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-barfield"
-         name="form.widgets.listOfObject.0.widgets.barfield"
+         id="form-widgets-list_of_objects-0-widgets-barfield"
+         name="form.widgets.list_of_objects.0.widgets.barfield"
          class="text-widget int-field"
          value="99" />
               </div>
-      <input name="form.widgets.listOfObject.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
   </div>
           </div>
         </div>
       </div>
     <div class="buttons">
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-add"
-         name="form.widgets.listOfObject.buttons.add"
+         id="form-widgets-list_of_objects-buttons-add"
+         name="form.widgets.list_of_objects.buttons.add"
          class="submit-widget"
          value="Add" />
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-remove"
-         name="form.widgets.listOfObject.buttons.remove"
+         id="form-widgets-list_of_objects-buttons-remove"
+         name="form.widgets.list_of_objects.buttons.remove"
          class="submit-widget"
          value="Remove selected" />
     </div>
   </div>
-  <input type="hidden" name="form.widgets.listOfObject.count" value="1" />
+  <input type="hidden" name="form.widgets.list_of_objects.count" value="1" />
     </div>
     <div class="row">
       <label for="form-widgets-name">name</label>
@@ -1460,18 +1460,18 @@ Watch for the widget values in the HTML:
 Let's modify the values:
 
   >>> request = TestRequest(params={
-  ...     'form.widgets.listOfObject.count':'1',
-  ...     'form.widgets.listOfObject.0.widgets.foofield':'43',
-  ...     'form.widgets.listOfObject.0.widgets.barfield':'55',
-  ...     'form.widgets.listOfObject.0-empty-marker':'1',
+  ...     'form.widgets.list_of_objects.count':'1',
+  ...     'form.widgets.list_of_objects.0.widgets.foofield':'43',
+  ...     'form.widgets.list_of_objects.0.widgets.barfield':'55',
+  ...     'form.widgets.list_of_objects.0-empty-marker':'1',
   ...     'form.widgets.name':'first',
   ...     'form.buttons.apply':'Apply'})
 
 They are still the same:
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   66
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   99
 
   >>> editform.request = request
@@ -1479,9 +1479,9 @@ They are still the same:
 
 Until we have updated the form:
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   43
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   55
 
 Let's see our event log:
@@ -1502,7 +1502,7 @@ Let's see our event log:
   ['barfield', 'foofield']
   <zope...ObjectModifiedEvent object at ...>
   <InterfaceClass pyams_form.testing.IMyMultiObject>
-  ['listOfObject']
+  ['list_of_objects']
 
   >>> eventlog=[]
 
@@ -1514,12 +1514,12 @@ values:
   <i>Data successfully updated.</i>
   <form action=".">
     <div class="row">
-      <label for="form-widgets-listOfObject">My list field</label>
+      <label for="form-widgets-list_of_objects">My list field</label>
       <div class="multi-widget required">
-      <div id="form-widgets-listOfObject-0-row"
+      <div id="form-widgets-list_of_objects-0-row"
                class="row">
         <div class="label">
-          <label for="form-widgets-listOfObject-0">
+          <label for="form-widgets-list_of_objects-0">
             <span>my object widget</span>
             <span class="required">*</span>
           </label>
@@ -1527,57 +1527,57 @@ values:
         <div class="widget">
           <div class="multi-widget-checkbox">
             <input type="checkbox"
-                   id="form-widgets-listOfObject-0-remove"
-                   name="form.widgets.listOfObject.0.remove"
+                   id="form-widgets-list_of_objects-0-remove"
+                   name="form.widgets.list_of_objects.0.remove"
                    class="multi-widget-checkbox checkbox-widget"
                    value="1" />
           </div>
           <div class="multi-widget-input">
             <div class="object-widget required">
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-foofield">
+                      <label for="form-widgets-list_of_objects-0-widgets-foofield">
                               <span>My foo field</span>
                               <span class="required">*</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-foofield"
-         name="form.widgets.listOfObject.0.widgets.foofield"
+         id="form-widgets-list_of_objects-0-widgets-foofield"
+         name="form.widgets.list_of_objects.0.widgets.foofield"
          class="text-widget required int-field"
          value="43" />
               </div>
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-barfield">
+                      <label for="form-widgets-list_of_objects-0-widgets-barfield">
                               <span>My dear bar</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-barfield"
-         name="form.widgets.listOfObject.0.widgets.barfield"
+         id="form-widgets-list_of_objects-0-widgets-barfield"
+         name="form.widgets.list_of_objects.0.widgets.barfield"
          class="text-widget int-field"
          value="55" />
               </div>
-      <input name="form.widgets.listOfObject.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
   </div>
           </div>
         </div>
       </div>
     <div class="buttons">
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-add"
-         name="form.widgets.listOfObject.buttons.add"
+         id="form-widgets-list_of_objects-buttons-add"
+         name="form.widgets.list_of_objects.buttons.add"
          class="submit-widget"
          value="Add" />
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-remove"
-         name="form.widgets.listOfObject.buttons.remove"
+         id="form-widgets-list_of_objects-buttons-remove"
+         name="form.widgets.list_of_objects.buttons.remove"
          class="submit-widget"
          value="Remove selected" />
     </div>
   </div>
-  <input type="hidden" name="form.widgets.listOfObject.count" value="1" />
+  <input type="hidden" name="form.widgets.list_of_objects.count" value="1" />
     </div>
     <div class="row">
       <label for="form-widgets-name">name</label>
@@ -1601,20 +1601,20 @@ Let's see if the widget keeps the old object on editing:
 
 We add a special property to keep track of the object:
 
-  >>> root['first'].listOfObject[0].__marker__ = "ThisMustStayTheSame"
+  >>> root['first'].list_of_objects[0].__marker__ = "ThisMustStayTheSame"
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   43
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   55
 
 Let's modify the values:
 
   >>> request = TestRequest(params={
-  ...     'form.widgets.listOfObject.count':'1',
-  ...     'form.widgets.listOfObject.0.widgets.foofield':'666',
-  ...     'form.widgets.listOfObject.0.widgets.barfield':'999',
-  ...     'form.widgets.listOfObject.0-empty-marker':'1',
+  ...     'form.widgets.list_of_objects.count':'1',
+  ...     'form.widgets.list_of_objects.0.widgets.foofield':'666',
+  ...     'form.widgets.list_of_objects.0.widgets.barfield':'999',
+  ...     'form.widgets.list_of_objects.0-empty-marker':'1',
   ...     'form.widgets.name':'first',
   ...     'form.buttons.apply':'Apply'})
 
@@ -1624,24 +1624,24 @@ Let's modify the values:
 
 Let's check what are ther esults of the update:
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   666
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   999
 
 ((TODO: bummer... we can't keep the old object))
 
-  #>>> root['first'].listOfObject[0].__marker__
+  #>>> root['first'].list_of_objects[0].__marker__
   #'ThisMustStayTheSame'
 
 
 Let's make a nasty error, by typing 'bad' instead of an integer:
 
   >>> request = TestRequest(params={
-  ...     'form.widgets.listOfObject.count':'1',
-  ...     'form.widgets.listOfObject.0.widgets.foofield':'99',
-  ...     'form.widgets.listOfObject.0.widgets.barfield':'bad',
-  ...     'form.widgets.listOfObject.0-empty-marker':'1',
+  ...     'form.widgets.list_of_objects.count':'1',
+  ...     'form.widgets.list_of_objects.0.widgets.foofield':'99',
+  ...     'form.widgets.list_of_objects.0.widgets.barfield':'bad',
+  ...     'form.widgets.list_of_objects.0-empty-marker':'1',
   ...     'form.widgets.name':'first',
   ...     'form.buttons.apply':'Apply'})
 
@@ -1676,12 +1676,12 @@ it has to appear at the field itself and at the top of the form:
   <form action=".">
     <div class="row">
       <b><div class="error">The entered value is not a valid integer literal.</div></b>
-      <label for="form-widgets-listOfObject">My list field</label>
+      <label for="form-widgets-list_of_objects">My list field</label>
       <div class="multi-widget required">
-      <div id="form-widgets-listOfObject-0-row"
+      <div id="form-widgets-list_of_objects-0-row"
                class="row">
         <div class="label">
-          <label for="form-widgets-listOfObject-0">
+          <label for="form-widgets-list_of_objects-0">
             <span>my object widget</span>
             <span class="required">*</span>
           </label>
@@ -1690,58 +1690,58 @@ it has to appear at the field itself and at the top of the form:
         <div class="widget">
           <div class="multi-widget-checkbox">
             <input type="checkbox"
-                   id="form-widgets-listOfObject-0-remove"
-                   name="form.widgets.listOfObject.0.remove"
+                   id="form-widgets-list_of_objects-0-remove"
+                   name="form.widgets.list_of_objects.0.remove"
                    class="multi-widget-checkbox checkbox-widget"
                    value="1" />
           </div>
           <div class="multi-widget-input">
             <div class="object-widget required">
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-foofield">
+                      <label for="form-widgets-list_of_objects-0-widgets-foofield">
                               <span>My foo field</span>
                               <span class="required">*</span>
                       </label>
               </div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-foofield"
-         name="form.widgets.listOfObject.0.widgets.foofield"
+         id="form-widgets-list_of_objects-0-widgets-foofield"
+         name="form.widgets.list_of_objects.0.widgets.foofield"
          class="text-widget required int-field"
          value="99" />
               </div>
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-barfield">
+                      <label for="form-widgets-list_of_objects-0-widgets-barfield">
                               <span>My dear bar</span>
                       </label>
               </div>
                       <div class="error">The entered value is not a valid integer literal.</div>
               <div class="widget">
                       <input type="text"
-         id="form-widgets-listOfObject-0-widgets-barfield"
-         name="form.widgets.listOfObject.0.widgets.barfield"
+         id="form-widgets-list_of_objects-0-widgets-barfield"
+         name="form.widgets.list_of_objects.0.widgets.barfield"
          class="text-widget int-field"
          value="bad" />
               </div>
-      <input name="form.widgets.listOfObject.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
   </div>
           </div>
         </div>
       </div>
     <div class="buttons">
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-add"
-         name="form.widgets.listOfObject.buttons.add"
+         id="form-widgets-list_of_objects-buttons-add"
+         name="form.widgets.list_of_objects.buttons.add"
          class="submit-widget"
          value="Add" />
         <input type="submit"
-         id="form-widgets-listOfObject-buttons-remove"
-         name="form.widgets.listOfObject.buttons.remove"
+         id="form-widgets-list_of_objects-buttons-remove"
+         name="form.widgets.list_of_objects.buttons.remove"
          class="submit-widget"
          value="Remove selected" />
     </div>
   </div>
-  <input type="hidden" name="form.widgets.listOfObject.count" value="1" />
+  <input type="hidden" name="form.widgets.list_of_objects.count" value="1" />
     </div>
     <div class="row">
       <label for="form-widgets-name">name</label>
@@ -1762,9 +1762,9 @@ it has to appear at the field itself and at the top of the form:
 
 The object values must stay at the old ones:
 
-  >>> root['first'].listOfObject[0].foofield
+  >>> root['first'].list_of_objects[0].foofield
   666
-  >>> root['first'].listOfObject[0].barfield
+  >>> root['first'].list_of_objects[0].barfield
   999
 
 
@@ -1777,13 +1777,13 @@ Simple but often used use-case is the display form:
   >>> print(format_html(editform.render()))
   <form action=".">
     <div class="row">
-      <label for="form-widgets-listOfObject">My list field</label>
-      <div id="form-widgets-listOfObject"
+      <label for="form-widgets-list_of_objects">My list field</label>
+      <div id="form-widgets-list_of_objects"
        class="multi-widget">
-      <div id="form-widgets-listOfObject-0-row"
+      <div id="form-widgets-list_of_objects-0-row"
                class="row">
           <div class="label">
-            <label for="form-widgets-listOfObject-0">
+            <label for="form-widgets-list_of_objects-0">
               <span>my object widget</span>
               <span class="required">*</span>
             </label>
@@ -1792,22 +1792,22 @@ Simple but often used use-case is the display form:
             <div class="multi-widget-display">
               <div class="object-widget">
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-foofield">
+                      <label for="form-widgets-list_of_objects-0-widgets-foofield">
                   <span>My foo field</span>
                               <span class="required">*</span>
                       </label>
               </div>
               <div class="widget">
-                      <span id="form-widgets-listOfObject-0-widgets-foofield"
+                      <span id="form-widgets-list_of_objects-0-widgets-foofield"
         class="text-widget int-field">666</span>
               </div>
               <div class="label">
-                      <label for="form-widgets-listOfObject-0-widgets-barfield">
+                      <label for="form-widgets-list_of_objects-0-widgets-barfield">
                   <span>My dear bar</span>
                       </label>
               </div>
               <div class="widget">
-                      <span id="form-widgets-listOfObject-0-widgets-barfield"
+                      <span id="form-widgets-list_of_objects-0-widgets-barfield"
         class="text-widget int-field">999</span>
               </div>
   </div>

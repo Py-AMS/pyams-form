@@ -41,10 +41,12 @@ from pyams_utils.registry import query_utility
 
 PLACEHOLDER = object()
 
+# pylint: disable=invalid-name
 StaticWidgetAttribute = StaticValueCreator(
     discriminators=('context', 'request', 'view', 'field', 'widget')
 )
 
+# pylint: disable=invalid-name
 ComputedWidgetAttribute = ComputedValueCreator(
     discriminators=('context', 'request', 'view', 'field', 'widget')
 )
@@ -139,6 +141,7 @@ class Widget(Location):
         # Step 1.4: Convert the value to one that the widget can understand
         if value not in (NO_VALUE, PLACEHOLDER):
             converter = IDataConverter(self)
+            # pylint: disable=assignment-from-no-return
             self.value = converter.to_widget_value(value)
         # Step 2: Update selected attributes
         for attr_name in self._adapter_value_attributes:
@@ -157,6 +160,7 @@ class Widget(Location):
     render = get_widget_template()
 
     def json_data(self):
+        """Get widget data in JSON format"""
         return {
             'mode': self.mode,
             'error': self.error.message if self.error else '',
@@ -213,6 +217,7 @@ class SequenceWidget(Widget):
 
     @property
     def display_value(self):
+        """Widget display value"""
         value = []
         for token in self.value:
             # Ignore no value entries. They are in the request only.
@@ -232,6 +237,7 @@ class SequenceWidget(Widget):
         return value
 
     def update_terms(self):
+        """Get terms from widget context"""
         if self.terms is None:
             registry = self.request.registry
             self.terms = registry.getMultiAdapter((self.context, self.request, self.form,
@@ -240,13 +246,13 @@ class SequenceWidget(Widget):
         return self.terms
 
     def update(self):
-        """See z3c.form.interfaces.IWidget."""
+        """See pyams_form.interfaces.widget.IWidget."""
         # Create terms first, since we need them for the generic update.
         self.update_terms()
         super(SequenceWidget, self).update()
 
     def extract(self, default=NO_VALUE):
-        """See pyams_form.interfaces.IWidget."""
+        """See pyams_form.interfaces.widget.IWidget."""
         params = self.request.params
         if (self.name not in params and self.name + '-empty-marker' in params):
             return ()
@@ -277,6 +283,7 @@ class SequenceWidget(Widget):
 
 @implementer(IMultiWidget)
 class MultiWidget(Widget):
+    # pylint: disable=too-many-instance-attributes
     """None Term based sequence widget base.
 
     The multi widget is used for ITuple, IList or IDict if no other widget is
@@ -317,14 +324,17 @@ class MultiWidget(Widget):
 
     @property
     def is_dict(self):
+        """Check field key type"""
         return getattr(self.field, 'key_type', None) is not None
 
     @property
     def counter_name(self):
+        """Counter name getter"""
         return '%s.count' % self.name
 
     @property
     def counter_marker(self):
+        """Counter HTML marker getter"""
         # this get called in render from the template and contains always the
         # right amount of widgets we use.
         return '<input type="hidden" name="%s" value="%d" />' % (
@@ -332,11 +342,12 @@ class MultiWidget(Widget):
 
     @property
     def mode(self):
-        """This sets the subwidgets modes."""
+        """This gets the subwidgets mode."""
         return self._mode
 
     @mode.setter
     def mode(self, mode):
+        """Subwidgets mode setter"""
         self._mode = mode
         # ensure that we apply the new mode to the widgets
         for w in self.widgets:
@@ -360,9 +371,10 @@ class MultiWidget(Widget):
         return widget
 
     def set_name(self, widget, idx, prefix=None):
+        """Set widget name based on index position"""
         names = lambda id: [str(n) for n in [id] + [prefix, idx] if n is not None]
         widget.name = '.'.join([str(self.name)] + names(None))
-        widget.id = '-'.join([str(self.id)] + names(None))
+        widget.id = '-'.join([str(self.id)] + names(None))  # pylint: disable=no-member
 
     def append_adding_widget(self):
         """Simply append a new empty widget with correct (counter) name."""
@@ -405,12 +417,14 @@ class MultiWidget(Widget):
             try:
                 # convert widget value to field value
                 converter = IDataConverter(widget)
+                # pylint: disable=assignment-from-no-return
                 fvalue = converter.to_field_value(value)
                 # validate field value
                 registry.getMultiAdapter((self.context, self.request, self.form,
                                           getattr(widget, 'field', None), widget),
                                          IValidator).validate(fvalue)
                 # convert field value to widget value
+                # pylint: disable=assignment-from-no-return
                 widget.value = converter.to_widget_value(fvalue)
             except (ValidationError, ValueError) as error:
                 # on exception, setup the widget error message
@@ -422,7 +436,7 @@ class MultiWidget(Widget):
                 # set the wrong value as value
                 widget.value = value
 
-    def update_widgets(self):
+    def update_widgets(self):  # pylint: disable=too-many-branches
         """Setup internal widgets based on the value_type for each value item.
         """
         old_len = len(self.widgets)
@@ -444,7 +458,7 @@ class MultiWidget(Widget):
                 #      also, newly added item should be the last...
                 try:
                     items = sorted_none(self.value)
-                except:
+                except:  # pylint: disable=bare-except
                     # just in case it's impossible to sort don't fail
                     items = self.value
             else:
@@ -477,7 +491,7 @@ class MultiWidget(Widget):
         missing = old_len - len(self.widgets)
         if missing > 0:
             # add previous existing new added widgtes
-            for i in range(missing):
+            for _i in range(missing):
                 widget = self.get_widget(idx)
                 self.widgets.append(widget)
                 if self.is_dict:

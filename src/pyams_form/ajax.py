@@ -17,33 +17,29 @@ forms are submitted using an XMLHTTPRequest and where response is made of
 JSON messages.
 """
 
-import json
 import logging
 
 import venusian
 from pyramid.config import ConfigurationError
 from pyramid.events import subscriber
 from pyramid.interfaces import IRequest
-from zope.interface import Interface, classImplements, implementer, alsoProvides
-from zope.schema.fieldproperty import FieldProperty
+from zope.interface import Interface, alsoProvides, implementer
 
 from pyams_form.events import FormCreatedEvent
-from pyams_form.form import EditForm
 from pyams_form.interfaces import DISPLAY_MODE
 from pyams_form.interfaces.error import IAJAXErrorsRenderer, IErrorViewSnippet, IMultipleErrors
-from pyams_form.interfaces.form import IAJAXForm, IAJAXFormRenderer, IAddForm, IEditForm, IForm, \
+from pyams_form.interfaces.form import IAJAXForm, IAJAXFormRenderer, IAddForm, IForm, \
     IFormCreatedEvent
 from pyams_layer.interfaces import IFormLayer
 from pyams_pagelet.interfaces import IPagelet
 from pyams_pagelet.pagelet import Pagelet
 from pyams_utils.adapter import adapter_config
 from pyams_utils.list import boolean_iter
-from pyams_utils.url import absolute_url
 
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 LOGGER = logging.getLogger('PyAMS (form)')
 
@@ -57,20 +53,26 @@ class AJAXForm:
     """
 
     def __call__(self):
-        registry = self.request.registry
+        registry = self.request.registry  # pylint: disable=no-member
         registry.notify(FormCreatedEvent(self))
-        self.update()
-        has_errors, errors = boolean_iter(self.get_errors())
+        self.update()  # pylint: disable=no-member
+        has_errors, errors = boolean_iter(self.get_errors())  # pylint: disable=no-member
         if has_errors:
             return self.get_ajax_errors(errors)
-        return self.get_ajax_output(self._finished_obj)
+        return self.get_ajax_output(self._finished_obj)  # pylint: disable=no-member
 
     def get_ajax_errors(self, errors):
-        """Get AJAX status"""
-        registry = self.request.registry
-        renderer = registry.getMultiAdapter((self.context, self.request, self),
+        """Get AJAX errors"""
+        request = self.request  # pylint: disable=no-member
+        registry = request.registry
+        # pylint: disable=no-member
+        renderer = registry.getMultiAdapter((self.context, request, self),
                                             IAJAXErrorsRenderer)
         return renderer.render(errors)
+
+    def get_ajax_output(self, changes):
+        """Get AJAX status and changes output in JSON"""
+        raise NotImplementedError
 
 
 @subscriber(IFormCreatedEvent, context_selector=IAJAXForm)
@@ -83,14 +85,14 @@ def handle_new_ajax_form(event):
 
 
 class AJAXAddForm(AJAXForm):
-    """AJAX add form"""
+    """AJAX add form mix-in class"""
 
     no_changes_message = _("No data was created.")
 
     def get_ajax_output(self, changes):
-        """Get AJAX POST output in JSON"""
-        request = self.request
+        request = self.request  # pylint: disable=no-member
         registry = request.registry
+        # pylint: disable=no-member
         renderer = registry.queryMultiAdapter((self.context, request, self),
                                               IAJAXFormRenderer)
         if renderer is not None:
@@ -104,18 +106,18 @@ class AJAXAddForm(AJAXForm):
             }
         return {
             'status': 'reload',
-            'location': self.next_url()
+            'location': self.next_url()  # pylint: disable=no-member
         }
 
 
 class AJAXEditForm(AJAXForm):
-    """AJAX edit form"""
+    """AJAX edit form mix-in class"""
 
     def get_ajax_output(self, changes):
-        """Get AJAX edit form POST output in JSON"""
-        request = self.request
+        request = self.request  # pylint: disable=no-member
         registry = request.registry
         translate = request.localizer.translate
+        # pylint: disable=no-member
         renderer = registry.queryMultiAdapter((self.context, request, self),
                                               IAJAXFormRenderer)
         result = {}
@@ -150,6 +152,7 @@ class AJAXFormRenderer:
         self.form = form
 
     def render(self, changes):
+        """Render form status and changes in JSON format"""
         registry = self.request.registry
         result = {}
         for form in self.form.get_forms(include_self=False):
@@ -220,7 +223,7 @@ class AJAXErrorRenderer:
         return result
 
 
-class ajax_form_config:
+class ajax_form_config:  # pylint: disable=invalid-name
     """Class decorator for form configuration with AJAX support
 
     When decorating a form class, this decorator create two new classes:
@@ -254,7 +257,7 @@ class ajax_form_config:
 
     venusian = venusian
 
-    def __init__(self, **settings):
+    def __init__(self, **settings):  # pylint: disable=too-many-branches
         if 'name' not in settings:
             raise ConfigurationError("Missing 'name' argument for form definition")
         if 'for_' in settings:
@@ -324,7 +327,7 @@ class ajax_form_config:
                 ajax_cdict['permission'] = permission
             base = ajax_settings.get('base')
             if base is None:
-                if IAddForm.implementedBy(obj):
+                if IAddForm.implementedBy(obj):  # pylint: disable=no-value-for-parameter
                     base = AJAXAddForm
                 else:
                     base = AJAXEditForm

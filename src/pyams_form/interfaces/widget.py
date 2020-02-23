@@ -20,7 +20,7 @@ from zope.interface import Attribute, Interface
 from zope.location import ILocation
 from zope.schema import ASCIILine, Bool, Field, Object, Text, TextLine, Tuple
 
-from pyams_form.interfaces import IManager, INPUT_MODE, ITerms, DISPLAY_MODE, HIDDEN_MODE
+from pyams_form.interfaces import DISPLAY_MODE, HIDDEN_MODE, IManager, INPUT_MODE, ITerms
 from pyams_form.template import widget_layout_config, widget_template_config
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.interfaces.form import NO_VALUE
@@ -28,7 +28,7 @@ from pyams_utils.interfaces.form import NO_VALUE
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 class IFieldWidget(Interface):
@@ -145,7 +145,7 @@ class IWidget(ILocation):
     def json_data(self):
         """Returns a dictionary for the widget"""
 
-    def __call__(self):
+    def __call__(self):  # pylint: disable=signature-differs
         """Render a layout template which is calling widget/render"""
 
 

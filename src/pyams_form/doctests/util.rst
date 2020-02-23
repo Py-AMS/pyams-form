@@ -46,7 +46,7 @@ The function can also handle non-ASCII characters:
 Since the output depends on how Python is compiled (UCS-2 or 4), we only check
 that we have a valid id:
 
-  >>> util._identifier.match(id) is not None
+  >>> util._IDENTIFIER.match(id) is not None
   True
 
 
@@ -61,7 +61,7 @@ All other characters will be converted to ordinal numbers:
   >>> util.create_css_id('NormalId')
   'NormalId'
   >>> id = util.create_css_id('عَرَ')
-  >>> util._identifier.match(id) is not None
+  >>> util._IDENTIFIER.match(id) is not None
   True
   >>> util.create_css_id('This has spaces')
   'This20has20spaces'

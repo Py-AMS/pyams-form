@@ -10,24 +10,28 @@
 # FOR A PARTICULAR PURPOSE.
 #
 
-"""PyAMS_*** module
+"""PyAMS_form.browser.interfaces module
 
+Common browser-related interfaces definition.
 """
 
 from zope.interface import Interface
-from zope.schema import TextLine, ASCIILine, Choice, Int
+from zope.schema import ASCIILine, Choice, Int, TextLine
 
 
 __docformat__ = 'restructuredtext'
 
 
 class IWidgetLayoutSupport(Interface):
+    """Widget with layout support interface"""
+
     css = TextLine(title='Widget layout CSS class name(s)',
                    description='This attribute defines one or more layout class names.',
                    default='row',
                    required=False)
 
-    def get_css_class(klass=None, error=None, required=None,
+    # pylint: disable=too-many-arguments
+    def get_css_class(self, klass=None, error=None, required=None,
                       class_pattern='%(class)s', error_pattern='%(class)s-error',
                       required_pattern='%(class)s-required'):
         """Setup given css class (klass) with error and required postfix
@@ -46,6 +50,7 @@ class IWidgetLayoutSupport(Interface):
 class IHTMLCoreAttributes(Interface):
     """The HTML element 'core' attributes."""
 
+    # pylint: disable=invalid-name
     id = ASCIILine(title='Id',
                    description=('This attribute assigns a name to an element. This '
                                 'name must be unique in a document.'),

@@ -10,9 +10,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 
-"""PyAMS_form.browser.text module
+"""PyAMS_form.browser.textlines module
 
-This module provides default text widget.
+This module provides default textlines widget.
 """
 
 from zope.interface import implementer, implementer_only
@@ -31,12 +31,13 @@ class TextLinesWidget(TextAreaWidget):
 
 
 @implementer(IFieldWidget)
-def TextLinesFieldWidget(field, request):
+def TextLinesFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for TextLinesWidget."""
     return FieldWidget(field, TextLinesWidget(request))
 
 
 @implementer(IFieldWidget)
 def TextLinesFieldWidgetFactory(field, value_type, request):
+    # pylint: disable=invalid-name,unused-argument
     """IFieldWidget factory for TextLinesWidget."""
     return TextLinesFieldWidget(field, request)

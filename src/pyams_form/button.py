@@ -43,12 +43,14 @@ from pyams_utils.adapter import adapter_config
 __docformat__ = 'restructuredtext'
 
 
+# pylint: disable=invalid-name
 StaticButtonActionAttribute = StaticValueCreator(
-    discriminators = ('form', 'request', 'content', 'button', 'manager')
+    discriminators=('form', 'request', 'content', 'button', 'manager')
 )
 
+# pylint: disable=invalid-name
 ComputedButtonActionAttribute = ComputedValueCreator(
-    discriminators = ('form', 'request', 'content', 'button', 'manager')
+    discriminators=('form', 'request', 'content', 'button', 'manager')
 )
 
 
@@ -84,7 +86,7 @@ class ImageButton(Button):
 
     image = FieldProperty(IImageButton['image'])
 
-    def __init__(self, image=None, *args, **kwargs):
+    def __init__(self, image, *args, **kwargs):
         self.image = image
         super(ImageButton, self).__init__(*args, **kwargs)
 
@@ -126,8 +128,8 @@ class Handlers:
         self._registry = AdapterRegistry()
         self._handlers = ()
 
-    def add_handler(self, button, handler):
-        """See interfaces.IButtonHandlers"""
+    def add_handler(self, button, handler):  # pylint: disable=redefined-outer-name
+        """See interfaces.button.IButtonHandlers"""
         # Create a specification for the button
         button_spec = get_specification(button)
         if isinstance(button_spec, class_types):
@@ -138,32 +140,35 @@ class Handlers:
         self._handlers += ((button, handler),)
 
     def get_handler(self, button):
-        """See interfaces.IButtonHandlers"""
+        """See interfaces.button.IButtonHandlers"""
         button_provided = providedBy(button)
+        # pylint: disable=no-member
         return self._registry.lookup1(button_provided, IButtonHandler)
 
     def copy(self):
-        """See interfaces.IButtonHandlers"""
+        """See interfaces.button.IButtonHandlers"""
         handlers = Handlers()
-        for button, handler in self._handlers:
+        for button, handler in self._handlers:  # pylint: disable=redefined-outer-name
             handlers.add_handler(button, handler)
         return handlers
 
     def __add__(self, other):
-        """See interfaces.IButtonHandlers"""
+        """See interfaces.button.IButtonHandlers"""
         if not isinstance(other, Handlers):
             raise NotImplementedError
         handlers = self.copy()
-        for button, handler in other._handlers:
+        for button, handler in other._handlers:  # pylint: disable=redefined-outer-name
             handlers.add_handler(button, handler)
         return handlers
 
     def __repr__(self):
-        return '<Handlers %r>' %[handler for button, handler in self._handlers]
+        # pylint: disable=redefined-outer-name
+        return '<Handlers %r>' % [handler for button, handler in self._handlers]
 
 
 @implementer(IButtonHandler)
 class Handler:
+    """Button handler class"""
 
     def __init__(self, button, func):
         self.button = button
@@ -180,8 +185,8 @@ def handler(button):
     """A decorator for defining a success handler."""
 
     def create_handler(func):
-        handler = Handler(button, func)
-        frame = sys._getframe(1)
+        handler = Handler(button, func)  # pylint: disable=redefined-outer-name
+        frame = sys._getframe(1)  # pylint: disable=protected-access
         f_locals = frame.f_locals
         handlers = f_locals.setdefault('handlers', Handlers())
         handlers.add_handler(button, handler)
@@ -191,7 +196,7 @@ def handler(button):
 
 
 def button_and_handler(title, **kwargs):
-    """Button with handler"""
+    """Button with handler method decorator"""
     # Add the title to button constructor keyword arguments
     kwargs['title'] = title
     # Extract directly provided interfaces:
@@ -199,7 +204,7 @@ def button_and_handler(title, **kwargs):
     # Create button and add it to the button manager
     button = Button(**kwargs)
     alsoProvides(button, provides)
-    frame = sys._getframe(1)
+    frame = sys._getframe(1)  # pylint: disable=protected-access
     f_locals = frame.f_locals
     f_locals.setdefault('buttons', Buttons())
     f_locals['buttons'] += Buttons(button)
@@ -219,14 +224,17 @@ class ButtonAction(Action, SubmitWidget, Location):
 
     @property
     def access_key(self):
+        """Button access key"""
         return self.field.access_key
 
     @property
     def value(self):
+        """Button value"""
         return self.title
 
     @property
     def id(self):
+        """Button ID"""
         return self.name.replace('.', '-')
 
 
@@ -235,13 +243,14 @@ class ButtonAction(Action, SubmitWidget, Location):
 class ImageButtonAction(ImageWidget, ButtonAction):
     """Image button action"""
 
-    def __init__(self, request, field):
-        Action.__init__(self, request, field.title)
-        SubmitWidget.__init__(self, request)
+    def __init__(self, request, field):  # pylint: disable=super-init-not-called
+        Action.__init__(self, request, field.title)  # pylint: disable=non-parent-init-called
+        SubmitWidget.__init__(self, request)  # pylint: disable=non-parent-init-called
         self.field = field
 
     @property
     def src(self):
+        """Image source"""
         return to_unicode(self.field.image)
 
     def is_executed(self):
@@ -251,9 +260,10 @@ class ImageButtonAction(ImageWidget, ButtonAction):
 @adapter_config(required=(IButtonForm, Interface, Interface),
                 provides=IActions)
 class ButtonActions(Actions):
+    """Button actions manager"""
 
     def update(self):
-        """See z3c.form.interfaces.IActions."""
+        """See pyams_form.interfaces.button.IActions."""
         # Create a unique prefix.
         prefix = expand_prefix(self.form.prefix)
         prefix += expand_prefix(self.form.buttons.prefix)
@@ -305,10 +315,12 @@ class ButtonActions(Actions):
 @adapter_config(required=(IHandlerForm, Interface, Interface, ButtonAction),
                 provides=IActionHandler)
 class ButtonActionHandler(ActionHandlerBase):
+    """Button action handler"""
 
     def __call__(self):
+        # pylint: disable=redefined-outer-name
         handler = self.form.handlers.get_handler(self.action.field)
         # If no handler is found, then that's okay too.
         if handler is None:
-            return
+            return None
         return handler(self.form, self.action)

@@ -21,7 +21,7 @@ from zope.schema.fieldproperty import FieldProperty
 from pyams_form.browser.button import ButtonWidget
 from pyams_form.browser.interfaces import IHTMLImageWidget
 from pyams_form.interfaces.button import IImageButton
-from pyams_form.interfaces.widget import IImageWidget, IFieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, IImageWidget
 from pyams_form.util import to_unicode
 from pyams_form.widget import FieldWidget
 from pyams_layer.interfaces import IFormLayer
@@ -60,7 +60,7 @@ class ImageWidget(ButtonWidget):
 
 
 @adapter_config(required=(IImageButton, IFormLayer), provides=IFieldWidget)
-def ImageFieldWidget(field, request):
+def ImageFieldWidget(field, request):  # pylint: disable=invalid-name
     """Form image button widget factory adapter"""
     image = FieldWidget(field, ImageWidget(request))
     image.value = field.title

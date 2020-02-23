@@ -27,6 +27,7 @@ __docformat__ = 'restructuredtext'
 
 @implementer(IActionEvent)
 class ActionEvent:
+    """Base action event class"""
 
     def __init__(self, action):
         self.action = action
@@ -63,6 +64,7 @@ class Action:
         self.name = name
 
     def is_executed(self):
+        """Check if action was executed by looking for action name into request params"""
         return self.name in self.request.params
 
     def __repr__(self):
@@ -83,15 +85,15 @@ class Actions(Manager):
 
     @property
     def executed_actions(self):
+        """Get list of executed actions"""
         return [action for action in self.values()
                 if action.is_executed()]
 
     def update(self):
-        """See z3c.form.interfaces.IActions."""
-        pass
+        """See pyams_form.interfaces.button.IActions."""
 
     def execute(self):
-        """See z3c.form.interfaces.IActions."""
+        """See pyams_form.interfaces.button.IActions."""
         registry = self.request.registry
         for action in self.executed_actions:
             handler = registry.queryMultiAdapter((self.form, self.request, self.content, action),
@@ -104,6 +106,7 @@ class Actions(Manager):
                 else:
                     registry.notify(ActionSuccessful(action))
                     return result
+        return None
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.__name__)

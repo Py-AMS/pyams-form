@@ -12,6 +12,7 @@
 
 """PyAMS_form.datamanager module
 
+This module provides base data manager classes.
 """
 
 from zope.interface import implementer, Interface
@@ -28,7 +29,7 @@ from pyams_utils.interfaces.form import IDataManager, NO_VALUE
 __docformat__ = 'restructuredtext'
 
 
-_marker = []
+_MARKER = []
 
 
 ALLOWED_DATA_CLASSES = [dict]
@@ -56,6 +57,7 @@ class AttributeField(DataManager):
 
     @property
     def adapted_context(self):
+        """Data manager adapted context getter"""
         # get the right adapter or context
         context = self.context
         # NOTE: zope.schema fields defined in inherited interfaces will point
@@ -77,7 +79,7 @@ class AttributeField(DataManager):
         """See pyams_utils.interfaces.form.IDataManager"""
         try:
             return self.get()
-        except ForbiddenAttribute as e:
+        except ForbiddenAttribute as e:  # pylint: disable=invalid-name
             raise e
         except AttributeError:
             return default
@@ -123,33 +125,35 @@ class DictionaryField(DataManager):
 
     def __init__(self, data, field):
         if (not isinstance(data, self._allowed_data_classes) and
-            not IMapping.providedBy(data)):
+                not IMapping.providedBy(data)):
             raise ValueError("Data are not a dictionary: %s" % type(data))
         self.data = data
         self.field = field
 
     def get(self):
-        """See z3c.form.interfaces.IDataManager"""
-        value = self.data.get(self.field.__name__, _marker)
-        if value is _marker:
+        """See pyams_utils.interfaces.form.IDataManager"""
+        value = self.data.get(self.field.__name__, _MARKER)
+        if value is _MARKER:
             raise AttributeError
         return value
 
     def query(self, default=NO_VALUE):
-        """See z3c.form.interfaces.IDataManager"""
+        """See pyams_utils.interfaces.form.IDataManager"""
         return self.data.get(self.field.__name__, default)
 
     def set(self, value):
-        """See z3c.form.interfaces.IDataManager"""
+        """See pyams_utils.interfaces.form.IDataManager"""
         if self.field.readonly:
             raise TypeError("Can't set values on read-only fields name=%s"
                             % self.field.__name__)
         self.data[self.field.__name__] = value
 
-    def can_access(self):
+    @staticmethod
+    def can_access():
         """See pyams_utils.interfaces.form.IDataManager"""
         return True
 
-    def can_write(self):
+    @staticmethod
+    def can_write():
         """See pyams_utils.interfaces.form.IDataManager"""
         return True

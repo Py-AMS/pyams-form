@@ -42,7 +42,7 @@ class ButtonWidget(HTMLInputWidget, Widget):
 
 
 @adapter_config(required=(IButton, IFormLayer), provides=IFieldWidget)
-def ButtonFieldWidget(field, request):
+def ButtonFieldWidget(field, request):  # pylint: disable=invalid-name
     """Simple form button widget factory adapter"""
     button = FieldWidget(field, ButtonWidget(request))
     button.value = field.title

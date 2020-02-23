@@ -41,7 +41,7 @@ from pyams_utils.interfaces.form import NOT_CHANGED
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 @implementer(IDataConverter)
@@ -109,7 +109,7 @@ class FieldDataConverter(BaseDataConverter):
 
 
 @adapter_config(required=IFieldWidget, provides=IDataConverter)
-def FieldWidgetDataConverter(widget):
+def FieldWidgetDataConverter(widget):  # pylint: disable=invalid-name
     """Provide a data converter based on a field widget."""
     return widget.request.registry.queryMultiAdapter((widget.field, widget), IDataConverter)
 
@@ -232,6 +232,7 @@ class TimedeltaDataConverter(FieldDataConverter):
     """A special data converter for timedeltas."""
 
     def __init__(self, field, widget):
+        # pylint: disable=super-init-not-called
         self.field = field
         self.widget = widget
 
@@ -240,7 +241,7 @@ class TimedeltaDataConverter(FieldDataConverter):
         if value == '':
             return self.field.missing_value
         try:
-            days_string, crap, time_string = value.split(' ')
+            days_string, crap, time_string = value.split(' ')  # pylint: disable=unused-variable
         except ValueError:
             time_string = value
             days = 0
@@ -286,7 +287,7 @@ class FileUploadDataConverter(BaseDataConverter):
                 else:
                     seek = value.seek
                     read = value.read
-            except AttributeError as e:
+            except AttributeError as e:  # pylint: disable=invalid-name
                 raise ValueError(_('Bytes data are not a file object'), e)
             else:
                 seek(0)
@@ -318,7 +319,7 @@ class SequenceDataConverter(BaseDataConverter):
     def to_field_value(self, value):
         """See interfaces.IDataConverter"""
         widget = self.widget
-        if not len(value) or value[0] == widget.no_value_token:
+        if (len(value) == 0) or (value[0] == widget.no_value_token):
             return self.field.missing_value
         widget.update_terms()
         return widget.terms.getValue(value[0])
@@ -349,7 +350,7 @@ class CollectionSequenceDataConverter(BaseDataConverter):
         widget = self.widget
         if widget.terms is None:
             widget.update_terms()
-        collection_type = self.field._type
+        collection_type = self.field._type  # pylint: disable=protected-access
         if isinstance(collection_type, tuple):
             collection_type = collection_type[-1]
         return collection_type([widget.terms.getValue(token) for token in value])
@@ -368,12 +369,12 @@ class TextLinesConverter(BaseDataConverter):
 
     def to_field_value(self, value):
         """See interfaces.IDataConverter"""
-        collection_type = self.field._type
+        collection_type = self.field._type  # pylint: disable=protected-access
         if isinstance(collection_type, tuple):
             collection_type = collection_type[-1]
-        if not len(value):
+        if len(value) == 0:
             return self.field.missing_value
-        value_type = self.field.value_type._type
+        value_type = self.field.value_type._type  # pylint: disable=protected-access
         if isinstance(value_type, tuple):
             value_type = value_type[0]
         # having a blank line at the end matters, one might want to have a blank
@@ -381,11 +382,11 @@ class TextLinesConverter(BaseDataConverter):
         # splitlines ate that, so need to use split now
         value = value.replace('\r\n', '\n')
         items = []
-        for v in value.split('\n'):
+        for val in value.split('\n'):
             try:
-                items.append(value_type(v))
+                items.append(value_type(val))
             except ValueError as err:
-                raise FormatterValidationError(str(err), v)
+                raise FormatterValidationError(str(err), val)
         return collection_type(items)
 
 
@@ -404,14 +405,14 @@ class MultiConverter(BaseDataConverter):
 
     def to_field_value(self, value):
         """Just dispatch it."""
-        if not len(value):
+        if len(value) == 0:
             return self.field.missing_value
 
         converter = self._get_converter(self.field.value_type)
         values = [converter.to_field_value(v) for v in value]
 
         # convert the field values to a tuple or list
-        collection_type = self.field._type
+        collection_type = self.field._type  # pylint: disable=protected-access
         return collection_type(values)
 
 
@@ -423,23 +424,22 @@ class DictMultiConverter(BaseDataConverter):
         """Just dispatch it."""
         if value is self.field.missing_value:
             return []
-        converter = self._get_converter(self.field.value_type)
-        key_converter = self._get_converter(self.field.key_type)
 
+        key_converter = self._get_converter(self.field.key_type)
+        converter = self._get_converter(self.field.value_type)
         # we always return a list of values for the widget
         return [(key_converter.to_widget_value(k), converter.to_widget_value(v))
                 for k, v in value.items()]
 
     def to_field_value(self, value):
         """Just dispatch it."""
-        if not len(value):
+        if len(value) == 0:
             return self.field.missing_value
 
-        converter = self._get_converter(self.field.value_type)
         key_converter = self._get_converter(self.field.key_type)
-
-        return dict([(key_converter.to_field_value(k), converter.to_field_value(v))
-                     for k, v in value])
+        converter = self._get_converter(self.field.value_type)
+        return {key_converter.to_field_value(k): converter.to_field_value(v)
+                for k, v in value}
 
 
 @adapter_config(required=(IBool, ISingleCheckBoxWidget), provides=IDataConverter)

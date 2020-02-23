@@ -83,7 +83,7 @@ class IData(Interface):
     provided by instances.
     """
 
-    def __init__(self, schema, data, context):
+    def __init__(self, schema, data, context):  # pylint: disable=super-init-not-called
         """The data proxy is instantiated using the schema it represents, the
         data fulfilling the schema and the context in which the data are
         validated.
@@ -174,7 +174,7 @@ class IField(Interface):
 class IFields(ISelectionManager):
     """IField manager."""
 
-    def select(self, prefix=None, interface=None, *names):
+    def select(self, *names, prefix=None, interface=None):  # pylint: disable=arguments-differ
         """Return a modified instance with an ordered subset of items.
 
         This extension to the ``ISelectionManager`` allows for handling cases
@@ -182,7 +182,7 @@ class IFields(ISelectionManager):
         specification.
         """
 
-    def omit(self, prefix=None, interface=None, *names):
+    def omit(self, *names, prefix=None, interface=None):  # pylint: disable=arguments-differ
         """Return a modified instance omitting given items.
 
         This extension to the ``ISelectionManager`` allows for handling cases
@@ -228,7 +228,7 @@ class IDataConverter(Interface):
 class IValue(Interface):
     """A value"""
 
-    def get(self):
+    def get(self):  # pylint: disable=arguments-differ
         """Returns the value."""
 
 
@@ -243,13 +243,13 @@ class IVocabularyTerms(Interface):
     easilly!
     """
 
-    def getTerm(self, value):
+    def getTerm(self, value):  # pylint: disable=invalid-name
         """Return an ITitledTokenizedTerm object for the given value
 
         LookupError is raised if the value isn't in the source
         """
 
-    def getValue(self, token):
+    def getValue(self, token):  # pylint: disable=invalid-name
         """Return a value for a given identifier token
 
         LookupError is raised if there isn't a value in the source.
@@ -265,7 +265,7 @@ class ITerms(IVocabularyTerms):
     field = Field()
     widget = Field()
 
-    def getTermByToken(self, token):
+    def getTermByToken(self, token):  # pylint: disable=invalid-name
         """Return an ITokenizedTerm for the passed-in token.
 
         If `token` is not represented in the vocabulary, `LookupError`
@@ -300,12 +300,12 @@ class IBoolTerms(ITerms):
 
 class IObjectFactory(Interface):
     """Factory that will instantiate our objects for ObjectWidget.
-    
+
     It could also pre-populate properties as it gets the values extracted
     from the form passed in ``value``.
     """
 
-    def __call__(self, value):
+    def __call__(self, value):  # pylint: disable=signature-differs
         """Return a default object created to be populated.
         """
 
@@ -317,7 +317,7 @@ class IObjectFactory(Interface):
 class ISubformFactory(Interface):
     """Factory that will instantiate our subforms for ObjectWidget"""
 
-    def __call__(self):
+    def __call__(self):  # pylint: disable=signature-differs
         """Return a default object created to be populated"""
 
 

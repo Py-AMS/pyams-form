@@ -27,7 +27,7 @@ from pyams_form.interfaces.form import IHandlerForm, IInnerForm, ISubForm
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 @implementer(ISubForm, IInnerForm)
@@ -35,8 +35,7 @@ class BaseInnerForm(BaseForm):
     """Base inner subform"""
 
     def __init__(self, context, request, parent_form):
-        self.context = context
-        self.request = request
+        super(BaseInnerForm, self).__init__(context, request)
         self.parent_form = self.__parent__ = parent_form
 
 
@@ -58,18 +57,19 @@ class InnerDisplayForm(BaseInnerForm):
 
 @implementer(ISubForm, IHandlerForm)
 class EditSubForm(BaseForm):
+    """Edit sub-form"""
 
     form_errors_message = _('There were some errors.')
     success_message = _('Data successfully updated.')
     no_changes_message = _('No changes were applied.')
 
     def __init__(self, context, request, parent_form):
-        self.context = context
-        self.request = request
+        super(EditSubForm, self).__init__(context, request)
         self.parent_form = self.__parent__ = parent_form
 
     @handler(EditForm.buttons['apply'])
-    def handle_apply(self, action):
+    def handle_apply(self, action):  # pylint: disable=unused-argument
+        """Handler for apply button"""
         data, errors = self.widgets.extract()
         if errors:
             self.status = self.form_errors_message

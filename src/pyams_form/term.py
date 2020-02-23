@@ -13,11 +13,13 @@
 """PyAMS_form.term module
 
 Terms management module.
+
+Note: This module doesn't use snake_case for compatibility purposes with zope.schema package,
+which implies many Pylint annotations...
 """
 
 from zope.interface import Interface
-from zope.schema.interfaces import IBaseVocabulary, IBool, IChoice, ICollection, IIterableSource, \
-    IVocabularyTokenized
+from zope.schema.interfaces import IBaseVocabulary, IBool, IChoice, ICollection, IIterableSource
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from pyams_form.interfaces import IBoolTerms, ITerms, IVocabularyTerms
@@ -31,19 +33,24 @@ from pyams_utils.interfaces.form import IDataManager
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 class Terms:
     """Base implementation for custom ITerms."""
 
-    def getTerm(self, value):
+    terms = None
+
+    def getTerm(self, value):  # pylint: disable=invalid-name
+        """Get term matching given value"""
         return self.terms.getTerm(value)
 
-    def getTermByToken(self, token):
+    def getTermByToken(self, token):  # pylint: disable=invalid-name
+        """Get term matching given token"""
         return self.terms.getTermByToken(token)
 
-    def getValue(self, token):
+    def getValue(self, token):  # pylint: disable=invalid-name
+        """Get value matching given token"""
         return self.getTermByToken(token).value
 
     def __iter__(self):
@@ -60,6 +67,7 @@ class SourceTerms(Terms):
     """Base implementation for ITerms using a source instead of a vocabulary."""
 
     def __init__(self, context, request, form, field, source, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.form = form
@@ -102,7 +110,8 @@ class SourceTerms(Terms):
 
 @adapter_config(required=(Interface, IFormLayer, Interface, IChoice, IWidget),
                 provides=ITerms)
-def ChoiceTerms(context, request, form, field, widget):
+def ChoiceTerms(context, request, form, field, widget):  # pylint: disable=invalid-name
+    """Choice terms adapter"""
     if field.context is None:
         field = field.bind(context)
     terms = field.vocabulary
@@ -117,6 +126,7 @@ class ChoiceTermsVocabulary(Terms):
     vocabulary."""
 
     def __init__(self, context, request, form, field, vocabulary, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.form = form
@@ -125,7 +135,7 @@ class ChoiceTermsVocabulary(Terms):
         self.terms = vocabulary
 
 
-class MissingTermsBase:
+class MissingTermsBase:  # pylint: disable=no-member
     """Base class for MissingTermsMixin classes."""
 
     def _can_query_current_value(self):
@@ -135,7 +145,8 @@ class MissingTermsBase:
         return self.request.registry.getMultiAdapter((self.widget.context, self.field),
                                                      IDataManager).query()
 
-    def _make_token(self, value):
+    @staticmethod
+    def _make_token(value):
         """create a unique valid ASCII token"""
         return create_css_id(to_unicode(value))
 
@@ -150,7 +161,8 @@ class MissingTermsMixin(MissingTermsBase):
     """This can be used in case previous values/tokens get missing
     from the vocabulary and you still need to display/keep the values"""
 
-    def getTerm(self, value):
+    def getTerm(self, value):  # pylint: disable=invalid-name
+        """Get term martching given value"""
         try:
             return super(MissingTermsMixin, self).getTerm(value)
         except LookupError:
@@ -160,7 +172,8 @@ class MissingTermsMixin(MissingTermsBase):
                     return self._make_missing_term(value)
             raise
 
-    def getTermByToken(self, token):
+    def getTermByToken(self, token):  # pylint: disable=invalid-name
+        """Get term matching given token"""
         try:
             return super(MissingTermsMixin, self).getTermByToken(token)
         except LookupError:
@@ -205,6 +218,7 @@ class BoolTerms(Terms):
     false_label = _('no')
 
     def __init__(self, context, request, form, field, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.form = form
@@ -218,7 +232,8 @@ class BoolTerms(Terms):
 
 @adapter_config(required=(Interface, IFormLayer, Interface, ICollection, IWidget),
                 provides=ITerms)
-def CollectionTerms(context, request, form, field, widget):
+def CollectionTerms(context, request, form, field, widget):  # pylint: disable=invalid-name
+    """Collection terms adapter"""
     terms = field.value_type.bind(context).vocabulary
     return request.registry.queryMultiAdapter((context, request, form, field, terms, widget),
                                               ITerms)
@@ -231,6 +246,7 @@ class CollectionTermsVocabulary(Terms):
     vocabulary."""
 
     def __init__(self, context, request, form, field, vocabulary, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.form = form
@@ -242,7 +258,8 @@ class CollectionTermsVocabulary(Terms):
 class MissingCollectionTermsMixin(MissingTermsBase):
     """`MissingTermsMixin` adapted to collections."""
 
-    def getTerm(self, value):
+    def getTerm(self, value):  # pylint: disable=invalid-name
+        """Get term matching given value"""
         try:
             return super(MissingCollectionTermsMixin, self).getTerm(value)
         except LookupError:
@@ -251,7 +268,8 @@ class MissingCollectionTermsMixin(MissingTermsBase):
                     return self._make_missing_term(value)
             raise
 
-    def getTermByToken(self, token):
+    def getTermByToken(self, token):  # pylint: disable=invalid-name
+        """Get term matching given token"""
         try:
             return super(MissingCollectionTermsMixin, self).getTermByToken(token)
         except LookupError:
@@ -265,7 +283,8 @@ class MissingCollectionTermsMixin(MissingTermsBase):
                         return term
             raise
 
-    def getValue(self, token):
+    def getValue(self, token):  # pylint: disable=invalid-name
+        """Get value matching given token"""
         try:
             return super(MissingCollectionTermsMixin, self).getValue(token)
         except LookupError:

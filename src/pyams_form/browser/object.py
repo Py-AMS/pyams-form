@@ -20,7 +20,7 @@ from zope.schema.interfaces import IObject
 
 from pyams_form.browser.widget import HTMLFormElement
 from pyams_form.interfaces.widget import IFieldWidget, IObjectWidget
-from pyams_form.object import ObjectWidget
+from pyams_form.object import ObjectWidget as ObjectWidgetBase
 from pyams_form.widget import FieldWidget
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
@@ -30,7 +30,7 @@ __docformat__ = 'restructuredtext'
 
 
 @implementer(IObjectWidget)
-class ObjectWidget(HTMLFormElement, ObjectWidget):
+class ObjectWidget(HTMLFormElement, ObjectWidgetBase):
     """Object widget implementation"""
 
     klass = 'object-widget'
@@ -38,6 +38,6 @@ class ObjectWidget(HTMLFormElement, ObjectWidget):
 
 
 @adapter_config(required=(IObject, IFormLayer), provides=IFieldWidget)
-def ObjectFieldWidget(field, request):
+def ObjectFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for IObjectWidget."""
     return FieldWidget(field, ObjectWidget(request))

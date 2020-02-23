@@ -50,6 +50,6 @@ class TextAreaWidget(HTMLTextAreaWidget, Widget):
                 provides=IFieldWidget)
 @adapter_config(required=(IText, IFormLayer),
                 provides=IFieldWidget)
-def TextAreaFieldWidget(field, request):
+def TextAreaFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for TextWidget."""
     return FieldWidget(field, TextAreaWidget(request))

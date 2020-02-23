@@ -22,7 +22,6 @@ from persistent import IPersistent
 from pyramid.decorator import reify
 from pyramid.events import subscriber
 from pyramid.response import Response
-from pyramid_chameleon.interfaces import IChameleonTranslate
 from zope.interface import implementer
 from zope.lifecycleevent import Attributes, ObjectCreatedEvent, ObjectModifiedEvent
 from zope.location import locate
@@ -34,24 +33,22 @@ from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
 from pyams_form.interfaces.error import IErrorViewSnippet
-from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, IEditForm, \
-    IFieldsForm, IForm, IFormAware, IFormContextPermissionChecker, IGroup, IGroupManager, \
-    IHandlerForm, IInnerSubForm, IInnerTabForm, IInputForm
+from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, \
+    IEditForm, IFieldsForm, IForm, IFormAware, IFormContextPermissionChecker, IGroup, \
+    IGroupManager, IHandlerForm, IInnerSubForm, IInnerTabForm, IInputForm
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
-from pyams_template.interfaces import IContentTemplate, ILayoutTemplate
 from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import ContextRequestAdapter
 from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
-from pyams_utils.registry import query_utility
 from pyams_utils.url import absolute_url
 
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 REDIRECT_STATUS_CODES = (300, 301, 302, 303, 304, 305, 307)
@@ -82,16 +79,16 @@ def apply_changes(form, content, data):
             continue
         if changed_field(field.field, new_value, context=content):
             # Only update the data, if it is different
-            dm = registry.getMultiAdapter((content, field.field), IDataManager)
-            dm.set(new_value)
+            dman = registry.getMultiAdapter((content, field.field), IDataManager)
+            dman.set(new_value)
             # Record the change using information required later
-            changes.setdefault(dm.field.interface, []).append(name)
+            changes.setdefault(dman.field.interface, []).append(name)
     return changes
 
 
 def extends(*args, **kwargs):
     """Extend fields, buttons and handlers"""
-    frame = sys._getframe(1)
+    frame = sys._getframe(1)  # pylint: disable=protected-access
     f_locals = frame.f_locals
     if not kwargs.get('ignore_fields', False):
         f_locals['fields'] = Fields()
@@ -115,6 +112,7 @@ def merge_changes(source, changes):
 
 @subscriber(IActionErrorEvent)
 def handle_action_error(event):
+    """Action error subscriber"""
     # Only react to the event, if the form is a standard form.
     if not (IFormAware.providedBy(event.action) and
             IForm.providedBy(event.action.form)):
@@ -153,9 +151,10 @@ class BaseForm(ContextRequestAdapter):
 
     prefix = 'form.'
     status = ''
-    layout = get_layout_template()
-    template = get_content_template()
     widgets = None
+
+    template = get_content_template()
+    layout = get_layout_template()
 
     _mode = INPUT_MODE
     _edit_permission = None
@@ -167,8 +166,9 @@ class BaseForm(ContextRequestAdapter):
 
     @property
     def mode(self):
+        """Current mode getter"""
         mode = self._mode
-        if mode == DISPLAY_MODE:  # already updated mode
+        if mode == DISPLAY_MODE:  # already custom mode
             return mode
         permission = self.edit_permission
         if permission:
@@ -182,10 +182,12 @@ class BaseForm(ContextRequestAdapter):
 
     @mode.setter
     def mode(self, value):
+        """Form mode setter"""
         self._mode = value
 
     @property
     def edit_permission(self):
+        """Permission required to access form in input mode"""
         permission = self._edit_permission
         if permission is not None:  # locally defined edit permission
             return permission
@@ -200,15 +202,17 @@ class BaseForm(ContextRequestAdapter):
         return None
 
     def get_content(self):
-        """See interfaces.IForm"""
+        """See interfaces.form.IForm"""
         return self.context
 
     @property
     def required_info(self):
+        """Form required information label"""
         if (self.label_required is not None and
                 self.widgets is not None and
                 self.widgets.has_required_fields):
             return self.request.localizer.translate(self.label_required)
+        return None
 
     @reify
     def subforms(self):
@@ -221,6 +225,7 @@ class BaseForm(ContextRequestAdapter):
 
     @reify
     def tabforms(self):
+        """Get list of internal tab-forms"""
         registry = self.request.registry
         return sorted((adapter
                        for name, adapter in registry.getAdapters((self.context, self.request, self),
@@ -231,8 +236,9 @@ class BaseForm(ContextRequestAdapter):
         """Get all forms associated with this form"""
         if include_self:
             yield self
-        if IGroupManager.providedBy(self):
-            for group in self.groups:
+        manager = IGroupManager(self, None)
+        if manager is not None:
+            for group in manager.groups:
                 yield from group.get_forms()
         for form in self.subforms:
             yield from form.get_forms()
@@ -240,13 +246,13 @@ class BaseForm(ContextRequestAdapter):
             yield from form.get_forms()
 
     def update(self):
-        """See interfaces.IForm"""
+        """See interfaces.form.IForm"""
         self.update_widgets()
-        [subform.update() for subform in self.subforms]
-        [tabform.update() for tabform in self.tabforms]
+        [subform.update() for subform in self.subforms]  # pylint: disable=expression-not-assigned
+        [tabform.update() for tabform in self.tabforms]  # pylint: disable=expression-not-assigned
 
     def update_widgets(self, prefix=None):
-        """See interfaces.IForm"""
+        """See interfaces.form.IForm"""
         registry = self.request.registry
         self.widgets = registry.getMultiAdapter((self, self.request, self.get_content()),
                                                 IWidgets)
@@ -259,7 +265,7 @@ class BaseForm(ContextRequestAdapter):
         self.widgets.update()
 
     def extract_data(self, set_errors=True):
-        """See interfaces.IForm"""
+        """See interfaces.form.IForm"""
         self.widgets.set_errors = set_errors
         self.widgets.ignore_required_on_extract = self.ignore_required_on_extract
         data, errors = self.widgets.extract()
@@ -272,23 +278,8 @@ class BaseForm(ContextRequestAdapter):
             yield from form.widgets.errors
 
     def render(self):
-        """See interfaces.IForm"""
-        # render content template
-        request = self.request
-        cdict = {
-            'context': self.context,
-            'request': request,
-            'view': self,
-            'translate': query_utility(IChameleonTranslate)
-        }
-        if self.template is None:
-            registry = request.registry
-            template = registry.queryMultiAdapter((self.context, self.request, self),
-                                                  IContentTemplate)
-            if template is None:
-                template = registry.getMultiAdapter((self, self.request), IContentTemplate)
-            return template(**cdict)
-        return self.template(**cdict)
+        """See interfaces.form.IForm"""
+        return self.template()
 
     def __call__(self, **kwargs):
         self.update()
@@ -298,23 +289,10 @@ class BaseForm(ContextRequestAdapter):
         if request.response.status_code in REDIRECT_STATUS_CODES:
             return Response('')
 
-        cdict = {
-            'context': self.context,
-            'request': request,
-            'view': self,
-            'translate': query_utility(IChameleonTranslate)
-        }
-        cdict.update(kwargs)
-        if self.layout is None:
-            registry = request.registry
-            layout = registry.queryMultiAdapter((self.context, self.request, self),
-                                                ILayoutTemplate)
-            if layout is None:
-                layout = registry.getMultiAdapter((self, request), ILayoutTemplate)
-            return Response(layout(**cdict))
-        return Response(self.layout(**cdict))
+        return Response(self.layout(**kwargs))
 
     def json(self):
+        """Get form data in JSON format"""
         data = {
             'errors': [
                 error.message for error in
@@ -331,6 +309,7 @@ class BaseForm(ContextRequestAdapter):
 
 @implementer(IDisplayForm)
 class DisplayForm(BaseForm):
+    """Display only form"""
 
     _mode = DISPLAY_MODE
     ignore_request = True
@@ -372,10 +351,12 @@ class Form(BaseForm):
         return self.prefix.strip('.')
 
     @property
-    def id(self):
+    def id(self):  # pylint: disable=invalid-name
+        """Form ID"""
         return self.name.replace('.', '-')
 
     def update_actions(self):
+        """Update form actions"""
         registry = self.request.registry
         self.actions = registry.getMultiAdapter((self, self.request, self.get_content()), IActions)
         self.actions.update()
@@ -406,7 +387,8 @@ class AddForm(Form):
     _finished_add = False
 
     @button_and_handler(_('Add'), name='add')
-    def handle_add(self, action):
+    def handle_add(self, action):  # pylint: disable=unused-argument
+        """Handler for *add* button"""
         data, errors = {}, {}
         for form in self.get_forms():
             form_data, form_errors = form.extract_data()
@@ -425,6 +407,7 @@ class AddForm(Form):
             self._finished_add = True
 
     def create_and_add(self, data):
+        """Create new content and add it to context"""
         obj = self.create(data.get(self, {}))
         self.request.registry.notify(ObjectCreatedEvent(obj))
         if IPersistent.providedBy(obj):  # temporary locate to fix raising of INotYet exceptions
@@ -434,12 +417,15 @@ class AddForm(Form):
         return obj
 
     def create(self, data):
+        """Create new content from form data"""
         raise NotImplementedError
 
-    def add(self, object):
+    def add(self, object):  # pylint: disable=redefined-builtin
+        """Add new object to form context"""
         raise NotImplementedError
 
     def update_content(self, obj, data):
+        """Update content with form data after creation"""
         changes = {}
         for form in self.get_forms():
             if form.mode == DISPLAY_MODE:
@@ -448,6 +434,7 @@ class AddForm(Form):
         return changes
 
     def next_url(self):
+        """Redirection URL after object creation"""
         return self.action
 
     def render(self):
@@ -466,7 +453,7 @@ class EditForm(Form):
     no_changes_message = _('No changes were applied.')
 
     @button_and_handler(_('Apply'), name='apply')
-    def handle_apply(self, action):
+    def handle_apply(self, action):  # pylint: disable=unused-argument
         """Apply action handler"""
         data, errors = {}, {}
         for form in self.get_forms():

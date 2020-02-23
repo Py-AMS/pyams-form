@@ -41,18 +41,19 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
     notselected_items = ()
 
     def get_item(self, term, count=0):
-        id = '%s-%i' % (self.id, count)
+        """Get item matching given term"""
+        item_id = '%s-%i' % (self.id, count)
         content = term.value
         if ITitledTokenizedTerm.providedBy(term):
             content = self.request.localizer.translate(term.title)
         return {
-            'id': id,
+            'id': item_id,
             'value': term.token,
             'content': content
         }
 
     def update(self):
-        """See pyams_form.interfaces.IWidget."""
+        """See pyams_form.interfaces.widget.IWidget."""
         super(OrderedSelectWidget, self).update()
         add_field_class(self)
         self.items = [self.get_item(term, count)
@@ -64,6 +65,7 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
         self.notselected_items = self.deselect()
 
     def deselect(self):
+        """Get unselected items"""
         selected_items = []
         notselected_items = []
         for selected_item in self.selected_items:
@@ -74,6 +76,7 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
         return notselected_items
 
     def json_data(self):
+        """Get widget data in JSON format"""
         data = super(OrderedSelectWidget, self).json_data()
         data['type'] = 'multi_select'
         data['options'] = self.items
@@ -82,13 +85,13 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
         return data
 
 
-def OrderedSelectFieldWidget(field, request):
+def OrderedSelectFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for SelectWidget."""
     return FieldWidget(field, OrderedSelectWidget(request))
 
 
 @adapter_config(required=(ISequence, IFormLayer), provided=IFieldWidget)
-def SequenceSelectFieldWidget(field, request):
+def SequenceSelectFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for SelectWidget."""
     return request.registry.getMultiAdapter((field, field.value_type, request), IFieldWidget)
 
@@ -96,5 +99,6 @@ def SequenceSelectFieldWidget(field, request):
 @adapter_config(required=(IList, IChoice, IFormLayer), provided=IFieldWidget)
 @adapter_config(required=(ITuple, IChoice, IFormLayer), provided=IFieldWidget)
 def SequenceChoiceSelectFieldWidget(field, value_type, request):
+    # pylint: disable=invalid-name,unused-argument
     """IFieldWidget factory for SelectWidget."""
     return OrderedSelectFieldWidget(field, request)

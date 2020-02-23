@@ -225,6 +225,7 @@ class IInputForm(Interface):
                     description=_('The name of the form used to identify it.'),
                     required=False)
 
+    # pylint: disable=invalid-name
     id = TextLine(title=_('Id'),
                   description=_('The id of the form used to identify it.'),
                   required=False)

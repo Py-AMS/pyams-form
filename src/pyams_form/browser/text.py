@@ -16,11 +16,11 @@ This module provides default text widget.
 """
 
 from zope.interface import implementer_only
-from zope.schema.interfaces import IASCIILine, IBytesLine, IDate, IDatetime, IDecimal, IFloat, IId, \
-    IInt, ITextLine, ITime, ITimedelta, IURI
+from zope.schema.interfaces import IASCIILine, IBytesLine, IDate, IDatetime, IDecimal, IFloat, \
+    IId, IInt, ITextLine, ITime, ITimedelta, IURI
 
 from pyams_form.browser.widget import HTMLTextInputWidget, add_field_class
-from pyams_form.interfaces.widget import ITextWidget, IFieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, ITextWidget
 from pyams_form.widget import FieldWidget, Widget
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
@@ -66,6 +66,6 @@ class TextWidget(HTMLTextInputWidget, Widget):
                 provides=IFieldWidget)
 @adapter_config(required=(IURI, IFormLayer),
                 provides=IFieldWidget)
-def TextFieldWidget(field, request):
+def TextFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for TextWidget."""
     return FieldWidget(field, TextWidget(request))

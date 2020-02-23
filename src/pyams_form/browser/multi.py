@@ -24,14 +24,15 @@ from pyams_form.browser.widget import HTMLFormElement
 from pyams_form.button import Buttons, button_and_handler
 from pyams_form.interfaces.button import IActions
 from pyams_form.interfaces.form import IButtonForm, IHandlerForm
-from pyams_form.interfaces.widget import IMultiWidget, IFieldWidget
-from pyams_form.widget import MultiWidget, FieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, IMultiWidget
+from pyams_form.widget import FieldWidget, MultiWidget as MultiWidgetBase
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
 
+
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
 @implementer(IButtonForm, IHandlerForm)
@@ -40,7 +41,8 @@ class FormMixin:
 
 
 @implementer(IMultiWidget)
-class MultiWidget(HTMLFormElement, MultiWidget, FormMixin):
+class MultiWidget(HTMLFormElement, MultiWidgetBase, FormMixin):
+    # pylint: disable=function-redefined
     """Multi widget implementation."""
 
     buttons = Buttons()
@@ -54,7 +56,7 @@ class MultiWidget(HTMLFormElement, MultiWidget, FormMixin):
     show_label = True  # show labels for item subwidgets or not
 
     # Internal attributes
-    _adapter_value_attributes = MultiWidget._adapter_value_attributes + ('show_label',)
+    _adapter_value_attributes = MultiWidgetBase._adapter_value_attributes + ('show_label',)
 
     def update(self):
         """See pyams_form.interfaces.widget.IWidget."""
@@ -64,6 +66,7 @@ class MultiWidget(HTMLFormElement, MultiWidget, FormMixin):
         self.update_actions()  # Update again, as conditions may change
 
     def update_actions(self):
+        """Update widget actions"""
         self.update_allow_add_remove()
         if self.name is not None:
             self.prefix = self.name
@@ -73,19 +76,21 @@ class MultiWidget(HTMLFormElement, MultiWidget, FormMixin):
 
     @button_and_handler(_('Add'), name='add',
                         condition=attrgetter('allow_adding'))
-    def handle_add(self, action):
+    def handle_add(self, action):  # pylint: disable=unused-argument
+        """Add button handler"""
         self.append_adding_widget()
 
     @button_and_handler(_('Remove selected'), name='remove',
                         condition=attrgetter('allow_removing'))
-    def handle_remove(self, action):
+    def handle_remove(self, action):  # pylint: disable=unused-argument
+        """Remove button handler"""
         self.remove_widgets([widget.name for widget in self.widgets
                              if '{}.remove'.format(widget.name) in self.request.params])
 
 
 @adapter_config(required=(IDict, IFormLayer),
                 provided=IFieldWidget)
-def MultiFieldWidgetFactory(field, request):
+def MultiFieldWidgetFactory(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for MultiWidget."""
     return FieldWidget(field, MultiWidget(request))
 
@@ -96,6 +101,6 @@ def MultiFieldWidgetFactory(field, request):
                 provided=IFieldWidget)
 @adapter_config(required=(ITuple, IField, IFormLayer),
                 provided=IFieldWidget)
-def MultiFieldWidget(field, value_type, request):
+def MultiFieldWidget(field, value_type, request):  # pylint: disable=invalid-name,unused-argument
     """IFieldWidget factory for MultiWidget."""
     return MultiFieldWidgetFactory(field, request)

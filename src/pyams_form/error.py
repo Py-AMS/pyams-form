@@ -29,13 +29,15 @@ from pyams_utils.adapter import adapter_config
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
+# pylint: disable=invalid-name
 ErrorViewMessage = StaticValueCreator(
     discriminators=('error', 'request', 'widget', 'field', 'form', 'content')
 )
 
+# pylint: disable=invalid-name
 ComputedErrorViewMessage = ComputedValueCreator(
     discriminators=('error', 'request', 'widget', 'field', 'form', 'content')
 )
@@ -56,12 +58,13 @@ def ErrorViewDiscriminators(error_view, error=None, request=None, widget=None,
 @adapter_config(required=(ValidationError, None, None, None, None, None),
                 provides=IErrorViewSnippet)
 @implementer(IErrorViewSnippet)
-class ErrorViewSnippet:
+class ErrorViewSnippet:  # pylint: disable=too-many-instance-attributes
     """Base error view snippet."""
 
     message = None
 
     def __init__(self, error, request, widget, field, form, content):
+        # pylint: disable=too-many-arguments
         self.error = self.context = error
         self.request = request
         self.widget = widget
@@ -77,7 +80,7 @@ class ErrorViewSnippet:
         """Update snippet content"""
         registry = self.request.registry
         value = registry.queryMultiAdapter((self.context, self.request, self.widget,
-                                           self.field, self.form, self.content),
+                                            self.field, self.form, self.content),
                                            IValue, name='message')
         if value is not None:
             self.message = value.get()
@@ -114,7 +117,7 @@ class InvalidErrorViewSnippet(ErrorViewSnippet):
 class MultipleErrors(Exception):
     """An error that contains many errors"""
 
-    def __init__(self, errors):
+    def __init__(self, errors):  # pylint: disable=super-init-not-called
         self.errors = errors
 
 
@@ -127,4 +130,5 @@ class MultipleErrorViewSnippet(ErrorViewSnippet):
         pass
 
     def render(self):
+        """Render multiple errors"""
         return ''.join([view.render() for view in self.error.errors])

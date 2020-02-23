@@ -35,6 +35,7 @@ class FieldDescriptionAsHint:
     """Schema field description as widget's ```Title`` IValue adapter"""
 
     def __init__(self, context, request, form, field, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.form = form

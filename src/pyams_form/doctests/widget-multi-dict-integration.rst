@@ -28,7 +28,7 @@ Checking components on the highest possible level.
   >>> class EForm(form.EditForm):
   ...     form.extends(form.EditForm)
   ...     fields = field.Fields(
-  ...         testing.IMultiWidgetDictIntegration).omit('dictOfObject')
+  ...         testing.IMultiWidgetDictIntegration).omit('dict_of_objects')
 
 Our single content object:
 
@@ -80,24 +80,24 @@ All blank and empty values:
 Some valid default values
 #########################
 
-  >>> obj.dictOfInt = {-101: -100, -1:1, 101:100}
-  >>> obj.dictOfBool = {True: False, False: True}
-  >>> obj.dictOfChoice = {'key1': 'three', 'key3': 'two'}
-  >>> obj.dictOfTextLine = {'textkey1': 'some text one',
+  >>> obj.dict_of_int = {-101: -100, -1:1, 101:100}
+  >>> obj.dict_of_bool = {True: False, False: True}
+  >>> obj.dict_of_choice = {'key1': 'three', 'key3': 'two'}
+  >>> obj.dict_of_textline = {'textkey1': 'some text one',
   ...     'textkey2': 'some txt two'}
-  >>> obj.dictOfDate = {
+  >>> obj.dict_of_date = {
   ...     date(2011, 1, 15): date(2014, 6, 20),
   ...     date(2012, 2, 20): date(2013, 5, 19)}
 
   >>> from pprint import pprint
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
   >>> content = getForm(request)
 
@@ -179,16 +179,16 @@ Some valid default values
   [Remove selected]
   [Apply]
 
-dictOfInt
+dict_of_int
 #########
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfInt.key.2'] = 'foobar'
-  >>> submit['form.widgets.dictOfInt.2'] = 'foobar'
+  >>> submit['form.widgets.dict_of_int.key.2'] = 'foobar'
+  >>> submit['form.widgets.dict_of_int.2'] = 'foobar'
 
-  >>> submit['form.widgets.dictOfInt.buttons.add'] = 'Add'
+  >>> submit['form.widgets.dict_of_int.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -197,7 +197,7 @@ for "foobar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfInt"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_int"]'))
   DictOfInt label
   <BLANKLINE>
   Int key *
@@ -243,7 +243,7 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfInt"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_int"]//div[@class="error"]'))
   Required input is missing.
   Required input is missing.
   The entered value is not a valid integer literal.
@@ -252,13 +252,13 @@ Submit again with the empty field:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfInt.1.remove'] = '1'
-  >>> submit['form.widgets.dictOfInt.3.remove'] = '1'
-  >>> submit['form.widgets.dictOfInt.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_int.1.remove'] = '1'
+  >>> submit['form.widgets.dict_of_int.3.remove'] = '1'
+  >>> submit['form.widgets.dict_of_int.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfInt"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_int"]'))
   DictOfInt label
   <BLANKLINE>
   Int key *
@@ -284,28 +284,28 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 
-dictOfBool
+dict_of_bool
 ##########
 
 Add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfBool.buttons.add'] = 'Add'
+  >>> submit['form.widgets.dict_of_bool.buttons.add'] = 'Add'
   >>> request = testing.TestRequest(params=submit)
 
 Important is that we get a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfBool"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
   DictOfBool label
   <BLANKLINE>
   Bool key *
@@ -341,20 +341,20 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfBool"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_bool"]//div[@class="error"]'))
   Required input is missing.
   Required input is missing.
 
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfBool.1.remove'] = '1'
-  >>> submit['form.widgets.dictOfBool.2.remove'] = '1'
-  >>> submit['form.widgets.dictOfBool.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_bool.1.remove'] = '1'
+  >>> submit['form.widgets.dict_of_bool.2.remove'] = '1'
+  >>> submit['form.widgets.dict_of_bool.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfBool"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
   DictOfBool label
   <BLANKLINE>
   Bool key *
@@ -372,28 +372,28 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 
-dictOfChoice
+dict_of_choice
 ############
 
 Add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfChoice.buttons.add'] = 'Add'
+  >>> submit['form.widgets.dict_of_choice.buttons.add'] = 'Add'
   >>> request = testing.TestRequest(params=submit)
 
 Important is that we get a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfChoice"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_choice"]'))
   DictOfChoice label
   <BLANKLINE>
   Choice key *
@@ -429,19 +429,19 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfChoice"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_choice"]//div[@class="error"]'))
   Duplicate key
 
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfChoice.0.remove'] = '1'
-  >>> submit['form.widgets.dictOfChoice.1.remove'] = '1'
-  >>> submit['form.widgets.dictOfChoice.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_choice.0.remove'] = '1'
+  >>> submit['form.widgets.dict_of_choice.1.remove'] = '1'
+  >>> submit['form.widgets.dict_of_choice.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfChoice"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_choice"]'))
   DictOfChoice label
   <BLANKLINE>
   Choice key *
@@ -457,24 +457,24 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 
-dictOfTextLine
+dict_of_textline
 ##############
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfTextLine.key.0'] = 'foo\nbar'
-  >>> submit['form.widgets.dictOfTextLine.0'] = 'foo\nbar'
+  >>> submit['form.widgets.dict_of_textline.key.0'] = 'foo\nbar'
+  >>> submit['form.widgets.dict_of_textline.0'] = 'foo\nbar'
 
-  >>> submit['form.widgets.dictOfTextLine.buttons.add'] = 'Add'
+  >>> submit['form.widgets.dict_of_textline.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -483,7 +483,7 @@ for "foo\nbar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfTextLine"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_textline"]'))
   DictOfTextLine label
   <BLANKLINE>
   TextLine key *
@@ -523,7 +523,7 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfTextLine"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_textline"]//div[@class="error"]'))
   Required input is missing.
   Required input is missing.
   Constraint not satisfied
@@ -532,12 +532,12 @@ Submit again with the empty field:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfTextLine.2.remove'] = '1'
-  >>> submit['form.widgets.dictOfTextLine.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_textline.2.remove'] = '1'
+  >>> submit['form.widgets.dict_of_textline.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfTextLine"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_textline"]'))
   DictOfTextLine label
   <BLANKLINE>
   TextLine key *
@@ -567,24 +567,24 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 
-dictOfDate
+dict_of_date
 ##########
 
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfDate.key.0'] = 'foobar'
-  >>> submit['form.widgets.dictOfDate.0'] = 'foobar'
+  >>> submit['form.widgets.dict_of_date.key.0'] = 'foobar'
+  >>> submit['form.widgets.dict_of_date.0'] = 'foobar'
 
-  >>> submit['form.widgets.dictOfDate.buttons.add'] = 'Add'
+  >>> submit['form.widgets.dict_of_date.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -593,7 +593,7 @@ for "foobar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfDate"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_date"]'))
   DictOfDate label
   <BLANKLINE>
   Date key *
@@ -631,7 +631,7 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfDate"]//div[@class="error"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_date"]//div[@class="error"]'))
   Required input is missing.
   Required input is missing.
   The datetime string did not match the pattern 'M/d/yy'.
@@ -640,12 +640,12 @@ Submit again with the empty field:
 And fill in a valid value:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfDate.key.0'] = '5/12/14'
-  >>> submit['form.widgets.dictOfDate.0'] = '6/21/14'
+  >>> submit['form.widgets.dict_of_date.key.0'] = '5/12/14'
+  >>> submit['form.widgets.dict_of_date.0'] = '6/21/14'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfDate"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_date"]'))
   DictOfDate label
   <BLANKLINE>
   Date key *
@@ -680,12 +680,12 @@ And fill in a valid value:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfDate.1.remove'] = '1'
-  >>> submit['form.widgets.dictOfDate.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_date.1.remove'] = '1'
+  >>> submit['form.widgets.dict_of_date.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="row-form-widgets-dictOfDate"]'))
+  ...     './/div[@id="row-form-widgets-dict_of_date"]'))
   DictOfDate label
   <BLANKLINE>
   Date key *
@@ -711,12 +711,12 @@ Let's remove some items:
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 And apply
 
@@ -734,33 +734,33 @@ And apply
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True, True: False}
-    dictOfChoice: {'key1': 'three', 'key3': 'two'}
-    dictOfDate: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
+    dict_of_bool: {False: True, True: False}
+    dict_of_choice: {'key1': 'three', 'key3': 'two'}
+    dict_of_date: {datetime.date(2011, 1, 15): datetime.date(2014, 6, 20),
    datetime.date(2012, 2, 20): datetime.date(2013, 5, 19)}
-    dictOfInt: {-101: -100, -1: 1, 101: 100}
-    dictOfTextLine: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
+    dict_of_int: {-101: -100, -1: 1, 101: 100}
+    dict_of_textline: {'textkey1': 'some text one', 'textkey2': 'some txt two'}>
 
 Let's fix the values
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfInt.key.1'] = '42'
-  >>> submit['form.widgets.dictOfInt.1'] = '43'
-  >>> submit['form.widgets.dictOfTextLine.0.remove'] = '1'
-  >>> submit['form.widgets.dictOfTextLine.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.dict_of_int.key.1'] = '42'
+  >>> submit['form.widgets.dict_of_int.1'] = '43'
+  >>> submit['form.widgets.dict_of_textline.0.remove'] = '1'
+  >>> submit['form.widgets.dict_of_textline.buttons.remove'] = 'Remove selected'
 
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfTextLine.key.0'] = 'lorem ipsum'
-  >>> submit['form.widgets.dictOfTextLine.0'] = 'ipsum lorem'
-  >>> submit['form.widgets.dictOfDate.key.1'] = '6/25/14'
-  >>> submit['form.widgets.dictOfDate.1'] = '7/28/14'
-  >>> submit['form.widgets.dictOfInt.key.0'] = '-101'
-  >>> submit['form.widgets.dictOfInt.0'] = '-100'
-  >>> submit['form.widgets.dictOfBool.key.0'] = 'false'
-  >>> submit['form.widgets.dictOfBool.0'] = 'true'
+  >>> submit['form.widgets.dict_of_textline.key.0'] = 'lorem ipsum'
+  >>> submit['form.widgets.dict_of_textline.0'] = 'ipsum lorem'
+  >>> submit['form.widgets.dict_of_date.key.1'] = '6/25/14'
+  >>> submit['form.widgets.dict_of_date.1'] = '7/28/14'
+  >>> submit['form.widgets.dict_of_int.key.0'] = '-101'
+  >>> submit['form.widgets.dict_of_int.0'] = '-100'
+  >>> submit['form.widgets.dict_of_bool.key.0'] = 'false'
+  >>> submit['form.widgets.dict_of_bool.0'] = 'true'
 
   >>> submit['form.buttons.apply'] = 'Apply'
 
@@ -772,24 +772,24 @@ Let's fix the values
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: True}
-    dictOfChoice: {'key3': 'two'}
-    dictOfDate: {datetime.date(2012, 2, 20): datetime.date(2013, 5, 19),
+    dict_of_bool: {False: True}
+    dict_of_choice: {'key3': 'two'}
+    dict_of_date: {datetime.date(2012, 2, 20): datetime.date(2013, 5, 19),
    datetime.date(2014, 6, 25): datetime.date(2014, 7, 28)}
-    dictOfInt: {-101: -100, 42: 43}
-    dictOfTextLine: {'lorem ipsum': 'ipsum lorem'}>
+    dict_of_int: {-101: -100, 42: 43}
+    dict_of_textline: {'lorem ipsum': 'ipsum lorem'}>
 
 Twisting some keys
 ##################
 
 Change key values, item values must stick to the new values.
 
-  >>> obj.dictOfInt = {-101: -100, -1:1, 101:100}
-  >>> obj.dictOfBool = {True: False, False: True}
-  >>> obj.dictOfChoice = {'key1': 'three', 'key3': 'two'}
-  >>> obj.dictOfTextLine = {'textkey1': 'some text one',
+  >>> obj.dict_of_int = {-101: -100, -1:1, 101:100}
+  >>> obj.dict_of_bool = {True: False, False: True}
+  >>> obj.dict_of_choice = {'key1': 'three', 'key3': 'two'}
+  >>> obj.dict_of_textline = {'textkey1': 'some text one',
   ...     'textkey2': 'some txt two'}
-  >>> obj.dictOfDate = {
+  >>> obj.dict_of_date = {
   ...     date(2011, 1, 15): date(2014, 6, 20),
   ...     date(2012, 2, 20): date(2013, 5, 19)}
 
@@ -797,15 +797,15 @@ Change key values, item values must stick to the new values.
   >>> content = getForm(request)
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.dictOfInt.key.2'] = '42'  # was 101:100
-  >>> submit['form.widgets.dictOfBool.key.0'] = 'true'  # was False:True
-  >>> submit['form.widgets.dictOfBool.key.1'] = 'false'  # was True:False
-  >>> submit['form.widgets.dictOfChoice.key.1:list'] = 'key2'  # was key3: two
-  >>> submit['form.widgets.dictOfChoice.key.0:list'] = 'key3'  # was key1: three
-  >>> submit['form.widgets.dictOfTextLine.key.1'] = 'lorem'  # was textkey2: some txt two
-  >>> submit['form.widgets.dictOfTextLine.1'] = 'ipsum'  # was textkey2: some txt two
-  >>> submit['form.widgets.dictOfTextLine.key.0'] = 'foobar'  # was textkey1: some txt one
-  >>> submit['form.widgets.dictOfDate.key.0'] = '6/25/14'  # 11/01/15: 14/06/20
+  >>> submit['form.widgets.dict_of_int.key.2'] = '42'  # was 101:100
+  >>> submit['form.widgets.dict_of_bool.key.0'] = 'true'  # was False:True
+  >>> submit['form.widgets.dict_of_bool.key.1'] = 'false'  # was True:False
+  >>> submit['form.widgets.dict_of_choice.key.1:list'] = 'key2'  # was key3: two
+  >>> submit['form.widgets.dict_of_choice.key.0:list'] = 'key3'  # was key1: three
+  >>> submit['form.widgets.dict_of_textline.key.1'] = 'lorem'  # was textkey2: some txt two
+  >>> submit['form.widgets.dict_of_textline.1'] = 'ipsum'  # was textkey2: some txt two
+  >>> submit['form.widgets.dict_of_textline.key.0'] = 'foobar'  # was textkey1: some txt one
+  >>> submit['form.widgets.dict_of_date.key.0'] = '6/25/14'  # 11/01/15: 14/06/20
 
   >>> submit['form.buttons.apply'] = 'Apply'
 
@@ -817,12 +817,12 @@ Change key values, item values must stick to the new values.
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
-    dictOfBool: {False: False, True: True}
-    dictOfChoice: {'key2': 'two', 'key3': 'three'}
-    dictOfDate: {datetime.date(2012, 2, 20): datetime.date(2013, 5, 19),
+    dict_of_bool: {False: False, True: True}
+    dict_of_choice: {'key2': 'two', 'key3': 'three'}
+    dict_of_date: {datetime.date(2012, 2, 20): datetime.date(2013, 5, 19),
    datetime.date(2014, 6, 25): datetime.date(2014, 6, 20)}
-    dictOfInt: {-101: -100, -1: 1, 42: 100}
-    dictOfTextLine: {'foobar': 'some text one', 'lorem': 'ipsum'}>
+    dict_of_int: {-101: -100, -1: 1, 42: 100}
+    dict_of_textline: {'foobar': 'some text one', 'lorem': 'ipsum'}>
 
 
 Tests cleanup:

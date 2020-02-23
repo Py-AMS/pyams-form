@@ -36,6 +36,6 @@ class PasswordWidget(TextWidget):
 
 
 @adapter_config(required=(IPassword, IFormLayer), provides=IFieldWidget)
-def PasswordFieldWidget(field, request):
+def PasswordFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for IPasswordWidget."""
     return FieldWidget(field, PasswordWidget(request))

@@ -36,11 +36,11 @@ from pyams_utils.registry import get_current_registry
 
 __docformat__ = 'restructuredtext'
 
-from pyams_form import _
+from pyams_form import _  # pylint: disable=ungrouped-imports
 
 
-_identifier = re.compile('[A-Za-z][a-zA-Z0-9_]*$')
-_acceptable_chars = ascii_letters + digits + '_-'
+_IDENTIFIER = re.compile('[A-Za-z][a-zA-Z0-9_]*$')
+_ACCEPTABLE_CHARS = ascii_letters + digits + '_-'
 
 
 def to_unicode(obj):
@@ -61,10 +61,9 @@ def to_bytes(obj):
 
 def create_id(name):
     """Returns a *native* string as id of the given name."""
-    if _identifier.match(name):
+    if _IDENTIFIER.match(name):
         return str(name).lower()
-    id = hexlify(name.encode('utf-8'))
-    return id.decode()
+    return hexlify(name.encode('utf-8')).decode()
 
 
 @total_ordering
@@ -80,14 +79,14 @@ class MinType:
 
 def sorted_none(items):
     """Items sorter"""
-    min = MinType()
-    return sorted(items, key=lambda x: min if x is None else x)
+    min_type = MinType()
+    return sorted(items, key=lambda x: min_type if x is None else x)
 
 
 def create_css_id(name):
     """Create CSS id"""
     return str(''.join([
-        (char if char in _acceptable_chars else
+        (char if char in _ACCEPTABLE_CHARS else
          hexlify(char.encode('utf-8')).decode())
         for char in name]))
 
@@ -137,10 +136,10 @@ def expand_prefix(prefix):
     return prefix
 
 
-def get_widget_by_id(form, id):
+def get_widget_by_id(form, widget_id):
     """Get a widget by it's rendered DOM element id."""
     # convert the id to a name
-    name = id.replace('-', '.')
+    name = widget_id.replace('-', '.')
     prefix = form.prefix + form.widgets.prefix
     if not name.startswith(prefix):
         raise ValueError("Name %r must start with prefix %r" % (name, prefix))
@@ -148,13 +147,13 @@ def get_widget_by_id(form, id):
     return form.widgets.get(short_name, None)
 
 
-def extract_content_type(form, id):
+def extract_content_type(form, widget_id):
     """Extract the content type of the widget with the given id."""
-    widget = get_widget_by_id(form, id)
+    widget = get_widget_by_id(form, widget_id)
     return guess_content_type(widget.filename)[0]
 
 
-def extract_file_name(form, id, cleanup=True, allow_empty_postfix=False):
+def extract_file_name(form, widget_id, cleanup=True, allow_empty_postfix=False):
     """Extract the filename of the widget with the given id.
 
     Uploads from win/IE need some cleanup because the filename includes also
@@ -163,7 +162,7 @@ def extract_file_name(form, id, cleanup=True, allow_empty_postfix=False):
     default this option is set to ``False`` and will raise a ``ValueError`` if
     a filename doesn't contain a extension.
     """
-    widget = get_widget_by_id(form, id)
+    widget = get_widget_by_id(form, widget_id)
     clean_file_name = ''
     dotted_parts = []
     if not allow_empty_postfix or cleanup:
@@ -193,11 +192,11 @@ def changed_field(field, value, context=None):
         return True
 
     # Get the datamanager and get the original value
-    dm = get_current_registry().getMultiAdapter((context, field), IDataManager)
+    dman = get_current_registry().getMultiAdapter((context, field), IDataManager)
     # now figure value changed status
     # Or we can not get the original value, in which case we can not check
     # Or it is an Object, in case we'll never know
-    if (not dm.can_access()) or (dm.query() != value):
+    if (not dman.can_access()) or (dman.query() != value):
         return True
     return False
 
@@ -222,12 +221,12 @@ def changed_widget(widget, value, field=None, context=None):
 class Manager(OrderedDict):
     """Non-persistent IManager implementation."""
 
-    def create_according_to_list(self, d, l):
-        """Arrange elemnts of d according to sorting of l"""
+    def create_according_to_list(self, data, order):
+        """Arrange elements from data according to sorting of given list"""
         self.clear()
-        for key in l:
-            if key in d:
-                self[key] = d[key]
+        for key in order:
+            if key in data:
+                self[key] = data[key]
 
     def __getitem__(self, key):
         if key not in self:

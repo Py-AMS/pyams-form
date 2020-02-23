@@ -27,7 +27,7 @@ __docformat__ = 'restructuredtext'
 
 
 @implementer(IGroupManager)
-class GroupManager:
+class GroupManager:  # pylint: disable=no-member
     """Base groups manager miixn class"""
 
     groups = ()
@@ -52,7 +52,7 @@ class GroupManager:
                             key=get_form_weight):
             groups.append(group)
         # update all groups
-        [group.update() for group in groups]
+        [group.update() for group in groups]  # pylint: disable=expression-not-assigned
         self.groups = tuple(groups)
 
     def extract_data(self, set_errors=True):
@@ -75,7 +75,7 @@ class GroupManager:
 class Group(GroupManager, BaseForm):
     """Group of field widgets within form"""
 
-    def __init__(self, context, request, parent_form):
+    def __init__(self, context, request, parent_form):  # pylint: disable=super-init-not-called
         self.context = context
         self.request = request
         self.parent_form = self.__parent__ = parent_form
@@ -100,5 +100,5 @@ class GroupForm(GroupManager):
     def update(self):
         """See interfaces.IForm"""
         GroupManager.update(self)
-        self.update_actions()
-        self.actions.execute()
+        self.update_actions()  # pylint: disable=no-member
+        self.actions.execute()  # pylint: disable=no-member

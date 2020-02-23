@@ -33,6 +33,7 @@ class StaticValue:
         self.value = value
 
     def get(self):
+        """Get static value"""
         return self.value
 
     def __repr__(self):
@@ -41,12 +42,13 @@ class StaticValue:
 
 @implementer(IValue)
 class ComputedValue:
-    """Static value adapter."""
+    """Computed value adapter."""
 
     def __init__(self, func):
         self.func = func
 
     def get(self):
+        """Get computed value"""
         return self.func(self)
 
     def __repr__(self):
@@ -62,10 +64,10 @@ class ValueFactory:
         self.discriminators = discriminators
 
     def __call__(self, *args):
-        sv = self.value_class(self.value)
+        value_class = self.value_class(self.value)
         for name, value in zip(self.discriminators, args):
-            setattr(sv, name, value)
-        return sv
+            setattr(value_class, name, value)
+        return value_class
 
 
 class ValueCreator:

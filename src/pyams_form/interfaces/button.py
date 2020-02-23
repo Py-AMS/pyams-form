@@ -28,7 +28,7 @@ from pyams_form import _
 class ActionExecutionError(Exception):
     """An error that occurs during the execution of an action handler."""
 
-    def __init__(self, error):
+    def __init__(self, error):  # pylint: disable=super-init-not-called
         self.error = error
 
     def __repr__(self):
@@ -56,7 +56,7 @@ class IAction(Interface):
                      description=_('The action title.'),
                      required=True)
 
-    def is_executed():
+    def is_executed(self):
         """Determine whether the action has been executed."""
 
 
@@ -154,5 +154,5 @@ class IButtonHandlers(Interface):
 class IButtonHandler(Interface):
     """A handler managed by the button handlers."""
 
-    def __call__(self, form, action):
+    def __call__(self, form, action):  # pylint: disable=signature-differs
         """Execute the handler."""

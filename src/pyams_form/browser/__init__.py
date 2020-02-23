@@ -20,7 +20,10 @@ from fanstatic import Library, Resource
 
 __docformat__ = 'restructuredtext'
 
+
+# pylint: disable=invalid-name
 library = Library('pyams_form', 'resources')
 
+# pylint: disable=invalid-name
 ordered_select_input = Resource(library, 'js/orderedselect-input.js',
                                 minified='js/orderedselect-input.min.js')

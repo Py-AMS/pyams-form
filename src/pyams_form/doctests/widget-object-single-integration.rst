@@ -92,13 +92,13 @@ Some valid default values
 #########################
 
   >>> obj.subobj = testing.ObjectWidgetSingleSubIntegration(
-  ...     singleInt=-100,
-  ...     singleBool=False,
-  ...     singleChoice='two',
-  ...     singleChoiceOpt='six',
-  ...     singleTextLine='some text one',
-  ...     singleDate=date(2014, 6, 20),
-  ...     singleReadOnly='some R/O text')
+  ...     single_int=-100,
+  ...     single_bool=False,
+  ...     single_choice='two',
+  ...     single_choice_opt='six',
+  ...     single_textline='some text one',
+  ...     single_date=date(2014, 6, 20),
+  ...     single_readonly='some R/O text')
 
   >>> content = getForm(request)
 
@@ -126,10 +126,10 @@ Wrong values
 Set wrong values:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.subobj.widgets.singleInt'] = 'foobar'
-  >>> submit['form.widgets.subobj.widgets.singleChoice:list'] = 'two'
-  >>> submit['form.widgets.subobj.widgets.singleTextLine'] = 'foo\nbar'
-  >>> submit['form.widgets.subobj.widgets.singleDate'] = 'foobar'
+  >>> submit['form.widgets.subobj.widgets.single_int'] = 'foobar'
+  >>> submit['form.widgets.subobj.widgets.single_choice:list'] = 'two'
+  >>> submit['form.widgets.subobj.widgets.single_textline'] = 'foo\nbar'
+  >>> submit['form.widgets.subobj.widgets.single_date'] = 'foobar'
 
   >>> submit['form.buttons.apply'] = 'Apply'
 
@@ -182,12 +182,12 @@ Let's fix the values:
 
   >>> submit = testing.get_submit_values(content)
 
-  >>> submit['form.widgets.subobj.widgets.singleInt'] = '1042'
-  >>> submit['form.widgets.subobj.widgets.singleBool'] = 'true'
-  >>> submit['form.widgets.subobj.widgets.singleChoice:list'] = 'three'
-  >>> submit['form.widgets.subobj.widgets.singleChoiceOpt:list'] = 'four'
-  >>> submit['form.widgets.subobj.widgets.singleTextLine'] = 'foobar'
-  >>> submit['form.widgets.subobj.widgets.singleDate'] = '6/14/21'
+  >>> submit['form.widgets.subobj.widgets.single_int'] = '1042'
+  >>> submit['form.widgets.subobj.widgets.single_bool'] = 'true'
+  >>> submit['form.widgets.subobj.widgets.single_choice:list'] = 'three'
+  >>> submit['form.widgets.subobj.widgets.single_choice_opt:list'] = 'four'
+  >>> submit['form.widgets.subobj.widgets.single_textline'] = 'foobar'
+  >>> submit['form.widgets.subobj.widgets.single_date'] = '6/14/21'
 
   >>> submit['form.buttons.apply'] = 'Apply'
 
@@ -215,9 +215,9 @@ Let's fix the values:
 Bool was misbehaving
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.subobj.widgets.singleBool'] = 'false'
-  >>> submit['form.widgets.subobj.widgets.singleChoice'] = 'three'
-  >>> submit['form.widgets.subobj.widgets.singleChoiceOpt'] = 'four'
+  >>> submit['form.widgets.subobj.widgets.single_bool'] = 'false'
+  >>> submit['form.widgets.subobj.widgets.single_choice'] = 'three'
+  >>> submit['form.widgets.subobj.widgets.single_choice_opt'] = 'four'
   >>> submit['form.buttons.apply'] = 'Apply'
 
   >>> request = testing.TestRequest(params=submit)
@@ -230,18 +230,18 @@ Bool was misbehaving
   >>> from pprint import pprint
   >>> pprint(obj.subobj)
   <ObjectWidgetSingleSubIntegration
-    singleBool: False
-    singleChoice: 'three'
-    singleChoiceOpt: 'four'
-    singleDate: datetime.date(2021, 6, 14)
-    singleInt: 1042
-    singleReadOnly: 'some R/O text'
-    singleTextLine: 'foobar'>
+    single_bool: False
+    single_choice: 'three'
+    single_choice_opt: 'four'
+    single_date: datetime.date(2021, 6, 14)
+    single_int: 1042
+    single_readonly: 'some R/O text'
+    single_textline: 'foobar'>
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.subobj.widgets.singleBool'] = 'true'
-  >>> submit['form.widgets.subobj.widgets.singleChoice'] = 'three'
-  >>> submit['form.widgets.subobj.widgets.singleChoiceOpt'] = 'four'
+  >>> submit['form.widgets.subobj.widgets.single_bool'] = 'true'
+  >>> submit['form.widgets.subobj.widgets.single_choice'] = 'three'
+  >>> submit['form.widgets.subobj.widgets.single_choice_opt'] = 'four'
   >>> submit['form.buttons.apply'] = 'Apply'
 
   >>> request = testing.TestRequest(params=submit)
@@ -253,13 +253,13 @@ Bool was misbehaving
 
   >>> pprint(obj.subobj)
   <ObjectWidgetSingleSubIntegration
-    singleBool: True
-    singleChoice: 'three'
-    singleChoiceOpt: 'four'
-    singleDate: datetime.date(2021, 6, 14)
-    singleInt: 1042
-    singleReadOnly: 'some R/O text'
-    singleTextLine: 'foobar'>
+    single_bool: True
+    single_choice: 'three'
+    single_choice_opt: 'four'
+    single_date: datetime.date(2021, 6, 14)
+    single_int: 1042
+    single_readonly: 'some R/O text'
+    single_textline: 'foobar'>
 
 
 Tests cleanup:

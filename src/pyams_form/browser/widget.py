@@ -28,18 +28,19 @@ __docformat__ = 'restructuredtext'
 
 
 class WidgetLayoutSupport:
-    """Widget layout support"""
+    """Widget layout support mix-in class"""
 
-    def wrap_css_class(self, klass, pattern='%(class)s'):
+    @staticmethod
+    def wrap_css_class(klass, pattern='%(class)s'):
         """Return a list of css class names wrapped with given pattern"""
         if klass is not None and pattern is not None:
             return [pattern % {'class': k} for k in klass.split()]
-        else:
-            return []
+        return []
 
     def get_css_class(self, klass=None, error=None, required=None,
                       class_pattern='%(class)s', error_pattern='%(class)s-error',
                       required_pattern='%(class)s-required'):
+        # pylint: disable=too-many-arguments
         """Setup given css class (klass) with error and required postfix
 
         If no klass name is given the widget.wrapper class name/names get used.
@@ -90,30 +91,27 @@ class WidgetLayoutSupport:
         if klass is not None:
             kls = klass
         else:
-            kls = self.css
+            kls = self.css  # pylint: disable=no-member
 
         # setup error class names
-        if error is not None:
-            error = error
-        else:
+        if error is None:
             error = kls
 
         # setup required class names
-        if required is not None:
-            required = required
-        else:
+        if required is None:
             required = kls
 
         # append error class names
-        if self.error is not None:
+        if self.error is not None:  # pylint: disable=no-member
             classes += self.wrap_css_class(error, error_pattern)
         # append required class names
-        if self.required:
+        if self.required:  # pylint: disable=no-member
             classes += self.wrap_css_class(required, required_pattern)
         # append given class names
         classes += self.wrap_css_class(kls, class_pattern)
         # remove duplicated class names but keep order
         unique = []
+        # pylint: disable=expression-not-assigned
         [unique.append(kls) for kls in classes if kls not in unique]
         return ' '.join(unique)
 
@@ -122,7 +120,7 @@ class WidgetLayoutSupport:
 class HTMLFormElement(WidgetLayoutSupport):
     """HTML form element"""
 
-    id = FieldProperty(IHTMLFormElement['id'])
+    id = FieldProperty(IHTMLFormElement['id'])  # pylint: disable=invalid-name
     klass = FieldProperty(IHTMLFormElement['klass'])
     style = FieldProperty(IHTMLFormElement['style'])
     title = FieldProperty(IHTMLFormElement['title'])
@@ -167,8 +165,8 @@ class HTMLFormElement(WidgetLayoutSupport):
 
     def update(self):
         """See z3c.form.IWidget"""
-        super(HTMLFormElement, self).update()
-        if self.mode == INPUT_MODE and self.required:
+        super(HTMLFormElement, self).update()  # pylint: disable=no-member
+        if self.mode == INPUT_MODE and self.required:  # pylint: disable=no-member
             self.add_class('required')
 
 

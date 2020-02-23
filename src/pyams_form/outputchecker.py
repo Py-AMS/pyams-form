@@ -99,6 +99,7 @@ class OutputChecker(LHTMLOutputChecker, RENormalizing):
         return result
 
     def get_parser(self, want, got, optionflags):
+        # pylint: disable=invalid-name
         NOPARSE_MARKUP = self.doctest.OPTIONFLAGS_BY_NAME.get("NOPARSE_MARKUP", 0)
         PARSE_HTML = self.doctest.OPTIONFLAGS_BY_NAME.get("PARSE_HTML", 0)
         PARSE_XML = self.doctest.OPTIONFLAGS_BY_NAME.get("PARSE_XML", 0)
@@ -109,7 +110,7 @@ class OutputChecker(LHTMLOutputChecker, RENormalizing):
         if PARSE_HTML & optionflags:
             parser = lxml.doctestcompare.html_fromstring
         elif PARSE_XML & optionflags:
-            parser = lxml.etree.XML
+            parser = lxml.etree.XML  # pylint: disable=c-extension-no-member
         elif (want.strip().lower().startswith('<html')
               and got.strip().startswith('<html')):
             parser = lxml.doctestcompare.html_fromstring

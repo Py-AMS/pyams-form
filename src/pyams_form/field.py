@@ -22,10 +22,11 @@ from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import IField as ISchemaField
 
 from pyams_form.error import MultipleErrors
-from pyams_form.interfaces import DISPLAY_MODE, IDataConverter, IField, IFields, IManagerValidator, INPUT_MODE, IValidator
+from pyams_form.interfaces import DISPLAY_MODE, IDataConverter, IField, IFields, \
+    IManagerValidator, INPUT_MODE, IValidator
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IContextAware, IFieldsForm, IFormAware
-from pyams_form.interfaces.widget import IWidgets, IFieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, IWidgets
 from pyams_form.util import Manager, SelectionManager, expand_prefix
 from pyams_form.widget import AfterWidgetUpdateEvent
 from pyams_layer.interfaces import IFormLayer
@@ -80,6 +81,7 @@ class Field:
 
     widget_factory = WidgetFactoryProperty()
 
+    # pylint: disable=too-many-arguments
     def __init__(self, field, name=None, prefix='', mode=None, interface=None,
                  ignore_context=None, show_default=None):
         self.field = field
@@ -105,7 +107,7 @@ class Fields(SelectionManager):
 
     manager_interface = IFields
 
-    def __init__(self, *args, **kw):
+    def __init__(self, *args, **kw):  # pylint: disable=too-many-branches
         keep_readonly, omit_readonly, defaults = _initkw(**kw)
 
         fields = []
@@ -150,7 +152,7 @@ class Fields(SelectionManager):
 
             self[name] = form_field
 
-    def select(self, *names, **kwargs):
+    def select(self, *names, **kwargs):  # pylint: disable=arguments-differ
         """See interfaces.IFields"""
         prefix = kwargs.pop('prefix', None)
         interface = kwargs.pop('interface', None)
@@ -159,12 +161,11 @@ class Fields(SelectionManager):
             names = [expand_prefix(prefix) + name for name in names]
         mapping = self
         if interface is not None:
-            mapping = dict([(field.field.__name__, field)
-                            for field in self.values()
-                            if field.field.interface is interface])
+            mapping = {field.field.__name__: field for field in self.values()
+                       if field.field.interface is interface}
         return self.__class__(*[mapping[name] for name in names])
 
-    def omit(self, *names, **kwargs):
+    def omit(self, *names, **kwargs):  # pylint: disable=arguments-differ
         """See interfaces.IFields"""
         prefix = kwargs.pop('prefix', None)
         interface = kwargs.pop('interface', None)
@@ -200,6 +201,7 @@ class FieldWidgets(Manager):
         self.content = content
 
     def validate(self, data):
+        """Validate widgets fields"""
         fields = self.form.fields.values()
 
         # Step 1: Collect the data for the various schemas
@@ -227,12 +229,12 @@ class FieldWidgets(Manager):
         return errors
 
     def update(self):
-        """See interfaces.IWidgets"""
+        """See interfaces.widget.IWidgets"""
         # Create a unique prefix.
         prefix = expand_prefix(self.form.prefix) + expand_prefix(self.prefix)
         # Walk through each field, making a widget out of it.
-        d = {}
-        d.update(self)
+        data = {}
+        data.update(self)
         registry = self.request.registry
         for field in self.form.fields.values():
             # Step 0. Determine whether the context should be ignored.
@@ -248,15 +250,15 @@ class FieldWidgets(Manager):
             elif not ignore_context:
                 # If we do not have enough permissions to write to the
                 # attribute, then switch to display mode.
-                dm = registry.getMultiAdapter((self.content, field.field), IDataManager)
-                if not dm.can_write():
+                dman = registry.getMultiAdapter((self.content, field.field), IDataManager)
+                if not dman.can_write():
                     mode = DISPLAY_MODE
             # Step 2: Get the widget for the given field.
             short_name = field.__name__
             new_widget = True
             if short_name in self:
                 # reuse existing widget
-                widget = d[short_name]
+                widget = data[short_name]
                 new_widget = False
             elif field.widget_factory.get(mode) is not None:
                 factory = field.widget_factory.get(mode)
@@ -287,9 +289,9 @@ class FieldWidgets(Manager):
             if widget.required:
                 self.has_required_fields = True
             if new_widget:
-                d[short_name] = widget
+                data[short_name] = widget
                 locate(widget, self, short_name)
-        self.create_according_to_list(d, self.form.fields.keys())
+        self.create_according_to_list(data, self.form.fields.keys())
 
     def _extract(self, return_raw=False):
         data = {}
@@ -303,6 +305,7 @@ class FieldWidgets(Manager):
                 widget.set_errors = self.set_errors
                 raw = widget.extract()
                 if raw is not NO_VALUE:
+                    # pylint: disable=assignment-from-no-return
                     value = IDataConverter(widget).to_field_value(raw)
                 widget.ignore_required_on_validation = self.ignore_required_on_extract
                 registry.getMultiAdapter((self.content, self.request, self.form,
@@ -310,7 +313,8 @@ class FieldWidgets(Manager):
                                          IValidator).validate(value)
             except (Invalid, ValueError, MultipleErrors) as error:
                 view = registry.getMultiAdapter((error, self.request, widget, widget.field,
-                                                self.form, self.content), IErrorViewSnippet)
+                                                 self.form, self.content),
+                                                IErrorViewSnippet)
                 view.update()
                 if self.set_errors:
                     widget.error = view

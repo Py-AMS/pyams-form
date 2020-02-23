@@ -27,7 +27,7 @@ from pyams_form.interfaces import DISPLAY_MODE, IDataConverter, INPUT_MODE, \
     IObjectFactory, IValidator
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IFormAware
-from pyams_form.interfaces.widget import IObjectWidget, IWidget, IFieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, IObjectWidget, IWidget
 from pyams_form.widget import Widget
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
@@ -39,17 +39,17 @@ from pyams_utils.registry import get_current_registry
 __docformat__ = 'restructuredtext'
 
 
-class ObjectWidget_NO_VALUE:
+class ObjectWidget_NO_VALUE:  # pylint: disable=invalid-name
     """No-value object widget placeholder"""
     def __repr__(self):
         return '<ObjectWidget_NO_VALUE>'
 
 
-ObjectWidget_NO_VALUE = ObjectWidget_NO_VALUE()
+ObjectWidget_NO_VALUE = ObjectWidget_NO_VALUE()  # pylint: disable=invalid-name
 
 
 class ObjectWidgetValue(dict):
-    """"""
+    """Object widget value mapping"""
     original_value = ObjectWidget_NO_VALUE  # will store the original object
 
 
@@ -68,8 +68,8 @@ class ObjectConverter(BaseDataConverter):
 
         registry = self.widget.request.registry
         for name, field in getFieldsInOrder(self.field.schema):
-            dm = registry.getMultiAdapter((value, field), IDataManager)
-            subv = dm.query()
+            dman = registry.getMultiAdapter((value, field), IDataManager)
+            subv = dman.query()
 
             if subv is NO_VALUE:
                 # look up default value
@@ -93,6 +93,7 @@ class ObjectConverter(BaseDataConverter):
         return retval
 
     def adapted_obj(self, obj):
+        """Widget adapter object getter"""
         return self.field.schema(obj)
 
     def to_field_value(self, value):
@@ -117,10 +118,10 @@ class ObjectConverter(BaseDataConverter):
                 converter = registry.getMultiAdapter((field, widget), IDataConverter)
                 newval = converter.to_field_value(newval_raw)
 
-                dm = registry.getMultiAdapter((obj, field), IDataManager)
-                oldval = dm.query()
+                dman = registry.getMultiAdapter((obj, field), IDataManager)
+                oldval = dman.query()
                 if (oldval != newval) or IObject.providedBy(field):
-                    dm.set(newval)
+                    dman.set(newval)
                     names.append(name)
 
         if names:
@@ -131,14 +132,18 @@ class ObjectConverter(BaseDataConverter):
 
 @implementer(IObjectWidget)
 class ObjectWidget(Widget):
+    """Object widget class"""
 
     _mode = INPUT_MODE
     _value = NO_VALUE
     _updating = False
+
     prefix = ''
+    fields = None
     widgets = None
 
     def create_object(self, value):
+        """Create widget object"""
         # keep value passed, maybe some subclasses want it
         # value here is the raw extracted from the widget's subform
         # in the form of a dict key:fieldname, value:fieldvalue
@@ -154,6 +159,7 @@ class ObjectWidget(Widget):
         return obj
 
     def get_object(self, value):
+        """Get widget object"""
         if value.original_value is ObjectWidget_NO_VALUE:
             # if the original_value did not survive the roundtrip
             if self.ignore_context:
@@ -161,9 +167,9 @@ class ObjectWidget(Widget):
             else:
                 # try to get the original object from the context.field_name
                 registry = self.request.registry
-                dm = registry.getMultiAdapter((self.context, self.field), IDataManager)
+                dman = registry.getMultiAdapter((self.context, self.field), IDataManager)
                 try:
-                    obj = dm.get()
+                    obj = dman.get()
                 except (KeyError, AttributeError):
                     obj = self.create_object(value)
         else:
@@ -183,16 +189,19 @@ class ObjectWidget(Widget):
 
     @mode.setter
     def mode(self, mode):
+        """Mode setter applies mode to all widgets"""
         self._mode = mode
         # ensure that we apply the new mode to the widgets
         if self.widgets:
-            for w in self.widgets.values():
-                w.mode = mode
+            for widget in self.widgets.values():
+                widget.mode = mode
 
     def setup_fields(self):
+        """Setup subform fields"""
         self.fields = Fields(self.field.schema)
 
     def setup_widgets(self):
+        """Setup subform widgets"""
         self.setup_fields()
 
         self.prefix = self.name
@@ -205,6 +214,7 @@ class ObjectWidget(Widget):
         self.widgets.update()
 
     def update_widgets(self, set_errors=True):
+        """Update subform widgets"""
         if self.field is None:
             raise ValueError("%r .field is None, that's a blocking point" % self)
 
@@ -213,7 +223,6 @@ class ObjectWidget(Widget):
         if self._value is NO_VALUE:
             # XXX: maybe readonly fields/widgets should be reset here to
             #      widget.mode = INPUT_MODE
-            pass
             for name, widget in self.widgets.items():
                 if widget.field.readonly:
                     widget.mode = INPUT_MODE
@@ -234,11 +243,11 @@ class ObjectWidget(Widget):
                     self.apply_value(widget, rawvalue[name])
                 else:
                     try:
-                        v = self._value[name]
+                        val = self._value[name]
                     except KeyError:
                         pass
                     else:
-                        self.apply_value(widget, v)
+                        self.apply_value(widget, val)
 
     def apply_value(self, widget, value):
         """Validate and apply value to given widget.
@@ -255,6 +264,7 @@ class ObjectWidget(Widget):
             try:
                 # convert widget value to field value
                 converter = IDataConverter(widget)
+                # pylint: disable=assignment-from-no-return
                 fvalue = converter.to_field_value(value)
                 # validate field value
                 registry.getMultiAdapter((self.context, self.request, self.form,
@@ -262,6 +272,7 @@ class ObjectWidget(Widget):
                                          IValidator).validate(fvalue)
                 # convert field value back to widget value
                 # that will probably format the value too
+                # pylint: disable=assignment-from-no-return
                 widget.value = converter.to_widget_value(fvalue)
             except (ValidationError, ValueError) as error:
                 # on exception, setup the widget error message
@@ -275,6 +286,7 @@ class ObjectWidget(Widget):
                 widget.value = value
 
     def update(self):
+        """Update widget contents"""
         # very-very-nasty: skip raising exceptions in extract while we're updating
         self._updating = True
         try:
@@ -286,6 +298,7 @@ class ObjectWidget(Widget):
 
     @property
     def value(self):
+        """Widget value getter"""
         # value (get) cannot raise an exception, then we return insane values
         try:
             self.set_errors = True
@@ -303,6 +316,7 @@ class ObjectWidget(Widget):
 
     @value.setter
     def value(self, value):
+        """Widget value setter"""
         # This invokes updateWidgets on any value change e.g. update/extract.
         if (not isinstance(value, ObjectWidgetValue)) and (value is not NO_VALUE):
             value = ObjectWidgetValue(value)
@@ -312,7 +326,7 @@ class ObjectWidget(Widget):
         self.update_widgets()
 
     def extract_raw(self, set_errors=True):
-        '''See interfaces.IForm'''
+        '''See interfaces.form.IForm'''
         self.widgets.set_errors = set_errors
         data, errors = self.widgets.extract_raw()
         value = ObjectWidgetValue()
@@ -342,22 +356,7 @@ class ObjectWidget(Widget):
                     return value
                 raise MultipleErrors(errors)
             return value
-        else:
-            return default
-
-    # def render(self):
-    #     """See pyams_form.interfaces.widget.IWidget."""
-    #     template = self.template
-    #     if template is None:
-    #         # one more discriminator than in widget.Widget
-    #         registry = self.request.registry
-    #         template = registry.queryMultiAdapter((self.context, self.request, self.form,
-    #                                                self.field, self,
-    #                                                make_dummy_object(self.field.schema)),
-    #                                               IPageTemplate, name=self.mode)
-    #         if template is None:
-    #             return super(ObjectWidget, self).render()
-    #     return template(self)
+        return default
 
 
 def make_dummy_object(iface):
@@ -368,11 +367,11 @@ def make_dummy_object(iface):
     if iface is not None:
         @implementer(iface)
         class DummyObject:
-            pass
+            """Dummy object creator"""
     else:
         @implementer(Interface)
         class DummyObject:
-            pass
+            """Dummy object creator"""
 
     dummy = DummyObject()
     return dummy
@@ -380,7 +379,7 @@ def make_dummy_object(iface):
 
 @adapter_config(required=(Interface, IFormLayer, Interface, IWidget),
                 provides=IObjectFactory)
-class FactoryAdapter(object):
+class FactoryAdapter:
     """Most basic-default object factory adapter"""
 
     factory = None
@@ -393,7 +392,7 @@ class FactoryAdapter(object):
 
     def __call__(self, value):
         # value is the extracted data from the form
-        obj = self.factory()
+        obj = self.factory()  # pylint: disable=not-callable
         registry = self.request.registry
         registry.notify(ObjectCreatedEvent(obj))
         return obj
@@ -403,9 +402,10 @@ class FactoryAdapter(object):
 # use all discriminators e.g. context, request, form, widget as optional
 # arguments...
 def register_factory_adapter(for_, klass, registry=None):
-    """register the basic FactoryAdapter for a given interface and class"""
+    """register the basic object factory adapter for a given interface and class"""
 
-    class temp(FactoryAdapter):
+    class temp(FactoryAdapter):  # pylint: disable=invalid-name
+        """Factory adapter class"""
         factory = klass
 
     name = get_interface_name(for_)

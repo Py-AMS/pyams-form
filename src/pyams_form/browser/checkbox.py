@@ -39,22 +39,24 @@ class CheckBoxWidget(HTMLInputWidget, SequenceWidget):
     css = 'checkbox'
 
     def is_checked(self, term):
+        """Check if given term is selected"""
         return term.token in self.value
 
     @property
     def items(self):
+        """Items list getter"""
         if self.terms is None:
             return ()
         items = []
         for count, term in enumerate(self.terms):
             checked = self.is_checked(term)
-            id = '%s-%i' % (self.id, count)
+            item_id = '%s-%i' % (self.id, count)
             if ITitledTokenizedTerm.providedBy(term):
                 label = self.request.localizer.translate(term.title)
             else:
                 label = to_unicode(term.value)
             items.append({
-                'id': id,
+                'id': item_id,
                 'name': self.name + ':list',
                 'value': term.token,
                 'label': label,
@@ -63,29 +65,31 @@ class CheckBoxWidget(HTMLInputWidget, SequenceWidget):
         return items
 
     def update(self):
-        """See z3c.form.interfaces.IWidget."""
+        """See pyams_form.interfaces.widget.IWidget."""
         super(CheckBoxWidget, self).update()
         add_field_class(self)
 
     def json_data(self):
+        """Get widget data in JSON format"""
         data = super(CheckBoxWidget, self).json_data()
         data['type'] = 'check'
         data['options'] = list(self.items)
         return data
 
 
-def CheckBoxFieldWidget(field, request):
+def CheckBoxFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for CheckBoxWidget."""
     return FieldWidget(field, CheckBoxWidget(request))
 
 
 @implementer_only(ISingleCheckBoxWidget)
 class SingleCheckBoxWidget(CheckBoxWidget):
-    """Single Input type checkbox widget implementation."""
+    """Single input type checkbox widget implementation."""
 
     klass = 'single-checkbox-widget'
 
     def update_terms(self):
+        """Update terms"""
         if self.terms is None:
             self.terms = Terms()
             self.terms.terms = SimpleVocabulary((
@@ -94,7 +98,7 @@ class SingleCheckBoxWidget(CheckBoxWidget):
 
 
 @adapter_config(context=(IBool, IFormLayer), provides=IFieldWidget)
-def SingleCheckBoxFieldWidget(field, request):
+def SingleCheckBoxFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for CheckBoxWidget."""
     widget = FieldWidget(field, SingleCheckBoxWidget(request))
     widget.label = ''  # don't show the label twice

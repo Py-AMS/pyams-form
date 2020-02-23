@@ -34,7 +34,7 @@ a.k.a. list of objects widget
   >>> class EForm(form.EditForm):
   ...     form.extends(form.EditForm)
   ...     fields = field.Fields(
-  ...         testing.IMultiWidgetListIntegration).select('listOfObject')
+  ...         testing.IMultiWidgetListIntegration).select('list_of_objects')
 
 Our multi content object:
 
@@ -75,39 +75,39 @@ Some valid default values
 #########################
 
   >>> sub1 = testing.ObjectWidgetMultiSubIntegration(
-  ...     multiInt=-100,
-  ...     multiBool=False,
-  ...     multiChoice='two',
-  ...     multiChoiceOpt='six',
-  ...     multiTextLine='some text one',
-  ...     multiDate=date(2014, 6, 20))
+  ...     multi_int=-100,
+  ...     multi_bool=False,
+  ...     multi_choice='two',
+  ...     multi_choice_opt='six',
+  ...     multi_textline='some text one',
+  ...     multi_date=date(2014, 6, 20))
 
   >>> sub2 = testing.ObjectWidgetMultiSubIntegration(
-  ...     multiInt=42,
-  ...     multiBool=True,
-  ...     multiChoice='one',
-  ...     multiChoiceOpt='four',
-  ...     multiTextLine='second txt',
-  ...     multiDate=date(2011, 3, 15))
+  ...     multi_int=42,
+  ...     multi_bool=True,
+  ...     multi_choice='one',
+  ...     multi_choice_opt='four',
+  ...     multi_textline='second txt',
+  ...     multi_date=date(2011, 3, 15))
 
-  >>> obj.listOfObject = [sub1, sub2]
+  >>> obj.list_of_objects = [sub1, sub2]
 
   >>> from pprint import pprint
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2014, 6, 20)
-    multiInt: -100
-    multiTextLine: 'some text one'>,
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2014, 6, 20)
+    multi_int: -100
+    multi_textline: 'some text one'>,
    <ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'one'
-    multiChoiceOpt: 'four'
-    multiDate: datetime.date(2011, 3, 15)
-    multiInt: 42
-    multiTextLine: 'second txt'>]
+    multi_bool: True
+    multi_choice: 'one'
+    multi_choice_opt: 'four'
+    multi_date: datetime.date(2011, 3, 15)
+    multi_int: 42
+    multi_textline: 'second txt'>]
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
@@ -148,9 +148,9 @@ wrong input (Int)
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiInt'] = 'foobar'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_int'] = 'foobar'
 
-  >>> submit['form.widgets.listOfObject.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_objects.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -159,7 +159,7 @@ for "foobar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...       './/div[@id="form-widgets-listOfObject-0-row"]'))
+  ...       './/div[@id="form-widgets-list_of_objects-0-row"]'))
   Object label *
   The entered value is not a valid integer literal.
   [ ]
@@ -183,15 +183,15 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...       './/div[@id="form-widgets-listOfObject-0-row"]//div[@class="error"]'))
+  ...       './/div[@id="form-widgets-list_of_objects-0-row"]//div[@class="error"]'))
   The entered value is not a valid integer literal.
   The entered value is not a valid integer literal.
 
   >>> print(testing.plain_text(content,
-  ...       './/div[@id="form-widgets-listOfObject-1-row"]//div[@class="error"]'))
+  ...       './/div[@id="form-widgets-list_of_objects-1-row"]//div[@class="error"]'))
 
   >>> print(testing.plain_text(content,
-  ...       './/div[@id="form-widgets-listOfObject-2-row"]'))
+  ...       './/div[@id="form-widgets-list_of_objects-2-row"]'))
   Object label *
   [ ]
   Int label *
@@ -214,9 +214,9 @@ Submit again with the empty field:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.1.remove'] = '1'
-  >>> submit['form.widgets.listOfObject.2.remove'] = '1'
-  >>> submit['form.widgets.listOfObject.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_objects.1.remove'] = '1'
+  >>> submit['form.widgets.list_of_objects.2.remove'] = '1'
+  >>> submit['form.widgets.list_of_objects.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
@@ -242,21 +242,21 @@ Let's remove some items:
 
 The object is unchanged:
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2014, 6, 20)
-    multiInt: -100
-    multiTextLine: 'some text one'>,
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2014, 6, 20)
+    multi_int: -100
+    multi_textline: 'some text one'>,
    <ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'one'
-    multiChoiceOpt: 'four'
-    multiDate: datetime.date(2011, 3, 15)
-    multiInt: 42
-    multiTextLine: 'second txt'>]
+    multi_bool: True
+    multi_choice: 'one'
+    multi_choice_opt: 'four'
+    multi_date: datetime.date(2011, 3, 15)
+    multi_int: 42
+    multi_textline: 'second txt'>]
 
 
 wrong input (TextLine)
@@ -265,9 +265,9 @@ wrong input (TextLine)
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiTextLine'] = 'foo\nbar'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_textline'] = 'foo\nbar'
 
-  >>> submit['form.widgets.listOfObject.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_objects.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -276,7 +276,7 @@ for "foo\nbar" and a new input.
 
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="form-widgets-listOfObject-0-row"]'))
+  ...     './/div[@id="form-widgets-list_of_objects-0-row"]'))
   Object label *
   The entered value is not a valid integer literal.
   [ ]
@@ -302,13 +302,13 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
-  ...     './/div[@id="form-widgets-listOfObject-0-row"]//div[@class="error"]'))
+  ...     './/div[@id="form-widgets-list_of_objects-0-row"]//div[@class="error"]'))
   The entered value is not a valid integer literal.
   The entered value is not a valid integer literal.
   Constraint not satisfied
 
   >>> print(format_html(testing.plain_text(content,
-  ...     './/div[@id="form-widgets-listOfObject-1-row"]//div[@class="error"]')))
+  ...     './/div[@id="form-widgets-list_of_objects-1-row"]//div[@class="error"]')))
   Required input is missing.
   Required input is missing.
   Required input is missing.
@@ -317,8 +317,8 @@ Submit again with the empty field:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.1.remove'] = '1'
-  >>> submit['form.widgets.listOfObject.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_objects.1.remove'] = '1'
+  >>> submit['form.widgets.list_of_objects.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
@@ -345,21 +345,21 @@ Let's remove some items:
 
 The object is unchanged:
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2014, 6, 20)
-    multiInt: -100
-    multiTextLine: 'some text one'>,
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2014, 6, 20)
+    multi_int: -100
+    multi_textline: 'some text one'>,
    <ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'one'
-    multiChoiceOpt: 'four'
-    multiDate: datetime.date(2011, 3, 15)
-    multiInt: 42
-    multiTextLine: 'second txt'>]
+    multi_bool: True
+    multi_choice: 'one'
+    multi_choice_opt: 'four'
+    multi_date: datetime.date(2011, 3, 15)
+    multi_int: 42
+    multi_textline: 'second txt'>]
 
 
 wrong input (Date)
@@ -368,9 +368,9 @@ wrong input (Date)
 Set a wrong value and add a new input:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiDate'] = 'foobar'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_date'] = 'foobar'
 
-  >>> submit['form.widgets.listOfObject.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_objects.buttons.add'] = 'Add'
 
   >>> request = testing.TestRequest(params=submit)
 
@@ -421,7 +421,7 @@ Submit again with the empty field:
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(format_html(testing.plain_text(content,
-  ...     './/div[@id="form-widgets-listOfObject-0-row"]//div[@class="error"]')))
+  ...     './/div[@id="form-widgets-list_of_objects-0-row"]//div[@class="error"]')))
   The entered value is not a valid integer literal.
   The entered value is not a valid integer literal.
   Constraint not satisfied
@@ -430,14 +430,14 @@ Submit again with the empty field:
 Add one more field:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.buttons.add'] = 'Add'
+  >>> submit['form.widgets.list_of_objects.buttons.add'] = 'Add'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
 
 And fill in a valid value:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.2.widgets.multiDate'] = '6/14/21'
+  >>> submit['form.widgets.list_of_objects.2.widgets.multi_date'] = '6/14/21'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
@@ -501,8 +501,8 @@ And fill in a valid value:
 Let's remove some items:
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.2.remove'] = '1'
-  >>> submit['form.widgets.listOfObject.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_objects.2.remove'] = '1'
+  >>> submit['form.widgets.list_of_objects.buttons.remove'] = 'Remove selected'
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
@@ -548,32 +548,32 @@ Let's remove some items:
 
 The object is unchanged:
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2014, 6, 20)
-    multiInt: -100
-    multiTextLine: 'some text one'>,
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2014, 6, 20)
+    multi_int: -100
+    multi_textline: 'some text one'>,
    <ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'one'
-    multiChoiceOpt: 'four'
-    multiDate: datetime.date(2011, 3, 15)
-    multiInt: 42
-    multiTextLine: 'second txt'>]
+    multi_bool: True
+    multi_choice: 'one'
+    multi_choice_opt: 'four'
+    multi_date: datetime.date(2011, 3, 15)
+    multi_int: 42
+    multi_textline: 'second txt'>]
 
 Fix values
 ##########
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiInt'] = '1042'
-  >>> submit['form.widgets.listOfObject.0.widgets.multiTextLine'] = 'moo900'
-  >>> submit['form.widgets.listOfObject.0.widgets.multiDate'] = '6/14/23'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_int'] = '1042'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_textline'] = 'moo900'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_date'] = '6/14/23'
 
-  >>> submit['form.widgets.listOfObject.1.remove'] = '1'
-  >>> submit['form.widgets.listOfObject.buttons.remove'] = 'Remove selected'
+  >>> submit['form.widgets.list_of_objects.1.remove'] = '1'
+  >>> submit['form.widgets.list_of_objects.buttons.remove'] = 'Remove selected'
 
   >>> request = testing.TestRequest(params=submit)
   >>> content = getForm(request)
@@ -597,21 +597,21 @@ Fix values
 
 The object is unchanged:
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2014, 6, 20)
-    multiInt: -100
-    multiTextLine: 'some text one'>,
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2014, 6, 20)
+    multi_int: -100
+    multi_textline: 'some text one'>,
    <ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'one'
-    multiChoiceOpt: 'four'
-    multiDate: datetime.date(2011, 3, 15)
-    multiInt: 42
-    multiTextLine: 'second txt'>]
+    multi_bool: True
+    multi_choice: 'one'
+    multi_choice_opt: 'four'
+    multi_date: datetime.date(2011, 3, 15)
+    multi_int: 42
+    multi_textline: 'second txt'>]
 
 And apply
 
@@ -640,21 +640,21 @@ And apply
 
 Now the object gets updated:
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2023, 6, 14)
-    multiInt: 1042
-    multiTextLine: 'moo900'>]
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2023, 6, 14)
+    multi_int: 1042
+    multi_textline: 'moo900'>]
 
 
 Bool was misbehaving
 ####################
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiBool'] = 'true'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_bool'] = 'true'
   >>> submit['form.buttons.apply'] = 'Apply'
 
   >>> request = testing.TestRequest(params=submit)
@@ -663,18 +663,18 @@ Bool was misbehaving
   Data successfully updated...
   ...
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: True
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2023, 6, 14)
-    multiInt: 1042
-    multiTextLine: 'moo900'>]
+    multi_bool: True
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2023, 6, 14)
+    multi_int: 1042
+    multi_textline: 'moo900'>]
 
 
   >>> submit = testing.get_submit_values(content)
-  >>> submit['form.widgets.listOfObject.0.widgets.multiBool'] = 'false'
+  >>> submit['form.widgets.list_of_objects.0.widgets.multi_bool'] = 'false'
   >>> submit['form.buttons.apply'] = 'Apply'
 
   >>> request = testing.TestRequest(params=submit)
@@ -683,14 +683,14 @@ Bool was misbehaving
   Data successfully updated...
   ...
 
-  >>> pprint(obj.listOfObject)
+  >>> pprint(obj.list_of_objects)
   [<ObjectWidgetMultiSubIntegration
-    multiBool: False
-    multiChoice: 'two'
-    multiChoiceOpt: 'six'
-    multiDate: datetime.date(2023, 6, 14)
-    multiInt: 1042
-    multiTextLine: 'moo900'>]
+    multi_bool: False
+    multi_choice: 'two'
+    multi_choice_opt: 'six'
+    multi_date: datetime.date(2023, 6, 14)
+    multi_int: 1042
+    multi_textline: 'moo900'>]
 
 
 Tests cleanup:

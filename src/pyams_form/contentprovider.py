@@ -40,17 +40,18 @@ class BaseProvider:
     __slots__ = ('position',)
 
 
-lookup_ = BaseProvider()
+_LOOKUP = BaseProvider()
 
 
 @implementer(IContentProviders)
 class ContentProviders(dict):
+    """Content providers mapping"""
 
     def __init__(self, names=None):
         super(ContentProviders, self).__init__()
         if names is not None:
-            for position, name in enumerate(names):
-                self[name] = lookup_
+            for position, name in enumerate(names):  # pylint: disable=unused-variable
+                self[name] = _LOOKUP
 
     def __setitem__(self, key, value):
         factory = ContentProviderFactory(factory=value, name=key)
@@ -66,7 +67,7 @@ class ContentProviderFactory:
         self.position = getattr(factory, 'position', None)
 
     def __call__(self, manager):
-        if self.factory != lookup_:
+        if self.factory != _LOOKUP:
             content_provider = self.factory(manager.content, manager.request, manager.form)
         else:
             registry = manager.request.registry
@@ -79,13 +80,13 @@ class ContentProviderFactory:
 @adapter_config(required=(IFieldsAndContentProvidersForm, IFormLayer, Interface),
                 provides=IWidgets)
 class FieldWidgetsAndProviders(FieldWidgets):
-    """Field widgets and providers"""
+    """Field widgets and providers adapter"""
 
     def update(self):
         super(FieldWidgetsAndProviders, self).update()
         unique_ordered_keys = list(self.keys())
-        d = {}
-        d.update(self)
+        data = {}
+        data.update(self)
         for name in self.form.content_providers:
             factory = self.form.content_providers[name]
             if factory.position is None:
@@ -95,9 +96,9 @@ class FieldWidgetsAndProviders(FieldWidgets):
             short_name = name
             content_provider.update()
             unique_ordered_keys.insert(factory.position, short_name)
-            d[short_name] = content_provider
+            data[short_name] = content_provider
             locate(content_provider, self, short_name)
-        self.create_according_to_list(d, unique_ordered_keys)
+        self.create_according_to_list(data, unique_ordered_keys)
 
     def extract(self):
         """See interfaces.IWidgets"""
@@ -114,12 +115,11 @@ class FieldWidgetsAndProviders(FieldWidgets):
                 widget.set_errors = self.set_errors
                 raw = widget.extract()
                 if raw is not NO_VALUE:
+                    # pylint: disable=assignment-from-no-return
                     value = IDataConverter(widget).to_field_value(raw)
-                registry.getMultiAdapter(
-                    (self.content, self.request, self.form,
-                     getattr(widget, 'field', None),
-                     widget),
-                    IValidator).validate(value)
+                registry.getMultiAdapter((self.content, self.request, self.form,
+                                          getattr(widget, 'field', None), widget),
+                                         IValidator).validate(value)
             except (Invalid, ValueError, MultipleErrors) as error:
                 view = registry.getMultiAdapter((error, self.request, widget, widget.field,
                                                  self.form, self.content),

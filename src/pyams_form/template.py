@@ -12,6 +12,7 @@
 
 """PyAMS_form.template module
 
+Widgets templates management module.
 """
 
 import inspect
@@ -37,6 +38,7 @@ class WidgetTemplateFactory(TemplateFactory):
     """Widget template factory"""
 
     def __call__(self, context, request, form, field, widget):
+        # pylint: disable=too-many-arguments
         return self.template
 
 

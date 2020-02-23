@@ -22,8 +22,7 @@ from zope.interface import Interface, Invalid, alsoProvides, implementer
 from zope.interface.interfaces import IInterface, IMethod
 from zope.schema.interfaces import IBytes, IField
 
-from pyams_form.interfaces import IData, IManagerValidator, IValidator, \
-    IValue
+from pyams_form.interfaces import IData, IManagerValidator, IValidator, IValue
 from pyams_form.interfaces.form import IContextAware
 from pyams_form.interfaces.widget import IFileWidget
 from pyams_form.util import changed_widget, get_specification
@@ -43,13 +42,14 @@ class StrictSimpleFieldValidator:
     """
 
     def __init__(self, context, request, view, field, widget):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.view = view
         self.field = field
         self.widget = widget
 
-    def validate(self, value, force=False):
+    def validate(self, value, force=False):  # pylint: disable=unused-argument
         """See interfaces.IValidator"""
         context = self.context
         field = self.field
@@ -70,6 +70,7 @@ class StrictSimpleFieldValidator:
             if value is NO_VALUE:
                 # look up default value
                 value = field.default
+                # pylint: disable=redefined-outer-name
                 adapter = registry.queryMultiAdapter(
                     (context, self.request, self.view, field, widget),
                     IValue, name='default')
@@ -102,12 +103,12 @@ class SimpleFieldValidator(StrictSimpleFieldValidator):
         if not force:
             if value is NOT_CHANGED:
                 # no need to validate unchanged values
-                return
+                return None
 
             if self.widget and not changed_widget(
-                self.widget, value, field=self.field, context=self.context):
+                    self.widget, value, field=self.field, context=self.context):
                 # if new value == old value, no need to validate
-                return
+                return None
 
         # otherwise StrictSimpleFieldValidator will do the job
         return super(SimpleFieldValidator, self).validate(value, force)
@@ -125,6 +126,7 @@ class FileUploadValidator(StrictSimpleFieldValidator):
 
 def WidgetValidatorDiscriminators(validator, context=None, request=None, view=None,
                                   field=None, widget=None):
+    # pylint: disable=invalid-name,too-many-arguments
     """Widget validator discriminators"""
     adapter(
         get_specification(context),
@@ -151,10 +153,11 @@ class NoInputData(Invalid):
 
 @implementer(IData)
 class Data:
+    """Form data proxy implementation"""
 
     def __init__(self, schema, data, context):
-        self._Data_data___ = data
-        self._Data_schema___ = schema
+        self._Data_data___ = data  # pylint: disable=invalid-name
+        self._Data_schema___ = schema  # pylint: disable=invalid-name
         alsoProvides(self, schema)
         self.__context__ = context
 
@@ -174,8 +177,8 @@ class Data:
             if self.__context__ is None:
                 raise NoInputData(name)
             registry = get_current_registry()
-            dm = registry.getMultiAdapter((self.__context__, field), IDataManager)
-            value = dm.get()
+            dman = registry.getMultiAdapter((self.__context__, field), IDataManager)
+            value = dman.get()
         # Optimization: Once we know we have a good value, set it as an
         # attribute for faster access.
         setattr(self, name, value)
@@ -188,6 +191,7 @@ class InvariantsValidator:
     """Simple Field Validator"""
 
     def __init__(self, context, request, view, schema, manager):
+        # pylint: disable=too-many-arguments
         self.context = context
         self.request = request
         self.view = view
@@ -198,7 +202,8 @@ class InvariantsValidator:
         """See interfaces.IManagerValidator"""
         return self.validate_object(Data(self.schema, data, self.context))
 
-    def validate_object(self, object):
+    def validate_object(self, object):  # pylint: disable=redefined-builtin
+        """validate given object"""
         errors = []
         try:
             self.schema.validateInvariants(object, errors)

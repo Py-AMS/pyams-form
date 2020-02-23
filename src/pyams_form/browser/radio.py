@@ -16,13 +16,13 @@ This module provides radio widgets.
 """
 
 from zope.interface import implementer_only
-from zope.schema.interfaces import ITitledTokenizedTerm, IBool, IVocabularyTokenized
+from zope.schema.interfaces import IBool, ITitledTokenizedTerm
 from zope.schema.vocabulary import SimpleTerm
 
 from pyams_form.browser.widget import HTMLInputWidget, add_field_class
-from pyams_form.interfaces.widget import IRadioWidget, IFieldWidget
+from pyams_form.interfaces.widget import IFieldWidget, IRadioWidget
 from pyams_form.util import to_unicode
-from pyams_form.widget import SequenceWidget, FieldWidget
+from pyams_form.widget import FieldWidget, SequenceWidget
 from pyams_layer.interfaces import IFormLayer
 from pyams_template.interfaces import IPageTemplate
 
@@ -40,9 +40,11 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
     css = 'radio'
 
     def is_checked(self, term):
+        """Check if given term is checked"""
         return term.token in self.value
 
     def render_for_value(self, value):
+        """Render given value"""
         terms = list(self.terms)
         try:
             term = self.terms.getTermByToken(value)
@@ -50,14 +52,14 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
             if value == SequenceWidget.no_value_token:
                 term = SimpleTerm(value)
                 terms.insert(0, term)
-                id = '%s-novalue' % self.id
+                item_id = '%s-novalue' % self.id
             else:
                 raise
         else:
-            id = '%s-%i' % (self.id, terms.index(term))
+            item_id = '%s-%i' % (self.id, terms.index(term))
         checked = self.is_checked(term)
         item = {
-            'id': id,
+            'id': item_id,
             'name': self.name,
             'value': term.token,
             'checked': checked
@@ -74,18 +76,19 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
 
     @property
     def items(self):
+        """Items list getter"""
         if self.terms is None:
             return
         for count, term in enumerate(self.terms):
             checked = self.is_checked(term)
-            id = '%s-%i' % (self.id, count)
+            item_id = '%s-%i' % (self.id, count)
             if ITitledTokenizedTerm.providedBy(term):
                 translate = self.request.localizer.translate
                 label = translate(term.title)
             else:
                 label = to_unicode(term.value)
             yield {
-                'id': id,
+                'id': item_id,
                 'name': self.name,
                 'value': term.token,
                 'label': label,
@@ -98,6 +101,7 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
         add_field_class(self)
 
     def json_data(self):
+        """Get widget data in JSON format"""
         data = super(RadioWidget, self).json_data()
         data['options'] = list(self.items)
         data['type'] = 'radio'
@@ -106,6 +110,6 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
 
 @adapter_config(required=(IBool, IFormLayer),
                 provides=IFieldWidget)
-def RadioFieldWidget(field, request):
+def RadioFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for RadioWidget."""
     return FieldWidget(field, RadioWidget(request))
