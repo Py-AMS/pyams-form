@@ -12,7 +12,7 @@ is accomplished by using a hidden input field that holds the value
 of the encoding desired.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> import zope.schema
   >>> from pyams_form import widget

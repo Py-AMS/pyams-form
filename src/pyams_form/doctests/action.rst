@@ -7,7 +7,7 @@ within a view, usually a form. They are also responsible for executing actions
 when asked to do so.
 
   >>> from pyramid.testing import setUp, tearDown, DummyRequest
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

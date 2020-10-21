@@ -6,7 +6,7 @@ the ``widgetFactory`` argument of a ``IField`` object if you construct fields
 or set the custom widget factory on selected fields later.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

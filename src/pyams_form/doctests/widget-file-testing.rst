@@ -5,7 +5,7 @@ The File Testing widget is just like the file widget except it has
 another hidden field where the contents of a file can be uploaded in a textarea.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

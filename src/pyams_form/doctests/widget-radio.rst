@@ -4,7 +4,7 @@ from pyams_layer.interfaces import PYAMS_BASE_SKIN_NAMERadio Widget
 The RadioWidget renders a radio input type field e.g. <input type="radio" />
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

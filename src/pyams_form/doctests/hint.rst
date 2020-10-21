@@ -14,7 +14,7 @@ the title. Since this is very specific we only provide a
 IValue adapter.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

@@ -4,7 +4,7 @@ Multi+Object Widget
 The multi widget allows you to add and edit one or more values.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -53,12 +53,12 @@ We can now render the widget:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -91,7 +91,7 @@ for this widget and check it again:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </div>
@@ -163,12 +163,12 @@ just cry about it in the HTML:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -283,12 +283,12 @@ Let's set acceptable values:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -461,12 +461,12 @@ a new value:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -656,12 +656,12 @@ Now let's store the new value:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -806,12 +806,12 @@ remove an existing value:
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -955,12 +955,12 @@ as input for our internal (sub) widget.
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1086,12 +1086,12 @@ if you like to skip the label rendering for all widgets.
         <input type="submit"
          id="foo-buttons-add"
          name="foo.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="foo-buttons-remove"
          name="foo.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1178,7 +1178,7 @@ Now rendering the addform renders no items yet:
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-add"
          name="form.widgets.list_of_objects.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </div>
@@ -1196,7 +1196,7 @@ Now rendering the addform renders no items yet:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -1278,12 +1278,12 @@ Render the form:
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-add"
          name="form.widgets.list_of_objects.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-remove"
          name="form.widgets.list_of_objects.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1301,7 +1301,7 @@ Render the form:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -1429,12 +1429,12 @@ Watch for the widget values in the HTML:
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-add"
          name="form.widgets.list_of_objects.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-remove"
          name="form.widgets.list_of_objects.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1452,7 +1452,7 @@ Watch for the widget values in the HTML:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1568,12 +1568,12 @@ values:
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-add"
          name="form.widgets.list_of_objects.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-remove"
          name="form.widgets.list_of_objects.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1591,7 +1591,7 @@ values:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1732,12 +1732,12 @@ it has to appear at the field itself and at the top of the form:
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-add"
          name="form.widgets.list_of_objects.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="form-widgets-list_of_objects-buttons-remove"
          name="form.widgets.list_of_objects.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1755,7 +1755,7 @@ it has to appear at the field itself and at the top of the form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1825,7 +1825,7 @@ Simple but often used use-case is the display form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>

@@ -9,7 +9,7 @@ coding and be transparent on the data extraction level.
 For the examples to work, we have to bring up most of the form framework:
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -188,7 +188,7 @@ We can now render the form:
           <input type="submit"
            id="form-buttons-add"
            name="form.buttons.add"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Add" />
       </div>
     </form>
@@ -396,7 +396,7 @@ After updating the form, we can render the HTML:
         <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -586,7 +586,7 @@ Instanciate the form and use a group class and a group instance:
         <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -736,7 +736,7 @@ the ``owner`` prefix for the fields.
         <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1015,7 +1015,7 @@ Update and render:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>

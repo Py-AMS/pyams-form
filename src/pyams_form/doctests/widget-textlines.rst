@@ -6,7 +6,7 @@ is stored as a list or tuple. This depends on what you are using as sequence
 type.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

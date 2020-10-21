@@ -10,7 +10,7 @@ As JSON messages contents can be dependent of the Javascript framework in use, J
 are handled by adapters, so they can be easilly replaced by a custom implementation.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -337,7 +337,7 @@ Our form is needing a content and a layout templates:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>

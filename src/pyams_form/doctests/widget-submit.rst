@@ -7,7 +7,7 @@ The submit widget allows you to upload a new submit to the server. The
 http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-INPUT
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -45,15 +45,20 @@ Before rendering the widget, one has to set the name and id of the widget:
 If we render the widget we get a simple input element:
 
   >>> print(widget.render())
-  <input type="submit" id="widget.id" name="widget.name"
+  <input type="submit"
+         id="widget.id"
+         name="widget.name"
          class="submit-widget" />
 
 Setting a value for the widget effectively changes the button label:
 
   >>> widget.value = 'Submit'
   >>> print(widget.render())
-  <input type="submit" id="widget.id" name="widget.name"
-         class="submit-widget" value="Submit" />
+  <input type="submit"
+         id="widget.id"
+         name="widget.name"
+         class="submit-widget"
+         value="Submit" />
 
 
 Let's now make sure that we can extract user entered data from a widget:

@@ -7,7 +7,7 @@ The password widget allows you to upload a new password to the server. The
 http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-INPUT
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

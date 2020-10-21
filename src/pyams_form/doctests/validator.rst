@@ -69,7 +69,7 @@ since the validation of field-absent widgets is generally not
 well-defined. Thus, we first need to create a schema.
 
   >>> from pyramid.testing import setUp, tearDown, DummyRequest
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -189,7 +189,7 @@ Let's now clean up the component architecture and register the login validator
 again:
 
   >>> tearDown()
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> config.registry.registerAdapter(LoginValidator,
   ...       provided=interfaces.IValidator)

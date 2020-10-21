@@ -8,7 +8,7 @@ further; like fields, buttons are schema fields within schema. When the form
 is instantiated and updated, the buttons are converted to actions.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -186,7 +186,7 @@ widget. We can now render each action:
   <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
 
 So displaying is nice, but how do button handlers get executed? The action

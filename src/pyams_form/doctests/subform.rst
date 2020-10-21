@@ -10,7 +10,7 @@ there are several classes of sub-forms with different goals.
 Of course, we need to setup our defaults for this demonstration as well:
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -161,7 +161,7 @@ Let's now instantiate the form and render it:
       <input type="submit"
            id="owner-buttons-apply"
            name="owner.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
     </div>
       </fieldset>
@@ -169,7 +169,7 @@ Let's now instantiate the form and render it:
         <input type="submit"
            id="car-buttons-apply"
            name="car.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -241,7 +241,7 @@ Also, the form should say that the data of the owner has changed:
       <input type="submit"
            id="owner-buttons-apply"
            name="owner.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
     </div>
       </fieldset>
@@ -249,7 +249,7 @@ Also, the form should say that the data of the owner has changed:
         <input type="submit"
            id="car-buttons-apply"
            name="car.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -364,7 +364,7 @@ Rendering the form works as before:
         <input type="submit"
            id="car-buttons-apply"
            name="car.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -468,7 +468,7 @@ Let's look at the rendered form:
         <input type="submit"
            id="car-buttons-apply"
            name="car.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -651,7 +651,7 @@ And render the form. As you can see, the widgets get rendered without any
       <input type="submit"
            id="owner-buttons-apply"
            name="owner.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
     </div>
       </fieldset>
@@ -659,7 +659,7 @@ And render the form. As you can see, the widgets get rendered without any
         <input type="submit"
            id="car-buttons-apply"
            name="car.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -741,7 +741,7 @@ Until now, the rendered HTML should still be the same, without the "owner" subfo
       <input type="submit"
          id="car-buttons-add"
          name="car.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -871,7 +871,7 @@ so we have to create a new form:
       <input type="submit"
          id="car-buttons-add"
          name="car.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -1045,7 +1045,7 @@ Let's now create an edit form for our car:
       <input type="submit"
          id="car-buttons-apply"
          name="car.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>

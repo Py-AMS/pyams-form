@@ -13,7 +13,7 @@ all the default component registrations have been made prior to doing those
 examples:
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -435,7 +435,7 @@ Now rendering the addform renders the subform as well:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -550,7 +550,7 @@ Watch for the widget values in the HTML:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -647,7 +647,7 @@ values:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -761,7 +761,7 @@ it has to appear at the field itself and at the top of the form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -843,7 +843,7 @@ Both errors must appear at the top of the form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -896,7 +896,7 @@ Simple but often used use-case is the display form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -940,7 +940,7 @@ What matters is that the objectwidget is rendered hidden.
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1008,7 +1008,7 @@ Watch for the widget values in the HTML:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1171,7 +1171,7 @@ Now rendering the addform renders the subform as well:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>

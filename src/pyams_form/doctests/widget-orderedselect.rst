@@ -8,7 +8,7 @@ such a widget as part of its specification, so that the system has to use a
 combnation of "option" elements, buttons and Javascript.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

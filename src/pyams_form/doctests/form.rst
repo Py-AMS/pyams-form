@@ -15,7 +15,7 @@ all the default component registrations have been made prior to doing those
 examples:
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -418,7 +418,7 @@ Let's now render the page:
       <input type="submit"
        id="form-buttons-add"
        name="form.buttons.add"
-       class="submit-widget"
+       class="submit-widget button-field"
        value="Add" />
     </div>
   </form>
@@ -492,7 +492,7 @@ HTML content:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -666,7 +666,7 @@ Let's now render the form:
       <input type="submit"
          id="form-buttons-add"
          name="form.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </form>
@@ -977,10 +977,10 @@ the add form should display a cancel button:
   >>> addForm.update()
   >>> print(format_html(render_xpath(addForm, './/div[@class="action"]')))
   <div class="action">
-      <input type="submit" id="form-buttons-add" name="form.buttons.add" class="submit-widget" value="Add" />
+      <input type="submit" id="form-buttons-add" name="form.buttons.add" class="submit-widget button-field" value="Add" />
     </div>
   <div class="action">
-      <input type="submit" id="form-buttons-cancel" name="form.buttons.cancel" class="submit-widget" value="Cancel" />
+      <input type="submit" id="form-buttons-cancel" name="form.buttons.cancel" class="submit-widget button-field" value="Cancel" />
     </div>
 
 But showing the button does not mean it does anything. So we also need a
@@ -1082,7 +1082,7 @@ After adding a template, we can look at the form:
       <input type="submit"
          id="form-buttons-apply"
          name="form.buttons.apply"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Apply" />
     </div>
   </form>
@@ -1157,7 +1157,7 @@ Let's now submit the form having some invalid data.
         <input type="submit"
            id="form-buttons-apply"
            name="form.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -1336,7 +1336,7 @@ We can now use the form as usual:
         <input type="submit"
            id="form-buttons-apply"
            name="form.buttons.apply"
-           class="submit-widget"
+           class="submit-widget button-field"
            value="Apply" />
       </div>
     </form>
@@ -1983,7 +1983,7 @@ The button will be available when context is not empty.
   >>> myForm.update()
   >>> print(format_html(render_xpath(myForm, './/div[@class="action"]')))
   <div class="action">
-      <input type="submit" id="form-buttons-empty" name="form.buttons.empty" class="submit-widget" value="Empty" />
+      <input type="submit" id="form-buttons-empty" name="form.buttons.empty" class="submit-widget button-field" value="Empty" />
     </div>
 
 The button will not be available when the context is empty.

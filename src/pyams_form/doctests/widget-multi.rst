@@ -4,7 +4,7 @@ Multi Widget
 The multi widget allows you to add and edit one or more values.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
@@ -49,12 +49,12 @@ We can now render the widget:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -77,7 +77,7 @@ field nothing useful gets rendered. Now let's define a field for this widget and
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </div>
@@ -144,12 +144,12 @@ this widget.
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -248,12 +248,12 @@ a new value:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -351,12 +351,12 @@ Now let's store the new value:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -435,12 +435,12 @@ This is good so, because the Remove selected is an widget-internal submit action
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -509,12 +509,12 @@ Change again a value after delete:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -588,12 +588,12 @@ as input for our internal (sub) widget.
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -650,7 +650,7 @@ Let's test with minimum sequence, there should be no remove button:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </div>
@@ -718,12 +718,12 @@ Now, with middle-length sequence. All buttons should be there.
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -818,7 +818,7 @@ no add button:
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -884,7 +884,7 @@ The multi widget also supports IDict schemas.
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -988,12 +988,12 @@ a new value:
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1110,12 +1110,12 @@ We will get an error if we try and set the same key twice
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-name-buttons-remove"
          name="widget.name.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1431,12 +1431,12 @@ See below for an example.
         <input type="submit"
          id="widget-buttons-add"
          name="widget.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-buttons-remove"
          name="widget.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1509,12 +1509,12 @@ to set the ``show_label``. Let's see.
         <input type="submit"
          id="widget-buttons-add"
          name="widget.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
         <input type="submit"
          id="widget-buttons-remove"
          name="widget.buttons.remove"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Remove selected" />
     </div>
   </div>
@@ -1623,7 +1623,7 @@ Coverage happiness
         <input type="submit"
          id="widget-name-buttons-add"
          name="widget.name.buttons.add"
-         class="submit-widget"
+         class="submit-widget button-field"
          value="Add" />
     </div>
   </div>

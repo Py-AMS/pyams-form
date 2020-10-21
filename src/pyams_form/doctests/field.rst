@@ -12,7 +12,7 @@ is associated with additional meta-data. The simplest way to create a field
 manager is to specify the schema from which to extract all fields.
 
   >>> from pyramid.testing import setUp, tearDown, DummyRequest
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

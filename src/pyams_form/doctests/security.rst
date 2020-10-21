@@ -28,7 +28,7 @@ enough; edit form can implement more complex rules using *IFormContextPermission
 notably when form's content is using an update workflow.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)

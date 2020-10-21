@@ -28,7 +28,7 @@ Data managers abstract the getting and setting of the data. A data manager is
 responsible for setting one piece of data in a particular context.
 
   >>> from pyramid.testing import setUp, tearDown
-  >>> config = setUp()
+  >>> config = setUp(hook_zca=True)
 
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
