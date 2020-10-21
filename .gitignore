@@ -4,4 +4,5 @@
 !/bin/
 !/parts/
 !/develop-eggs/
+!/src/pyams_form/**/__pycache__/
 !/src/pyams_form.egg-info/

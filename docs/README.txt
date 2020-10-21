@@ -17,7 +17,7 @@ application.
 
 All PyAMS documentation is available on `ReadTheDocs <https://pyams.readthedocs.io>`_; source code
 is available on `Gitlab <https://gitlab.com/pyams>`_ and pushed to `Github
-<https://github.com/py-ams>`_.
+<https://github.com/py-ams>`_. Complete doctests are available in the *doctests* folder.
 
 
 What is PyAMS_form?

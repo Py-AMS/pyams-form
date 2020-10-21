@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.3
+-----
+ - updated doctests using ZCA hook
+
 1.0.2
 -----
  - code refactoring to reduce duplications
