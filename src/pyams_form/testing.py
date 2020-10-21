@@ -68,7 +68,7 @@ if sys.argv[-1].endswith('/bin/test'):
     DATE_LABEL = 'Date label'
     READONLY_LABEL = 'ReadOnly label'
     OBJECT_LABEL = 'Object label'
-    
+
 
     def TestRequest(**kwargs):  # pylint: disable=invalid-name
         """Test request helper"""

@@ -126,7 +126,7 @@ class base_widget_template_config:  # pylint: disable=invalid-name
     def __call__(self, wrapped):
         settings = self.__dict__.copy()
 
-        def callback(context, name, widget):
+        def callback(context, name, widget):  # pylint: disable=unused-argument
             template = os.path.join(os.path.dirname(inspect.getfile(inspect.getmodule(widget))),
                                     settings.get('template'))
             if not os.path.isfile(template):

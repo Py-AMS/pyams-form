@@ -211,7 +211,7 @@ class ObjectWidget(Widget):
         self.widgets.ignore_request = self.ignore_request
         self.widgets.update()
 
-    def update_widgets(self, set_errors=True):
+    def update_widgets(self, set_errors=True):  # pylint: disable=unused-argument
         """Update subform widgets"""
         if self.field is None:
             raise ValueError("%r .field is None, that's a blocking point" % self)
