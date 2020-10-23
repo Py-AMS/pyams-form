@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.4
+-----
+ - included edge case fix to handle missing values which are not None but that work as None
+   (merged from z3c.form)
+
 1.0.3
 -----
  - updated doctests using ZCA hook
