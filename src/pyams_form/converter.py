@@ -71,7 +71,7 @@ class BaseDataConverter:
 
     def to_widget_value(self, value):
         """See interfaces.IDataConverter"""
-        if value == self.field.missing_value:
+        if value is self.field.missing_value:
             return ''
         return to_unicode(value)
 
