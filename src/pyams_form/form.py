@@ -28,19 +28,21 @@ from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_form.button import Buttons, Handlers, button_and_handler
-from pyams_form.events import DataExtractedEvent
+from pyams_form.events import DataExtractedEvent, FormCreatedEvent
 from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, \
-    IEditForm, IFieldsForm, IForm, IFormAware, IFormContextPermissionChecker, IGroup, \
-    IGroupManager, IHandlerForm, IInnerSubForm, IInnerTabForm, IInputForm
+    IEditForm, IFieldsForm, IForm, IFormAware, IGroup, IGroupManager, IHandlerForm, \
+    IInnerSubForm, IInnerTabForm, IInputForm
+from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
 from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import ContextRequestAdapter
+from pyams_utils.factory import get_object_factory, is_interface
 from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
 from pyams_utils.url import absolute_url
@@ -146,8 +148,9 @@ class BaseForm(ContextRequestAdapter):
 
     fields = Fields()
 
-    label = None
-    label_required = _('<span class="required">*</span>&ndash; required')
+    title = None
+    legend = None
+    required_label = _('<span class="required">*</span>&ndash; required')
 
     prefix = 'form.'
     status = ''
@@ -194,9 +197,9 @@ class BaseForm(ContextRequestAdapter):
         registry = self.request.registry
         content = self.get_content()
         checker = registry.queryMultiAdapter((content, self.request, self),
-                                             IFormContextPermissionChecker)
+                                             IViewContextPermissionChecker)
         if checker is None:
-            checker = registry.queryAdapter(content, IFormContextPermissionChecker)
+            checker = registry.queryAdapter(content, IViewContextPermissionChecker)
         if checker is not None:
             return checker.edit_permission
         return None
@@ -208,10 +211,9 @@ class BaseForm(ContextRequestAdapter):
     @property
     def required_info(self):
         """Form required information label"""
-        if (self.label_required is not None and
-                self.widgets is not None and
+        if (self.required_label is not None and self.widgets is not None and
                 self.widgets.has_required_fields):
-            return self.request.localizer.translate(self.label_required)
+            return self.request.localizer.translate(self.required_label)
         return None
 
     @reify
@@ -270,6 +272,8 @@ class BaseForm(ContextRequestAdapter):
         self.widgets.ignore_required_on_extract = self.ignore_required_on_extract
         data, errors = self.widgets.extract()
         self.request.registry.notify(DataExtractedEvent(data, errors, self))
+        if not errors:
+            errors = self.widgets.errors
         return data, errors
 
     def get_errors(self):
@@ -282,6 +286,8 @@ class BaseForm(ContextRequestAdapter):
         return self.template()
 
     def __call__(self, **kwargs):
+        """Call update and return layout template"""
+        self.request.registry.notify(FormCreatedEvent(self))
         self.update()
 
         # Don't render anything if we are doing a redirect
@@ -302,7 +308,8 @@ class BaseForm(ContextRequestAdapter):
             'status': self.status,
             'mode': self.mode,
             'fields': [widget.json_data() for widget in self.widgets.values()],
-            'label': self.label or ''
+            'title': self.title or '',
+            'legend': self.legend or ''
         }
         return json.dumps(data)
 
@@ -325,6 +332,7 @@ class Form(BaseForm):
     enctype = FieldProperty(IInputForm['enctype'])
     accept_charset = FieldProperty(IInputForm['accept_charset'])
     accept = FieldProperty(IInputForm['accept'])
+    autocomplete = FieldProperty(IInputForm['autocomplete'])
 
     actions = FieldProperty(IActionForm['actions'])
     refresh_actions = FieldProperty(IActionForm['refresh_actions'])
@@ -338,7 +346,9 @@ class Form(BaseForm):
     # common string for use in validation status messages
     form_errors_message = _('There were some errors.')
 
-    _finished_obj = None
+    def __init__(self, context, request):
+        super(Form, self).__init__(context, request)
+        self.finished_state = {}
 
     @property
     def action(self):
@@ -358,7 +368,8 @@ class Form(BaseForm):
     def update_actions(self):
         """Update form actions"""
         registry = self.request.registry
-        self.actions = registry.getMultiAdapter((self, self.request, self.get_content()), IActions)
+        self.actions = registry.getMultiAdapter((self, self.request, self.get_content()),
+                                                IActions)
         self.actions.update()
 
     def update(self):
@@ -384,7 +395,7 @@ class AddForm(Form):
     ignore_context = True
     ignore_readonly = True
 
-    _finished_add = False
+    content_factory = None
 
     @button_and_handler(_('Add'), name='add')
     def handle_add(self, action):  # pylint: disable=unused-argument
@@ -403,8 +414,10 @@ class AddForm(Form):
         obj = self.create_and_add(data)
         if obj is not None:
             # mark only as finished if we get the new object
-            self._finished_obj = obj
-            self._finished_add = True
+            self.finished_state.update({
+                'action': action,
+                'changes': obj
+            })
 
     def create_and_add(self, data):
         """Create new content and add it to context"""
@@ -412,15 +425,19 @@ class AddForm(Form):
         self.request.registry.notify(ObjectCreatedEvent(obj))
         if IPersistent.providedBy(obj):  # temporary locate to fix raising of INotYet exceptions
             locate(obj, self.context)
-        self.add(obj)
         self.update_content(obj, data)
+        self.add(obj)
         return obj
 
     def create(self, data):
         """Create new content from form data"""
+        if self.content_factory is not None:
+            factory = get_object_factory(self.content_factory) \
+                if is_interface(self.content_factory) else self.content_factory
+            return factory()
         raise NotImplementedError
 
-    def add(self, object):  # pylint: disable=redefined-builtin
+    def add(self, obj):  # pylint: disable=redefined-builtin
         """Add new object to form context"""
         raise NotImplementedError
 
@@ -438,7 +455,7 @@ class AddForm(Form):
         return self.action
 
     def render(self):
-        if self._finished_add:
+        if self.finished_state:
             self.request.response.location = self.next_url()
             self.request.response.status = 302
             return ''
@@ -471,7 +488,10 @@ class EditForm(Form):
             self.status = self.success_message
         else:
             self.status = self.no_changes_message
-        self._finished_obj = changes
+        self.finished_state.update({
+            'action': action,
+            'changes': changes
+        })
 
     def apply_changes(self, data):
         """Apply updates to form context"""

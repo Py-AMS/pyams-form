@@ -63,7 +63,7 @@ class BaseDataConverter:
         widget = registry.getMultiAdapter((field, self.widget.request),
                                           IFieldWidget)
         if IFormAware.providedBy(self.widget):
-            # form property required by objectwidget
+            # form property required by object widget
             widget.form = self.widget.form
             alsoProvides(widget, IFormAware)
         converter = registry.getMultiAdapter((field, widget), IDataConverter)

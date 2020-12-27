@@ -12,7 +12,7 @@
     ${structure:widget.render()}
   </div>
   <fieldset tal:repeat="form view.subforms">
-    <legend>${form.label}</legend>
+    <legend>${form.legend}</legend>
     ${structure:form.render()}
   </fieldset>
   <div class="action" tal:repeat="action view.actions.values()">

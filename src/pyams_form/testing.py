@@ -74,7 +74,7 @@ if sys.argv[-1].endswith('/bin/test'):
         """Test request helper"""
         params = kwargs.get('params')
         if params:
-            copy = {}
+            copy = params.__class__()
             for key, value in params.items():
                 if key.endswith(':list'):
                     key = key.split(':', 1)[0]
@@ -524,8 +524,8 @@ if sys.argv[-1].endswith('/bin/test'):
         def create(self, data):
             return AJAXTestContent(**data)
 
-        def add(self, object):  # pylint: disable=redefined-builtin
-            self.context[object.name.lower()] = object
+        def add(self, obj):  # pylint: disable=redefined-builtin
+            self.context[obj.name.lower()] = obj
 
 
     class ITestEditForm(IAJAXForm):

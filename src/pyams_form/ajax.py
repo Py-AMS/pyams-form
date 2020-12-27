@@ -46,7 +46,7 @@ LOGGER = logging.getLogger('PyAMS (form)')
 
 @implementer(IAJAXForm)
 class AJAXForm:
-    """A form mix-in class used to support form's submit throught AJAX
+    """A form mix-in class used to support form's submit through AJAX
 
     You don't have to inherit from AJAXForm or one of it's subclasses; they are used
     autoamtically when using the "ajax_form_config" class decorator.
@@ -59,7 +59,7 @@ class AJAXForm:
         has_errors, errors = boolean_iter(self.get_errors())  # pylint: disable=no-member
         if has_errors:
             return self.get_ajax_errors(errors)
-        return self.get_ajax_output(self._finished_obj)  # pylint: disable=no-member
+        return self.get_ajax_output(self.finished_state.get('changes'))  # pylint: disable=no-member
 
     def get_ajax_errors(self, errors):
         """Get AJAX errors"""
@@ -105,8 +105,7 @@ class AJAXAddForm(AJAXForm):
                 'message': request.localizer.translate(self.no_changes_message)
             }
         return {
-            'status': 'reload',
-            'location': self.next_url()  # pylint: disable=no-member
+            'status': 'reload'
         }
 
 
@@ -118,11 +117,17 @@ class AJAXEditForm(AJAXForm):
         registry = request.registry
         translate = request.localizer.translate
         # pylint: disable=no-member
-        renderer = registry.queryMultiAdapter((self.context, request, self),
-                                              IAJAXFormRenderer)
         result = {}
+        renderer = None
+        if 'action' in self.finished_state is not None:
+            name = self.finished_state['action'].field.getName()
+            renderer = registry.queryMultiAdapter((self.context, request, self),
+                                                  IAJAXFormRenderer, name=name)
+        if renderer is None:
+            renderer = registry.queryMultiAdapter((self.context, request, self),
+                                                  IAJAXFormRenderer)
         if renderer is not None:
-            result = renderer.render(changes)
+            result = renderer.render(changes) or {}
         status = ''
         message = ''
         if result:

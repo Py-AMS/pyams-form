@@ -57,7 +57,7 @@ class CheckBoxWidget(HTMLInputWidget, SequenceWidget):
                 label = to_unicode(term.value)
             items.append({
                 'id': item_id,
-                'name': self.name + ':list',
+                'name': self.name,
                 'value': term.token,
                 'label': label,
                 'checked': checked
@@ -97,7 +97,7 @@ class SingleCheckBoxWidget(CheckBoxWidget):
         return self.terms
 
 
-@adapter_config(context=(IBool, IFormLayer), provides=IFieldWidget)
+@adapter_config(required=(IBool, IFormLayer), provides=IFieldWidget)
 def SingleCheckBoxFieldWidget(field, request):  # pylint: disable=invalid-name
     """IFieldWidget factory for CheckBoxWidget."""
     widget = FieldWidget(field, SingleCheckBoxWidget(request))

@@ -102,7 +102,7 @@ function copyDataForSubmit(name) {
 	for (var i = 0; i < toSel.options.length; i++) {
 		// create virtual node with suitable attributes
 		var newNode = document.createElement("input");
-		newNode.setAttribute("name", name.replace(/-/g, '.') + ':list');
+		newNode.setAttribute("name", name.replace(/-/g, '.'));
 		newNode.setAttribute("type", "hidden");
 		newNode.setAttribute("value", toSel.options[i].value);
 

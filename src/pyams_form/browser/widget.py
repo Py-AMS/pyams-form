@@ -185,6 +185,7 @@ class HTMLTextInputWidget(HTMLInputWidget):
     size = FieldProperty(IHTMLTextInputWidget['size'])
     maxlength = FieldProperty(IHTMLTextInputWidget['maxlength'])
     placeholder = FieldProperty(IHTMLTextInputWidget['placeholder'])
+    autocomplete = FieldProperty(IHTMLTextInputWidget['autocomplete'])
     autocapitalize = FieldProperty(IHTMLTextInputWidget['autocapitalize'])
 
 

@@ -21,14 +21,13 @@ import os
 import venusian
 from pyramid.config import ConfigurationError
 from pyramid_chameleon.interfaces import IChameleonTranslate
-from zope.component import getGlobalSiteManager
 from zope.interface import Interface, directlyProvides
 
 from pyams_form.interfaces import INPUT_MODE, IWidgetLayoutTemplate
 from pyams_layer.interfaces import IFormLayer
 from pyams_template.interfaces import IPageTemplate
 from pyams_template.template import TemplateFactory, ViewTemplate
-from pyams_utils.registry import query_utility
+from pyams_utils.registry import get_pyramid_registry, query_utility
 
 
 __docformat__ = 'restructuredtext'
@@ -107,7 +106,7 @@ def register_widget_template(template, widget, settings, provides, registry=None
     if registry is None:
         registry = settings.get('registry')
         if registry is None:
-            registry = getGlobalSiteManager()
+            registry = get_pyramid_registry()
     registry.registerAdapter(factory, required, provides, settings.get('mode', INPUT_MODE))
 
 

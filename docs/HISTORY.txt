@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.1.0
+-----
+ - small updates in forms API
+ - use form's "finished_state" attribute to store executed action and changes
+ - automatically use objects factories in add forms
+ - updated "adapter_config" decorator arguments names
+ - updated access to Pyramid's global registry
+ - updated doctests
+
 1.0.4
 -----
  - included edge case fix to handle missing values which are not None but that work as None

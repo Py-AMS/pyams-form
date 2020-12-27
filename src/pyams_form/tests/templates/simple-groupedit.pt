@@ -17,7 +17,7 @@
   </metal:block>
   <fieldset tal:condition="view.groups | nothing"
             tal:repeat="view view.groups">
-    <legend tal:condition="view.label">${view.label}</legend>
+    <legend tal:condition="view.legend">${view.legend}</legend>
     <div metal:use-macro="template.macros.errors" />
     <div metal:use-macro="template.macros.rows" />
   </fieldset>

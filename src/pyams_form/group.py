@@ -17,7 +17,6 @@ This module handles groups of widgets within forms.
 
 from zope.interface import implementer
 
-from pyams_form.events import DataExtractedEvent
 from pyams_form.form import BaseForm, get_form_weight
 from pyams_form.interfaces.form import IGroup, IGroupForm, IGroupManager
 from pyams_form.interfaces.widget import IWidgets
@@ -28,7 +27,7 @@ __docformat__ = 'restructuredtext'
 
 @implementer(IGroupManager)
 class GroupManager:  # pylint: disable=no-member
-    """Base groups manager miixn class"""
+    """Base groups manager mixin class"""
 
     groups = ()
 
@@ -66,8 +65,6 @@ class GroupManager:  # pylint: disable=no-member
                     errors += group_errors
                 else:
                     errors = group_errors
-        registry = self.request.registry
-        registry.notify(DataExtractedEvent(data, errors, self))
         return data, errors
 
 
@@ -79,6 +76,9 @@ class Group(GroupManager, BaseForm):
         self.context = context
         self.request = request
         self.parent_form = self.__parent__ = parent_form
+
+    def get_content(self):
+        return self.parent_form.get_content()
 
     def update_widgets(self, prefix=None):
         """See interfaces.IForm"""
