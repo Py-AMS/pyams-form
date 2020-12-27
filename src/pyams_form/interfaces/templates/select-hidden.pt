@@ -3,7 +3,7 @@
          type="hidden"
 		 class="hidden-widget"
          id="${item['id']}"
-		 name="${view.name}:list"
+		 name="${view.name}"
 		 value="${item['value']}" />
 </tal:loop>
 <input name="${view.name}-empty-marker" type="hidden" value="1" />

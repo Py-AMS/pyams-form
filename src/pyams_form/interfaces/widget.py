@@ -371,6 +371,10 @@ class IFileWidget(ITextWidget):
     """File widget."""
 
 
+class IMediaFileWidget(IFileWidget):
+    """Media file widget marker interface"""
+
+
 @widget_template_config(mode=INPUT_MODE,
                         layer=IFormLayer,
                         template='templates/password-input.pt')

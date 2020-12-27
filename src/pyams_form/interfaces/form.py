@@ -116,14 +116,19 @@ class IForm(Interface):
                                    'the form.'),
                      schema=IWidgets)
 
-    label = TextLine(title=_('Label'),
-                     description=_('A human readable text describing the form that can be '
-                                   'used in the UI.'),
+    title = TextLine(title=_('Title'),
+                     description=_('Main form title'),
                      required=False)
 
-    label_required = TextLine(title=_('Label required'),
-                              description=_('A human readable text describing the form that can be '
-                                            'used in the UI for rendering a required info legend.'),
+    legend = TextLine(title=_('Legend'),
+                      description=_('A human readable text describing the form that can be '
+                                    'used in the UI.'),
+                      required=False)
+
+    required_label = TextLine(title=_('Required label'),
+                              description=_('A human readable text describing the form that can '
+                                            'be used in the UI for rendering a required info '
+                                            'legend.'),
                               required=False)
 
     prefix = ASCIILine(title=_('Prefix'),
@@ -242,14 +247,19 @@ class IInputForm(Interface):
                         required=False)
 
     accept_charset = ASCIILine(title=_('Accepted Character Sets'),
-                               description=_('This is a list of character sets the server accepts. '
-                                             'By default this is unknown.'),
+                               description=_('This is a list of character sets the server '
+                                             'accepts. By default this is unknown.'),
                                required=False)
 
     accept = ASCIILine(title=_('Accepted Content Types'),
                        description=_('This is a list of content types the server can '
                                      'safely handle.'),
                        required=False)
+
+    autocomplete = Choice(title=_("Form autocomplete"),
+                          description=_("Enable or disable global form autocomplete"),
+                          values=('on', 'off', 'new-password'),
+                          required=False)
 
     # AJAX related form settings
 
@@ -262,8 +272,7 @@ class IInputForm(Interface):
     ajax_form_target = TextLine(title="Form submit target",
                                 description="Form content target, used for HTML and text content "
                                             "types",
-                                required=False,
-                                default='#content')
+                                required=False)
 
     ajax_form_callback = TextLine(title="AJAX submit callback",
                                   description="Name of a custom form submit callback",
@@ -362,16 +371,6 @@ class IFormSecurityContext(Interface):
     """Interface used to get security context of a given object"""
 
     context = Attribute("Object security context")
-
-
-class IFormContextPermissionChecker(Interface):
-    """Interface used to check access permissions on form context
-
-    May be implemented as a context adapter, or as a (context, request, form)
-    multi-adapter.
-    """
-
-    edit_permission = Attribute("Permission required to update form's content")
 
 
 class IFormCreatedEvent(IObjectCreatedEvent):

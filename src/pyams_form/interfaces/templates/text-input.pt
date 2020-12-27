@@ -14,6 +14,7 @@
 	   maxlength="${view.maxlength}"
 	   value="${view.value}"
 	   placeholder="${view.placeholder}"
+	   autocomplete="${view.autocomplete}"
 	   autocapitalize="${view.autocapitalize}"
 	   onclick="${view.onclick}"
 	   ondblclick="${view.ondblclick}"
