@@ -98,8 +98,7 @@ Finally: let's provide correct values:
   ...                                       'form.buttons.add': 'Add'})
   >>> result = render_view(root, request, 'test-add-form.json')
   >>> pprint.pprint(json.loads(result.decode()))
-  {'location': 'http://example.com',
-   'status': 'reload'}
+  {'status': 'reload'}
   >>> 'pyams' in root
   True
   >>> root['pyams']

@@ -19,12 +19,12 @@ mechanisms can be used here:
  - if an edit permission is defined on the form, this permission will be required to get access
    to form's input mode; otherwise, the form will be in display mode
 
- - a (multi-)adapter to :py:class:`pyams_form.interfaces.form.IFormContextPermissionChecker` can
+ - a (multi-)adapter to :py:class:`pyams_form.interfaces.form.IViewContextPermissionChecker` can
    be defined, for context, request and form or only for context; this adapter, if any, will
    return the permission required to get access to form in edit mode.
 
 Add form generally don't implement a specific edit permission, as getting access to form is
-enough; edit form can implement more complex rules using *IFormContextPermissionChecker* adapters,
+enough; edit form can implement more complex rules using *IViewContextPermissionChecker* adapters,
 notably when form's content is using an update workflow.
 
   >>> from pyramid.testing import setUp, tearDown
@@ -129,9 +129,9 @@ Using form context security adapter
 We are now going to use a form context security checker adapter:
 
   >>> from pyams_utils.adapter import ContextAdapter
-  >>> from pyams_form.interfaces.form import IFormContextPermissionChecker
+  >>> from pyams_security.interfaces import IViewContextPermissionChecker
 
-  >>> @implementer(IFormContextPermissionChecker)
+  >>> @implementer(IViewContextPermissionChecker)
   ... class ForbiddenSecurityChecker(ContextAdapter):
   ...     @property
   ...     def edit_permission(self):
@@ -139,7 +139,7 @@ We are now going to use a form context security checker adapter:
 
   >>> config.registry.registerAdapter(ForbiddenSecurityChecker,
   ...       required=(IMyContext,),
-  ...       provided=IFormContextPermissionChecker)
+  ...       provided=IViewContextPermissionChecker)
 
   >>> my_form._edit_permission = None
   >>> my_form.update()
@@ -150,7 +150,7 @@ We are now going to use a form context security checker adapter:
 
 If a security checker returns a null permission, it's always granted:
 
-  >>> @implementer(IFormContextPermissionChecker)
+  >>> @implementer(IViewContextPermissionChecker)
   ... class AllowedSecurityChecker(ContextAdapter):
   ...     @property
   ...     def edit_permission(self):
@@ -158,7 +158,7 @@ If a security checker returns a null permission, it's always granted:
 
   >>> config.registry.registerAdapter(AllowedSecurityChecker,
   ...       required=(IMyContext,),
-  ...       provided=IFormContextPermissionChecker)
+  ...       provided=IViewContextPermissionChecker)
 
   >>> my_form.update()
   >>> my_form.edit_permission is None

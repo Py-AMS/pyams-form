@@ -54,12 +54,12 @@ groups:
   >>> from pyams_form import field, group
 
   >>> class LicenseGroup(group.Group):
-  ...     label = 'License'
+  ...     legend = 'License'
   ...     fields = field.Fields(IVehicleRegistration).select(
   ...         'license', 'address')
 
   >>> class CarGroup(group.Group):
-  ...     label = 'Car'
+  ...     legend = 'Car'
   ...     fields = field.Fields(IVehicleRegistration).select(
   ...         'model', 'make', 'year')
 
@@ -639,7 +639,7 @@ Now we can create a group just for the owner with its own
 of the ``VehicleRegistration`` instance.
 
   >>> class OwnerGroup(group.Group):
-  ...     label = 'Owner'
+  ...     legend = 'Owner'
   ...     fields = field.Fields(IVehicleOwner, prefix='owner')
   ...
   ...     def get_content(self):
@@ -786,14 +786,14 @@ Nested Groups
 The group can contains groups. Let's adapt the previous RegistrationEditForm:
 
   >>> class OwnerGroup(group.Group):
-  ...     label = 'Owner'
+  ...     legend = 'Owner'
   ...     fields = field.Fields(IVehicleOwner, prefix='owner')
   ...
   ...     def get_content(self):
   ...         return self.context.owner
 
   >>> class VehicleRegistrationGroup(group.Group):
-  ...     label = 'Registration'
+  ...     legend = 'Registration'
   ...     fields = field.Fields(IVehicleRegistration).omit(
   ...         'owner')
   ...     groups = (OwnerGroup,)

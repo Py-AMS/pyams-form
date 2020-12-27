@@ -80,7 +80,7 @@ Now let's try if we get widget values:
           class="option">
       <input type="checkbox"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="true" />
       <label for="widget-id-0">
@@ -91,7 +91,7 @@ Now let's try if we get widget values:
           class="option">
       <input type="checkbox"
              id="widget-id-1"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="false" />
       <label for="widget-id-1">
@@ -112,12 +112,12 @@ The checkbox json_data representation:
    'options': [{'checked': False,
                 'id': 'widget-id-0',
                 'label': 'yes',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'true'},
                {'checked': False,
                 'id': 'widget-id-1',
                 'label': 'no',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'false'}],
    'required': False,
    'type': 'check',
@@ -135,7 +135,7 @@ field get rendered with a checked flag:
       <input type="checkbox"
                      checked="checked"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="true" />
       <label for="widget-id-0">
@@ -146,7 +146,7 @@ field get rendered with a checked flag:
           class="option">
       <input type="checkbox"
              id="widget-id-1"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="false" />
       <label for="widget-id-1">
@@ -167,12 +167,12 @@ The checkbox json_data representation:
    'options': [{'checked': True,
                 'id': 'widget-id-0',
                 'label': 'yes',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'true'},
                {'checked': False,
                 'id': 'widget-id-1',
                 'label': 'no',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'false'}],
    'required': False,
    'type': 'check',
@@ -184,7 +184,7 @@ Check HIDDEN_MODE:
   >>> widget.mode = interfaces.HIDDEN_MODE
   >>> print(widget.render())
   <span class="option">
-    <input type="hidden" id="widget-id-0" name="widget.name:list"
+    <input type="hidden" id="widget-id-0" name="widget.name"
            class="checkbox-widget" value="true" />
   </span>
   <input name="widget.name-empty-marker" type="hidden" value="1" />
@@ -200,12 +200,12 @@ The checkbox json_data representation:
    'options': [{'checked': True,
                 'id': 'widget-id-0',
                 'label': 'yes',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'true'},
                {'checked': False,
                 'id': 'widget-id-1',
                 'label': 'no',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'false'}],
    'required': False,
    'type': 'check',
@@ -221,12 +221,12 @@ the value (which is used as a backup label) contains non-ASCII characters:
   [{'checked': False,
     'id': 'widget-id-0',
     'label': 'yes\n',
-    'name': 'widget.name:list',
+    'name': 'widget.name',
     'value': 'yes\n'},
    {'checked': False,
     'id': 'widget-id-1',
     'label': 'no',
-    'name': 'widget.name:list',
+    'name': 'widget.name',
     'value': 'no...'}]
 
 Note: The "\234" character is interpreted differently in Pytohn 2 and 3
@@ -271,7 +271,7 @@ For there to be a sensible output, we need to give the widget a label:
           class="option">
       <input type="checkbox"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="single-checkbox-widget"
              value="selected" />
       <label for="widget-id-0">
@@ -291,7 +291,7 @@ The checkbox json_data representation:
    'options': [{'checked': False,
                 'id': 'widget-id-0',
                 'label': 'Do you want that?',
-                'name': 'widget.name:list',
+                'name': 'widget.name',
                 'value': 'selected'}],
    'required': False,
    'type': 'check',
@@ -311,7 +311,7 @@ will make the box checked:
       <input type="checkbox"
                      checked="checked"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="single-checkbox-widget"
              value="selected" />
       <label for="widget-id-0">
@@ -334,7 +334,7 @@ field
           class="option">
       <input type="checkbox"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="single-checkbox-widget"
              value="selected" />
       <label for="widget-id-0">
@@ -350,7 +350,7 @@ Check HIDDEN_MODE:
   >>> print(format_html(widget.render()))
   <span class="option">
     <input type="hidden" id="widget-id-0"
-           name="widget.name:list"
+           name="widget.name"
            class="single-checkbox-widget" value="selected" />
   </span>
   <input name="widget.name-empty-marker" type="hidden" value="1" />
@@ -392,7 +392,7 @@ Check if a term which __str__ returns non ascii string does not crash the update
           class="option">
       <input type="checkbox"
              id="widget-id-0"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="one" />
       <label for="widget-id-0">
@@ -403,7 +403,7 @@ Check if a term which __str__ returns non ascii string does not crash the update
           class="option">
       <input type="checkbox"
              id="widget-id-1"
-             name="widget.name:list"
+             name="widget.name"
              class="checkbox-widget"
              value="two" />
       <label for="widget-id-1">

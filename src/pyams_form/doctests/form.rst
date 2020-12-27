@@ -297,7 +297,7 @@ Rendering the form
 ------------------
 
 Once the update is complete we can render the form using one of two methods reder or json.
-If we want to generate json data to be consumed by the client all we need to do is call json()::
+If we want to generate json data to be consumed by the client all we need to do is call json():
 
  >>> import json
  >>> from pprint import pprint
@@ -347,10 +347,11 @@ If we want to generate json data to be consumed by the client all we need to do 
               'required': False,
               'type': 'text',
               'value': '20'}],
-  'label': '',
+  'legend': '',
   'mode': 'input',
   'prefix': 'form.',
-  'status': ''}
+  'status': '',
+  'title': ''}
 
 
 The other way we can render the form is using the render() method.
@@ -392,7 +393,7 @@ Let's now render the page:
     <div class="row">
       <label for="form-widgets-gender">Gender</label>
       <select id="form-widgets-gender"
-        name="form.widgets.gender:list"
+        name="form.widgets.gender"
         class="select-widget choice-field"
         size="1">
     <option id="form-widgets-gender-novalue"
@@ -466,7 +467,7 @@ HTML content:
     <div class="row">
       <label for="form-widgets-gender">Gender</label>
       <select id="form-widgets-gender"
-          name="form.widgets.gender:list"
+          name="form.widgets.gender"
           class="select-widget choice-field"
           size="1">
       <option id="form-widgets-gender-novalue"
@@ -640,7 +641,7 @@ Let's now render the form:
     <div class="row">
       <label for="form-widgets-gender">Gender</label>
       <select id="form-widgets-gender"
-          name="form.widgets.gender:list"
+          name="form.widgets.gender"
           class="select-widget choice-field"
           size="1">
       <option id="form-widgets-gender-novalue"
@@ -720,10 +721,11 @@ Notice the errors are present in the json output of the form as well
                 'required': False,
                 'type': 'text',
                 'value': '23'}],
-   'label': '',
+   'legend': '',
    'mode': 'input',
    'prefix': 'form.',
-   'status': 'There were some errors.'}
+   'status': 'There were some errors.',
+   'title': ''}
 
 
 Note that the values of the field are now extracted from the request.
@@ -803,10 +805,11 @@ and through as json:
                 'required': False,
                 'type': 'text',
                 'value': '23'}],
-    'label': '',
+    'legend': '',
     'mode': 'input',
     'prefix': 'form.',
-    'status': 'There were some errors.'}
+    'status': 'There were some errors.',
+    'title': ''}
 
 Let's try to provide a negative age, which is not possible either:
 
@@ -906,7 +909,7 @@ field is required:
 
 If we set the labelRequired to None, we do not get a requiredInfo label:
 
-  >>> addForm.label_required = None
+  >>> addForm.required_label = None
   >>> addForm.required_info is None
   True
 
@@ -992,7 +995,9 @@ custom action handler to handle the cancel action:
   ...
   ...     def __call__(self):
   ...         if self.action.name == 'form.buttons.cancel':
-  ...            self.form._finished_add = True
+  ...            self.form.finished_state.update({
+  ...                'action': self.action
+  ...            })
   ...            return
   ...         super(AddActionHandler, self).__call__()
 
@@ -1056,7 +1061,7 @@ After adding a template, we can look at the form:
     <div class="row">
       <label for="form-widgets-gender">Gender</label>
       <select id="form-widgets-gender"
-          name="form.widgets.gender:list"
+          name="form.widgets.gender"
           class="select-widget choice-field"
           size="1">
       <option id="form-widgets-gender-novalue"
@@ -1130,7 +1135,7 @@ Let's now submit the form having some invalid data.
       <div class="row">
         <label for="form-widgets-gender">Gender</label>
         <select id="form-widgets-gender"
-            name="form.widgets.gender:list"
+            name="form.widgets.gender"
             class="select-widget choice-field"
             size="1">
         <option id="form-widgets-gender-novalue"
@@ -1310,7 +1315,7 @@ We can now use the form as usual:
       <div class="row">
         <label for="form-widgets-gender">Gender</label>
         <select id="form-widgets-gender"
-            name="form.widgets.gender:list"
+            name="form.widgets.gender"
             class="select-widget choice-field"
             size="1">
         <option id="form-widgets-gender-novalue"

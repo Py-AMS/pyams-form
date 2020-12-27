@@ -127,7 +127,7 @@ Set wrong values:
 
   >>> submit = testing.get_submit_values(content)
   >>> submit['form.widgets.subobj.widgets.single_int'] = 'foobar'
-  >>> submit['form.widgets.subobj.widgets.single_choice:list'] = 'two'
+  >>> submit['form.widgets.subobj.widgets.single_choice'] = 'two'
   >>> submit['form.widgets.subobj.widgets.single_textline'] = 'foo\nbar'
   >>> submit['form.widgets.subobj.widgets.single_date'] = 'foobar'
 
@@ -184,8 +184,8 @@ Let's fix the values:
 
   >>> submit['form.widgets.subobj.widgets.single_int'] = '1042'
   >>> submit['form.widgets.subobj.widgets.single_bool'] = 'true'
-  >>> submit['form.widgets.subobj.widgets.single_choice:list'] = 'three'
-  >>> submit['form.widgets.subobj.widgets.single_choice_opt:list'] = 'four'
+  >>> submit['form.widgets.subobj.widgets.single_choice'] = 'three'
+  >>> submit['form.widgets.subobj.widgets.single_choice_opt'] = 'four'
   >>> submit['form.widgets.subobj.widgets.single_textline'] = 'foobar'
   >>> submit['form.widgets.subobj.widgets.single_date'] = '6/14/21'
 

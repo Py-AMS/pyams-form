@@ -95,7 +95,7 @@ Now let's try if we get widget values:
   >>> widget.update()
   >>> print(format_html(widget.render()))
   <select id="widget-id"
-          name="widget.name:list"
+          name="widget.name"
           class="select-widget"
           size="1">
       <option id="widget-id-novalue"
@@ -122,7 +122,7 @@ If we set the widget value to "x", then it should be present and selected:
   >>> widget.update()
   >>> print(format_html(widget.render()))
   <select id="widget-id"
-          name="widget.name:list"
+          name="widget.name"
           class="select-widget"
           size="1">
       <option id="widget-id-novalue"
@@ -144,7 +144,7 @@ If we set the widget value to "y", then it should NOT be around:
   >>> widget.value = ['y']
   >>> widget.update()
   >>> print(format_html(widget.render()))
-  <select id="widget-id" name="widget.name:list"
+  <select id="widget-id" name="widget.name"
           class="select-widget" size="1">
   <option id="widget-id-novalue" value="--NOVALUE--">No value</option>
   <option id="widget-id-0" value="0">bad</option>
@@ -243,13 +243,13 @@ Let's see what happens if we have values that are not in the vocabulary:
            type="hidden"
                class="hidden-widget"
            id="widget-id-0"
-               name="widget.name:list"
+               name="widget.name"
                value="0" />
     <input
            type="hidden"
                class="hidden-widget"
            id="widget-id-missing-0"
-               name="widget.name:list"
+               name="widget.name"
                value="x" />
   <input name="widget.name-empty-marker" type="hidden" value="1" />
 

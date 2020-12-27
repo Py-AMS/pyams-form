@@ -47,7 +47,7 @@ Before rendering the widget, one has to set the name and id of the widget:
 If we render the widget we get an empty widget:
 
   >>> print(format_html(widget.render()))
-  <select id="widget-id" name="widget.name:list"
+  <select id="widget-id" name="widget.name"
           class="select-widget" size="1">
   </select>
   <input name="widget.name-empty-marker" type="hidden"
@@ -74,7 +74,7 @@ Now let's try if we get widget values:
   >>> widget.update()
   >>> print(format_html(widget.render()))
   <select id="widget-id"
-          name="widget.name:list"
+          name="widget.name"
           class="select-widget"
           size="1">
       <option id="widget-id-novalue"
@@ -122,7 +122,7 @@ If we select item "b", then it should be selected:
   >>> widget.value = ['b']
   >>> widget.update()
   >>> print(format_html(widget.render()))
-  <select id="widget-id" name="widget.name:list"
+  <select id="widget-id" name="widget.name"
           class="select-widget" size="1">
   <option id="widget-id-novalue" value="--NOVALUE--">No value</option>
   <option id="widget-id-0" value="a">a</option>
@@ -164,7 +164,7 @@ Let's see what happens if we have values that are not in the vocabulary:
   >>> widget.value = ['x', 'y']
   >>> widget.update()
   >>> print(widget.render())
-  <select id="widget-id" name="widget.name:list"
+  <select id="widget-id" name="widget.name"
           class="select-widget" size="1">
   <option id="widget-id-novalue" value="--NOVALUE--">No value</option>
   <option id="widget-id-0" value="a">a</option>
@@ -275,7 +275,7 @@ cases you just have to set the ``prompt`` attribute to ``True``:
   >>> widget.update()
   >>> print(format_html(widget.render()))
   <select id="widget-id"
-          name="widget.name:list"
+          name="widget.name"
           class="select-widget"
           size="1">
       <option id="widget-id-novalue"
@@ -298,7 +298,7 @@ required:
   >>> widget.update()
   >>> print(format_html(widget.render()))
   <select id="widget-id"
-          name="widget.name:list"
+          name="widget.name"
           class="select-widget required"
           size="1">
       <option id="widget-id-novalue"
@@ -388,7 +388,7 @@ We can now set our widget's mode to hidden and render it:
            type="hidden"
                class="hidden-widget"
            id="widget-id-1"
-               name="widget.name:list"
+               name="widget.name"
                value="b" />
   <input name="widget.name-empty-marker" type="hidden" value="1" />
 

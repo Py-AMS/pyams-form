@@ -409,7 +409,7 @@ Now test the hints in our widgets:
 
   >>> print(format_html(allInOneForm.widgets['choiceField'].render()))
   <select id="form-widgets-choiceField"
-          name="form.widgets.choiceField:list"
+          name="form.widgets.choiceField"
           class="select-widget required choice-field"
           title="This is a choice field."
           size="1">
@@ -429,7 +429,7 @@ Now test the hints in our widgets:
 
   >>> print(format_html(allInOneForm.widgets['optionalChoiceField'].render()))
   <select id="form-widgets-optionalChoiceField"
-          name="form.widgets.optionalChoiceField:list"
+          name="form.widgets.optionalChoiceField"
           class="select-widget choice-field"
           title="This is a non-required choice field."
           size="1">
@@ -451,7 +451,7 @@ Now test the hints in our widgets:
 
   >>> print(format_html(allInOneForm.widgets['promptChoiceField'].render()))
   <select id="form-widgets-promptChoiceField"
-          name="form.widgets.promptChoiceField:list"
+          name="form.widgets.promptChoiceField"
           class="select-widget choice-field"
           title="This is a choice field with an explicit prompt."
           size="1">
@@ -513,7 +513,7 @@ Now test the hints in our widgets:
 
   >>> print(format_html(allInOneForm.widgets['frozenSetField'].render()))
   <select id="form-widgets-frozenSetField"
-          name="form.widgets.frozenSetField:list"
+          name="form.widgets.frozenSetField"
           class="select-widget required frozenset-field"
           title="This is a FrozenSet field."
           multiple="multiple"
@@ -606,7 +606,7 @@ Now test the hints in our widgets:
 
   >>> print(format_html(allInOneForm.widgets['setField'].render()))
   <select id="form-widgets-setField"
-          name="form.widgets.setField:list"
+          name="form.widgets.setField"
           class="select-widget required set-field"
           title="This is a Set field."
           multiple="multiple"

@@ -207,7 +207,7 @@ For the boolean, the checkbox widget can be used as well:
       <input type="checkbox"
                      checked="checked"
              id="foo-0"
-             name="bar:list"
+             name="bar"
              class="checkbox-widget required bool-field"
              value="true" />
       <label for="foo-0">
@@ -218,7 +218,7 @@ For the boolean, the checkbox widget can be used as well:
           class="option">
       <input type="checkbox"
              id="foo-1"
-             name="bar:list"
+             name="bar"
              class="checkbox-widget required bool-field"
              value="false" />
       <label for="foo-1">
@@ -261,7 +261,7 @@ We can also have a single checkbox button for the boolean.
       <input type="checkbox"
                      checked="checked"
              id="foo-0"
-             name="bar:list"
+             name="bar"
              class="single-checkbox-widget required bool-field"
              value="selected" />
       <label for="foo-0">
@@ -440,7 +440,7 @@ Choice
   <SequenceDataConverter converts from Choice to SelectWidget>
 
   >>> print(widget.render())
-  <select id="foo" name="bar:list" class="select-widget required choice-field"
+  <select id="foo" name="bar" class="select-widget required choice-field"
           size="1">
     <option id="foo-0" value="yes" selected="selected">Yes</option>
     <option id="foo-1" value="no">No</option>
@@ -676,7 +676,7 @@ FrozenSet
   <CollectionSequenceDataConverter converts from FrozenSet to SelectWidget>
 
   >>> print(format_html(widget.render()))
-  <select id="foo" name="bar:list" class="select-widget required frozenset-field"
+  <select id="foo" name="bar" class="select-widget required frozenset-field"
           multiple="multiple" size="5">
     <option id="foo-0" value="1" selected="selected">1</option>
     <option id="foo-1" value="2">2</option>
@@ -2264,7 +2264,7 @@ Set
   <CollectionSequenceDataConverter converts from Set to SelectWidget>
 
   >>> print(widget.render())
-  <select id="foo" name="bar:list" class="select-widget required set-field"
+  <select id="foo" name="bar" class="select-widget required set-field"
           multiple="multiple"  size="5">
     <option id="foo-0" value="1" selected="selected">1</option>
     <option id="foo-1" value="2">2</option>

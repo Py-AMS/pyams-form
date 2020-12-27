@@ -800,8 +800,8 @@ Change key values, item values must stick to the new values.
   >>> submit['form.widgets.dict_of_int.key.2'] = '42'  # was 101:100
   >>> submit['form.widgets.dict_of_bool.key.0'] = 'true'  # was False:True
   >>> submit['form.widgets.dict_of_bool.key.1'] = 'false'  # was True:False
-  >>> submit['form.widgets.dict_of_choice.key.1:list'] = 'key2'  # was key3: two
-  >>> submit['form.widgets.dict_of_choice.key.0:list'] = 'key3'  # was key1: three
+  >>> submit['form.widgets.dict_of_choice.key.1'] = 'key2'  # was key3: two
+  >>> submit['form.widgets.dict_of_choice.key.0'] = 'key3'  # was key1: three
   >>> submit['form.widgets.dict_of_textline.key.1'] = 'lorem'  # was textkey2: some txt two
   >>> submit['form.widgets.dict_of_textline.1'] = 'ipsum'  # was textkey2: some txt two
   >>> submit['form.widgets.dict_of_textline.key.0'] = 'foobar'  # was textkey1: some txt one

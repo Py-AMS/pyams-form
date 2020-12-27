@@ -849,7 +849,7 @@ so we have to create a new form:
   </div>
     </fieldset>
     <fieldset>
-      <legend>Parking</legend>
+      <legend></legend>
   <div class="row">
     <label for="parking-widgets-name">Name</label>
     <input type="text"
@@ -964,7 +964,7 @@ Let's now create an edit form for our car:
   >>> class ParkingEditForm(subform.InnerEditForm):
   ...     fields = field.Fields(IParking)
   ...     prefix = 'parking'
-  ...     label = 'Parking'
+  ...     legend = 'Parking'
   ...     weight = 2
   ...
   ...     def get_content(self):
@@ -1129,10 +1129,10 @@ If we provide a security manager for a given context, a subform in display mode 
 it's context:
 
   >>> from pyams_utils.adapter import ContextAdapter
+  >>> from pyams_security.interfaces import IViewContextPermissionChecker
   >>> from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
-  >>> from pyams_form.interfaces.form import IFormContextPermissionChecker
 
-  >>> @zope.interface.implementer(IFormContextPermissionChecker)
+  >>> @zope.interface.implementer(IViewContextPermissionChecker)
   ... class ForbiddenSecurityChecker(ContextAdapter):
   ...     @property
   ...     def edit_permission(self):
@@ -1140,7 +1140,7 @@ it's context:
 
   >>> config.registry.registerAdapter(ForbiddenSecurityChecker,
   ...       required=(IParking,),
-  ...       provided=IFormContextPermissionChecker)
+  ...       provided=IViewContextPermissionChecker)
 
   >>> request = TestRequest()
   >>> carForm = CarEditForm(car, request)
