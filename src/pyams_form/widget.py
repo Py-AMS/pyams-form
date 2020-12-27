@@ -285,7 +285,10 @@ class SequenceWidget(Widget):
         params = self.request.params
         if (self.name not in params and self.name + '-empty-marker' in params):
             return ()
-        value = params.get(self.name, default)
+        try:
+            value = params.getall(self.name) or default
+        except AttributeError:
+            value = params.get(self.name, default)
         if value != default:
             if not isinstance(value, (tuple, list)):
                 # this is here to make any single value a tuple
