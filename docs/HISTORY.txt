@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.0
+-----
+ - added support for inner sub-forms and tab-forms in groups manager
+
 1.1.0
 -----
  - small updates in forms API
