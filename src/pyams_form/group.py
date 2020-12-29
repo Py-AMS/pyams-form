@@ -53,6 +53,8 @@ class GroupManager:  # pylint: disable=no-member
         # update all groups
         [group.update() for group in groups]  # pylint: disable=expression-not-assigned
         self.groups = tuple(groups)
+        [subform.update() for subform in self.subforms]  # pylint: disable=expression-not-assigned
+        [tabform.update() for tabform in self.tabforms]  # pylint: disable=expression-not-assigned
 
     def extract_data(self, set_errors=True):
         """See interfaces.IForm"""
