@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1
+-----
+ - interfaces description updates
+ - code cleanup
+
 1.2.0
 -----
  - added support for inner sub-forms and tab-forms in groups manager
