@@ -237,7 +237,8 @@ class IHTMLTextInputWidget(IHTMLFormElement):
     autocomplete = Choice(title='Auto-Complete Control',
                           description=('This attribute controls whether the browser should '
                                        'automatically complete the input value.'),
-                          values=('off', 'on', 'new-password'),
+                          values=('off', 'on', 'username', 'new-password', 'current-password',
+                                  'cc-number'),
                           required=False)
 
     autocapitalize = Choice(title='Auto-Capitalization Control',

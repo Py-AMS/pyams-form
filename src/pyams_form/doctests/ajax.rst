@@ -259,15 +259,15 @@ Let's try now to add a subform to this edit form:
   ...     """Test element edit subform AJAX renderer"""
   ...
   ...     def render(self, changes):
-  ...         if changes:
-  ...             return {
-  ...                 'events': [{
-  ...                     'event_type': 'refresh',
-  ...                     'source': self.view.widgets['label'].name,
-  ...                     'value': self.view.widgets['label'].value
-  ...                 }]
-  ...             }
-  ...         return None
+  ...         if not changes:
+  ...             return None
+  ...         return {
+  ...             'events': [{
+  ...                 'event_type': 'refresh',
+  ...                 'source': self.view.widgets['label'].name,
+  ...                 'value': self.view.widgets['label'].value
+  ...             }]
+  ...         }
 
   >>> config.registry.registerAdapter(TestElementEditSubformRenderer,
   ...       required=(None, IFormLayer, TestElementEditSubform),

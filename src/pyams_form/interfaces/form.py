@@ -187,6 +187,9 @@ class IAJAXForm(IForm):
 class IAJAXFormRenderer(Interface):
     """AJAX form JSON renderer"""
 
+    def render(self, changes):
+        """Render changes in JSON"""
+
 
 class ISubForm(IForm):
     """A subform."""

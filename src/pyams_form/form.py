@@ -36,10 +36,10 @@ from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, \
     IEditForm, IFieldsForm, IForm, IFormAware, IGroup, IGroupManager, IHandlerForm, \
     IInnerSubForm, IInnerTabForm, IInputForm
-from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
+from pyams_security.permission import get_edit_permission
 from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import ContextRequestAdapter
 from pyams_utils.factory import get_object_factory, is_interface
@@ -194,15 +194,8 @@ class BaseForm(ContextRequestAdapter):
         permission = self._edit_permission
         if permission is not None:  # locally defined edit permission
             return permission
-        registry = self.request.registry
         content = self.get_content()
-        checker = registry.queryMultiAdapter((content, self.request, self),
-                                             IViewContextPermissionChecker)
-        if checker is None:
-            checker = registry.queryAdapter(content, IViewContextPermissionChecker)
-        if checker is not None:
-            return checker.edit_permission
-        return None
+        return get_edit_permission(self.request, content, self)
 
     def get_content(self):
         """See interfaces.form.IForm"""
@@ -301,13 +294,17 @@ class BaseForm(ContextRequestAdapter):
         """Get form data in JSON format"""
         data = {
             'errors': [
-                error.message for error in
-                (self.widgets.errors or []) if error.field is None
+                error.message
+                for error in (self.widgets.errors or [])
+                if error.field is None
             ],
             'prefix': self.prefix,
             'status': self.status,
             'mode': self.mode,
-            'fields': [widget.json_data() for widget in self.widgets.values()],
+            'fields': [
+                widget.json_data()
+                for widget in self.widgets.values()
+            ],
             'title': self.title or '',
             'legend': self.legend or ''
         }
