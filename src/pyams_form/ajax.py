@@ -23,6 +23,7 @@ import venusian
 from pyramid.config import ConfigurationError
 from pyramid.events import subscriber
 from pyramid.interfaces import IRequest
+from zope.component import queryMultiAdapter
 from zope.interface import Interface, alsoProvides, implementer
 
 from pyams_form.events import FormCreatedEvent
@@ -91,10 +92,15 @@ class AJAXAddForm(AJAXForm):
 
     def get_ajax_output(self, changes):
         request = self.request  # pylint: disable=no-member
-        registry = request.registry
         # pylint: disable=no-member
-        renderer = registry.queryMultiAdapter((self.context, request, self),
-                                              IAJAXFormRenderer)
+        renderer = None
+        if 'action' in self.finished_state:
+            name = self.finished_state['action'].field.getName()
+            renderer = queryMultiAdapter((self.context, request, self),
+                                         IAJAXFormRenderer, name=name)
+        if renderer is None:
+            renderer = queryMultiAdapter((self.context, request, self),
+                                         IAJAXFormRenderer)
         if renderer is not None:
             result = renderer.render(changes)
             if result:
@@ -114,18 +120,17 @@ class AJAXEditForm(AJAXForm):
 
     def get_ajax_output(self, changes):
         request = self.request  # pylint: disable=no-member
-        registry = request.registry
         translate = request.localizer.translate
         # pylint: disable=no-member
         result = {}
         renderer = None
-        if 'action' in self.finished_state is not None:
+        if 'action' in self.finished_state:
             name = self.finished_state['action'].field.getName()
-            renderer = registry.queryMultiAdapter((self.context, request, self),
-                                                  IAJAXFormRenderer, name=name)
+            renderer = queryMultiAdapter((self.context, request, self),
+                                         IAJAXFormRenderer, name=name)
         if renderer is None:
-            renderer = registry.queryMultiAdapter((self.context, request, self),
-                                                  IAJAXFormRenderer)
+            renderer = queryMultiAdapter((self.context, request, self),
+                                         IAJAXFormRenderer)
         if renderer is not None:
             result = renderer.render(changes) or {}
         status = ''
