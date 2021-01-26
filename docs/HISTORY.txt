@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.3.0
+-----
+ - look for actions in finished state to get AJAX renderers
+ - updated Gitlab-CI configuration
+ - removed Travis-CI configuration
+
 1.2.1
 -----
  - interfaces description updates
