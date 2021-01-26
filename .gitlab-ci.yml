@@ -75,7 +75,7 @@ coverage:
 build-3.5:
     stage: build
     script:
-        - ./bin/buildout setup setup.py clean --all sdist bdist_egg bdist_wheel
+        - buildout setup setup.py clean --all sdist bdist_egg bdist_wheel
     artifacts:
         paths:
             - ./dist
