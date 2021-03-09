@@ -8,6 +8,8 @@ tested.
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -349,7 +351,7 @@ sensible constructor:
   ...     manager_interface = zope.interface.Interface
   ...
   ...     def __init__(self, *args):
-  ...         super(MySelectionManager, self).__init__()
+  ...         super().__init__()
   ...         args = list(args)
   ...         for arg in args:
   ...             if isinstance(arg, MySelectionManager):

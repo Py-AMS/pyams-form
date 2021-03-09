@@ -12,6 +12,8 @@ are handled by adapters, so they can be easilly replaced by a custom implementat
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site

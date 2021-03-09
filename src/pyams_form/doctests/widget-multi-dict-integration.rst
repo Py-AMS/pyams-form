@@ -4,6 +4,8 @@ MultiWidget Dict integration tests
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -102,9 +104,7 @@ Some valid default values
   >>> content = getForm(request)
 
   >>> print(testing.plain_text(content))
-  DictOfInt label
-  <BLANKLINE>
-  Int key *
+  DictOfInt label Int key *
   [-1]
   Int label *
   [ ]
@@ -119,25 +119,19 @@ Some valid default values
   Int label *
   [ ]
   [100]
-  [Add]
-  [Remove selected]
-  DictOfBool label
-  <BLANKLINE>
-  Bool key *
+  [Add] [Remove selected]
+  DictOfBool label Bool key
   ( ) yes (O) no
-  Bool label *
+  Bool label
   [ ]
   (O) yes ( ) no
-  Bool key *
+  Bool key
   (O) yes ( ) no
-  Bool label *
+  Bool label
   [ ]
   ( ) yes (O) no
-  [Add]
-  [Remove selected]
-  DictOfChoice label
-  <BLANKLINE>
-  Choice key *
+  [Add] [Remove selected]
+  DictOfChoice label Choice key *
   [key1]
   Choice label *
   [ ]
@@ -147,11 +141,8 @@ Some valid default values
   Choice label *
   [ ]
   [two]
-  [Add]
-  [Remove selected]
-  DictOfTextLine label
-  <BLANKLINE>
-  TextLine key *
+  [Add] [Remove selected]
+  DictOfTextLine label TextLine key *
   [textkey1]
   TextLine label *
   [ ]
@@ -161,11 +152,8 @@ Some valid default values
   TextLine label *
   [ ]
   [some txt two]
-  [Add]
-  [Remove selected]
-  DictOfDate label
-  <BLANKLINE>
-  Date key *
+  [Add] [Remove selected]
+  DictOfDate label Date key *
   [1/15/11]
   Date label *
   [ ]
@@ -175,8 +163,7 @@ Some valid default values
   Date label *
   [ ]
   [5/19/13]
-  [Add]
-  [Remove selected]
+  [Add] [Remove selected]
   [Apply]
 
 dict_of_int
@@ -306,34 +293,22 @@ Important is that we get a new input.
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
-  DictOfBool label
-  <BLANKLINE>
-  Bool key *
-  <BLANKLINE>
+  DictOfBool label Bool key
   ( ) yes (O) no
-  <BLANKLINE>
-  Bool label *
-  <BLANKLINE>
+  Bool label
   [ ]
   (O) yes ( ) no
-  Bool key *
-  <BLANKLINE>
+  Bool key
   (O) yes ( ) no
-  <BLANKLINE>
-  Bool label *
-  <BLANKLINE>
+  Bool label
   [ ]
   ( ) yes (O) no
-  Bool key *
-  <BLANKLINE>
+  Bool key
   ( ) yes ( ) no
-  <BLANKLINE>
-  Bool label *
-  <BLANKLINE>
+  Bool label
   [ ]
   ( ) yes ( ) no
-  [Add]
-  [Remove selected]
+  [Add] [Remove selected]
 
 Submit again with the empty field:
 
@@ -342,8 +317,7 @@ Submit again with the empty field:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]//div[@class="error"]'))
-  Required input is missing.
-  Required input is missing.
+  <BLANKLINE>
 
 Let's remove some items:
 
@@ -355,20 +329,12 @@ Let's remove some items:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
-  DictOfBool label
-  <BLANKLINE>
-  Bool key *
-  <BLANKLINE>
-  Required input is missing.
+  DictOfBool label Bool key
   ( ) yes ( ) no
-  <BLANKLINE>
-  Bool label *
-  <BLANKLINE>
-  Required input is missing.
+  Bool label
   [ ]
   ( ) yes ( ) no
-  [Add]
-  [Remove selected]
+  [Add] [Remove selected]
 
   >>> pprint(obj)
   <MultiWidgetDictIntegration
@@ -727,7 +693,6 @@ And apply
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
   There were some errors.* DictOfInt label: Wrong contained type
-  * DictOfBool label: Wrong contained type
   * DictOfTextLine label: Constraint not satisfied
   * DictOfDate label: The datetime string did not match the pattern 'M/d/yy'...
   ...

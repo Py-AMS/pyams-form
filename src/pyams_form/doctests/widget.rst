@@ -54,6 +54,8 @@ instantiate it using the request:
   >>> from pyramid.testing import setUp, tearDown, DummyRequest
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site

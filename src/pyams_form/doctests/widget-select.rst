@@ -9,6 +9,8 @@ http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-SELECT
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site

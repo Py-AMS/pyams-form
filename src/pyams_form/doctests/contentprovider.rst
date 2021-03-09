@@ -22,6 +22,8 @@ Test setup
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -70,7 +72,7 @@ We define a test content provider that renders extra help text:
   >>> from zope.contentprovider.interfaces import IContentProvider
   >>> class ExtendedHelp:
   ...   def __init__(self, context, request, view):
-  ...       super(ExtendedHelp, self).__init__()
+  ...       super().__init__()
   ...       self.context = context
   ...       self.request = request
   ...       self.__parent__ = view

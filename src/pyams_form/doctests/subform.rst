@@ -12,6 +12,8 @@ Of course, we need to setup our defaults for this demonstration as well:
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -107,7 +109,7 @@ METAL macros, viewlets, or pagelets to make better reuse of some code.
   ...     def update(self):
   ...         self.owner = OwnerForm(self.context.owner, self.request)
   ...         self.owner.update()
-  ...         super(CarForm, self).update()
+  ...         super().update()
 
   >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
   ...                           'templates', 'simple-caredit.pt'), 'text/html')
@@ -310,7 +312,7 @@ constructor arguments, the last one being the parent form:
   ...     prefix = 'car'
   ...
   ...     def update(self):
-  ...         super(CarForm, self).update()
+  ...         super().update()
   ...         self.owner = OwnerForm(self.context.owner, self.request, self)
   ...         self.owner.update()
 
@@ -588,7 +590,7 @@ Next we define the car form, which has the owner form as a sub-form.
   ...     def update(self):
   ...         self.owner = OwnerAddForm(None, self.request)
   ...         self.owner.update()
-  ...         super(CarAddForm, self).update()
+  ...         super().update()
 
   >>> factory = TemplateFactory(os.path.join(os.path.dirname(tests.__file__),
   ...                           'templates', 'simple-caredit.pt'), 'text/html')

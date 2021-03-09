@@ -16,6 +16,8 @@ IValue adapter.
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -338,7 +340,7 @@ Now test the hints in our widgets:
       <input type="radio"
          id="form-widgets-boolField-0"
          name="form.widgets.boolField"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="true"
          title="This is a Bool field."
          checked="checked" />
@@ -350,7 +352,7 @@ Now test the hints in our widgets:
       <input type="radio"
          id="form-widgets-boolField-1"
          name="form.widgets.boolField"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="false"
          title="This is a Bool field." />
       <span class="label">no</span>
@@ -364,7 +366,7 @@ Now test the hints in our widgets:
       <input type="radio"
          id="form-widgets-checkboxBoolField-0"
          name="form.widgets.checkboxBoolField"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="true"
          title="This is a Bool field displayed suing a checkbox."
          checked="checked" />
@@ -376,7 +378,7 @@ Now test the hints in our widgets:
       <input type="radio"
          id="form-widgets-checkboxBoolField-1"
          name="form.widgets.checkboxBoolField"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="false"
          title="This is a Bool field displayed suing a checkbox." />
       <span class="label">no</span>

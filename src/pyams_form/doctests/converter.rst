@@ -12,6 +12,8 @@ particular mean of input.
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -539,7 +541,7 @@ There is also a ``ValueError`` if we don't get a seekable file from the
   >>> fudc.to_field_value(myUpload) is None
   Traceback (most recent call last):
   ...
-  ValueError: ('Bytes data are not a file object', ...AttributeError...)
+  ValueError: Bytes data are not a file object
 
 When converting to the widget value, not conversion should be done, since
 bytes are not convertable in that sense.
@@ -548,7 +550,7 @@ bytes are not convertable in that sense.
 
 When the file upload widget is not used and a text-based widget is desired,
 then the regular field data converter will be chosen. Using a text widget,
-however, must be setup manually in the form with code like this::
+however, must be setup manually in the form with code like this:
 
   fields['bytesField'].widget_factory = TextWidget
 

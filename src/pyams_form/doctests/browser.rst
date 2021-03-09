@@ -10,6 +10,8 @@ information about the widgets.
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -153,7 +155,7 @@ Bool
       <input type="radio"
          id="foo-0"
          name="bar"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="true"
          checked="checked" />
       <span class="label">yes</span>
@@ -164,7 +166,7 @@ Bool
       <input type="radio"
          id="foo-1"
          name="bar"
-         class="radio-widget required bool-field"
+         class="radio-widget bool-field"
          value="false" />
       <span class="label">no</span>
     </label>
@@ -174,21 +176,22 @@ Bool
 
   >>> widget.mode = interfaces.DISPLAY_MODE
   >>> print(widget.render())
-  <span id="foo" class="radio-widget required bool-field"><span
-      class="selected-option">yes</span></span>
+  <span id="foo"
+        class="radio-widget bool-field"><span
+        class="selected-option">yes</span></span>
 
 Calling the widget will return the widget including the layout
 
   >>> print(widget())
   <div id="foo-row"
-       class="row-required row">
+       class="row">
       <div class="label">
               <label for="foo">
                       <span>Check me</span>
               </label>
       </div>
       <div class="widget"><span id="foo"
-        class="radio-widget required bool-field"><span
+        class="radio-widget bool-field"><span
         class="selected-option">yes</span></span></div>
   </div>
 
@@ -208,7 +211,7 @@ For the boolean, the checkbox widget can be used as well:
                      checked="checked"
              id="foo-0"
              name="bar"
-             class="checkbox-widget required bool-field"
+             class="checkbox-widget bool-field"
              value="true" />
       <label for="foo-0">
         <span class="label">yes</span>
@@ -219,7 +222,7 @@ For the boolean, the checkbox widget can be used as well:
       <input type="checkbox"
              id="foo-1"
              name="bar"
-             class="checkbox-widget required bool-field"
+             class="checkbox-widget bool-field"
              value="false" />
       <label for="foo-1">
         <span class="label">no</span>
@@ -230,21 +233,22 @@ For the boolean, the checkbox widget can be used as well:
 
   >>> widget.mode = interfaces.DISPLAY_MODE
   >>> print(widget.render())
-  <span id="foo" class="checkbox-widget required bool-field"><span
-      class="selected-option">yes</span></span>
+  <span id="foo"
+        class="checkbox-widget bool-field"><span
+        class="selected-option">yes</span></span>
 
 Calling the widget will return the widget including the layout
 
   >>> print(widget())
   <div id="foo-row"
-       class="row-required row">
+       class="row">
       <div class="label">
               <label for="foo">
                       <span>Check me</span>
               </label>
       </div>
       <div class="widget"><span id="foo"
-        class="checkbox-widget required bool-field"><span
+        class="checkbox-widget bool-field"><span
         class="selected-option">yes</span></span></div>
   </div>
 
@@ -262,7 +266,7 @@ We can also have a single checkbox button for the boolean.
                      checked="checked"
              id="foo-0"
              name="bar"
-             class="single-checkbox-widget required bool-field"
+             class="single-checkbox-widget bool-field"
              value="selected" />
       <label for="foo-0">
         <span class="label">Check me</span>
@@ -273,8 +277,8 @@ We can also have a single checkbox button for the boolean.
   >>> widget.mode = interfaces.DISPLAY_MODE
   >>> print(widget.render())
   <span id="foo"
-        class="single-checkbox-widget required bool-field"><span
-      class="selected-option">Check me</span></span>
+        class="single-checkbox-widget bool-field"><span
+        class="selected-option">Check me</span></span>
 
 Note that the widget label is not repeated twice:
 
@@ -285,14 +289,14 @@ Calling the widget will return the widget including the layout
 
   >>> print(widget())
   <div id="foo-row"
-       class="row-required row">
+       class="row">
       <div class="label">
               <label for="foo">
                       <span></span>
               </label>
       </div>
       <div class="widget"><span id="foo"
-        class="single-checkbox-widget required bool-field"><span
+        class="single-checkbox-widget bool-field"><span
         class="selected-option">Check me</span></span></div>
   </div>
 

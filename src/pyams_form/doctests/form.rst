@@ -17,6 +17,8 @@ examples:
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -841,7 +843,7 @@ register a new error view snippet for the ``TooSmall`` error:
   ... class TooSmallView(error.ErrorViewSnippet):
   ...
   ...     def update(self):
-  ...         super(TooSmallView, self).update()
+  ...         super().update()
   ...         if self.field.min == 0:
   ...             self.message = 'The value cannot be a negative number.'
 
@@ -969,7 +971,7 @@ cancel action:
   ...         self.form.buttons = button.Buttons(
   ...             self.form.buttons,
   ...             button.Button('cancel', 'Cancel'))
-  ...         super(AddActions, self).update()
+  ...         super().update()
 
 After registering the new action manager,
 
@@ -999,7 +1001,7 @@ custom action handler to handle the cancel action:
   ...                'action': self.action
   ...            })
   ...            return
-  ...         super(AddActionHandler, self).__call__()
+  ...         super().__call__()
 
 After registering the action handler,
 
@@ -1644,7 +1646,7 @@ setUpWidgets method.
   ...     fields['name'].widget_factory = MyFieldWidget
   ...
   ...     def update_widgets(self):
-  ...         super(HiddenFieldEditForm, self).update_widgets()
+  ...         super().update_widgets()
   ...         self.widgets['age'].mode = interfaces.HIDDEN_MODE
 
 We can see that the widget gets rendered as hidden:

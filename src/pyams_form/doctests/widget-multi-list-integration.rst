@@ -4,6 +4,8 @@ MultiWidget List integration tests
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -108,13 +110,13 @@ Some valid default values
   [ ]
   [100]
   [Add] [Remove selected]
-  ListOfBool label Bool label *
+  ListOfBool label Bool label
   [ ]
   (O) yes ( ) no
-  Bool label *
+  Bool label
   [ ]
   ( ) yes (O) no
-  Bool label *
+  Bool label
   [ ]
   (O) yes ( ) no
   [Add] [Remove selected]
@@ -140,7 +142,7 @@ Some valid default values
     list_of_textline: ['some text one', 'some txt two']>
 
 list_of_int
-#########
+###########
 
 Set a wrong value and add a new input:
 
@@ -217,7 +219,7 @@ Let's remove some items:
 
 
 list_of_bool
-##########
+############
 
 Add a new input:
 
@@ -232,19 +234,19 @@ Important is that we get a new input.
   ...     './/div[@id="row-form-widgets-list_of_bool"]'))
   ListOfBool label
   <BLANKLINE>
-  Bool label *
+  Bool label
   <BLANKLINE>
   [ ]
   (O) yes ( ) no
-  Bool label *
+  Bool label
   <BLANKLINE>
   [ ]
   ( ) yes (O) no
-  Bool label *
+  Bool label
   <BLANKLINE>
   [ ]
   (O) yes ( ) no
-  Bool label *
+  Bool label
   <BLANKLINE>
   [ ]
   ( ) yes ( ) no
@@ -258,7 +260,7 @@ Submit again with the empty field:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-list_of_bool"]//div[@class="error"]'))
-  Required input is missing.
+  <BLANKLINE>
 
 Let's remove some items:
 
@@ -270,19 +272,13 @@ Let's remove some items:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-list_of_bool"]'))
-  ListOfBool label
-  <BLANKLINE>
-  Bool label *
-  <BLANKLINE>
+  ListOfBool label Bool label
   [ ]
   (O) yes ( ) no
-  Bool label *
-  <BLANKLINE>
-  Required input is missing.
+  Bool label
   [ ]
   ( ) yes ( ) no
-  [Add]
-  [Remove selected]
+  [Add] [Remove selected]
 
   >>> pprint(obj)
   <MultiWidgetListIntegration
@@ -294,7 +290,7 @@ Let's remove some items:
 
 
 list_of_textline
-##############
+################
 
 Set a wrong value and add a new input:
 
@@ -375,7 +371,7 @@ Let's remove some items:
 
 
 list_of_date
-##########
+############
 
 Set a wrong value and add a new input:
 
@@ -490,7 +486,6 @@ And apply
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
   There were some errors.* ListOfInt label: Wrong contained type
-  * ListOfBool label: Wrong contained type
   * ListOfTextLine label: Constraint not satisfied
   * ListOfDate label: The datetime string did not match the pattern 'M/d/yy'...
   ...

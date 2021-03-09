@@ -9,6 +9,8 @@ http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-SELECT
   >>> from pyramid.testing import setUp, tearDown
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -82,7 +84,7 @@ providing ``ITerms``. This source uses descriminators which will fit our setup.
   ...
   ...     def _make_missing_term(self, token):
   ...         if token == 'x':
-  ...             return super(SelectionTerms, self)._make_missing_term(token)
+  ...             return super()._make_missing_term(token)
   ...         else:
   ...             raise LookupError
 

@@ -71,6 +71,8 @@ well-defined. Thus, we first need to create a schema.
   >>> from pyramid.testing import setUp, tearDown, DummyRequest
   >>> config = setUp(hook_zca=True)
 
+  >>> from cornice import includeme as include_cornice
+  >>> include_cornice(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
@@ -144,7 +146,7 @@ in the login name:
   >>> class LoginValidator(validator.SimpleFieldValidator):
   ...
   ...     def validate(self, value):
-  ...         super(LoginValidator, self).validate(value)
+  ...         super().validate(value)
   ...         if re.search('[0-9]', value) is None:
   ...             raise zope.interface.Invalid('No numerical character found.')
 
@@ -487,7 +489,7 @@ ensure that the E-mail address is at most twice as long as the login:
 
   >>> class CustomValidator(validator.InvariantsValidator):
   ...     def validate_object(self, obj):
-  ...         errors = super(CustomValidator, self).validate_object(obj)
+  ...         errors = super().validate_object(obj)
   ...         if len(obj.email) > 2 * len(obj.login):
   ...             errors += (zope.interface.Invalid('Email too long.'),)
   ...         return errors
