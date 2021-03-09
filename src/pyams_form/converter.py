@@ -282,8 +282,12 @@ class FileUploadDataConverter(BaseDataConverter):
             self.widget.filename = value.filename
             try:
                 if isinstance(value, FieldStorage):
-                    seek = value.fp.seek
-                    read = value.fp.read
+                    if value.fp is None:
+                        seek = value.file.seek
+                        read = value.file.read
+                    else:
+                        seek = value.fp.seek
+                        read = value.fp.read
                 else:
                     seek = value.seek
                     read = value.read
