@@ -1,2 +1,3 @@
 [run]
 source = src/pyams_form
+omit = src/pyams_form/tests/*
