@@ -79,9 +79,9 @@ class SourceTerms(Terms):
 
     def getTerm(self, value):
         try:
-            return super(SourceTerms, self).getTerm(value)
-        except KeyError:
-            raise LookupError(value)
+            return super().getTerm(value)
+        except KeyError as err:
+            raise LookupError(value) from err
 
     def getTermByToken(self, token):
         # This is rather expensive
@@ -94,8 +94,8 @@ class SourceTerms(Terms):
     def getValue(self, token):
         try:
             return self.terms.getValue(token)
-        except KeyError:
-            raise LookupError(token)
+        except KeyError as err:
+            raise LookupError(token) from err
 
     def __iter__(self):
         for value in self.source:
@@ -164,7 +164,7 @@ class MissingTermsMixin(MissingTermsBase):
     def getTerm(self, value):  # pylint: disable=invalid-name
         """Get term martching given value"""
         try:
-            return super(MissingTermsMixin, self).getTerm(value)
+            return super().getTerm(value)
         except LookupError:
             if self._can_query_current_value():
                 cur_value = self._query_current_value()
@@ -175,8 +175,8 @@ class MissingTermsMixin(MissingTermsBase):
     def getTermByToken(self, token):  # pylint: disable=invalid-name
         """Get term matching given token"""
         try:
-            return super(MissingTermsMixin, self).getTermByToken(token)
-        except LookupError:
+            return super().getTermByToken(token)
+        except LookupError as err:
             if self._can_query_current_value():
                 value = self._query_current_value()
                 term = self._make_missing_term(value)
@@ -186,7 +186,7 @@ class MissingTermsMixin(MissingTermsBase):
                     # any crap coming from the request
                     return term
 
-            raise LookupError(token)
+            raise LookupError(token) from err
 
 
 @adapter_config(required=(Interface, IFormLayer, Interface, IChoice, IBaseVocabulary, IWidget),
@@ -261,7 +261,7 @@ class MissingCollectionTermsMixin(MissingTermsBase):
     def getTerm(self, value):  # pylint: disable=invalid-name
         """Get term matching given value"""
         try:
-            return super(MissingCollectionTermsMixin, self).getTerm(value)
+            return super().getTerm(value)
         except LookupError:
             if self._can_query_current_value():
                 if value in self._query_current_value():
@@ -271,7 +271,7 @@ class MissingCollectionTermsMixin(MissingTermsBase):
     def getTermByToken(self, token):  # pylint: disable=invalid-name
         """Get term matching given token"""
         try:
-            return super(MissingCollectionTermsMixin, self).getTermByToken(token)
+            return super().getTermByToken(token)
         except LookupError:
             if self._can_query_current_value():
                 for value in self._query_current_value():
@@ -286,7 +286,7 @@ class MissingCollectionTermsMixin(MissingTermsBase):
     def getValue(self, token):  # pylint: disable=invalid-name
         """Get value matching given token"""
         try:
-            return super(MissingCollectionTermsMixin, self).getValue(token)
+            return super().getValue(token)
         except LookupError:
             if self._can_query_current_value():
                 for value in self._query_current_value():

@@ -48,14 +48,14 @@ class ContentProviders(dict):
     """Content providers mapping"""
 
     def __init__(self, names=None):
-        super(ContentProviders, self).__init__()
+        super().__init__()
         if names is not None:
             for position, name in enumerate(names):  # pylint: disable=unused-variable
                 self[name] = _LOOKUP
 
     def __setitem__(self, key, value):
         factory = ContentProviderFactory(factory=value, name=key)
-        super(ContentProviders, self).__setitem__(key, factory)
+        super().__setitem__(key, factory)
 
 
 class ContentProviderFactory:
@@ -83,7 +83,7 @@ class FieldWidgetsAndProviders(FieldWidgets):
     """Field widgets and providers adapter"""
 
     def update(self):
-        super(FieldWidgetsAndProviders, self).update()
+        super().update()
         unique_ordered_keys = list(self.keys())
         data = {}
         data.update(self)

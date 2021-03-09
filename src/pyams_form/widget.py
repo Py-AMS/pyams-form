@@ -278,7 +278,7 @@ class SequenceWidget(Widget):
         """See pyams_form.interfaces.widget.IWidget."""
         # Create terms first, since we need them for the generic update.
         self.update_terms()
-        super(SequenceWidget, self).update()
+        super().update()
 
     def extract(self, default=NO_VALUE):
         """See pyams_form.interfaces.widget.IWidget."""
@@ -308,7 +308,7 @@ class SequenceWidget(Widget):
         return value
 
     def json_data(self):
-        data = super(SequenceWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'sequence'
         return data
 
@@ -349,7 +349,7 @@ class MultiWidget(Widget):
     _mode = FieldProperty(IWidget['mode'])
 
     def __init__(self, request):
-        super(MultiWidget, self).__init__(request)
+        super().__init__(request)
         self.widgets = []
         self.key_widgets = []
         self._value = []
@@ -538,7 +538,7 @@ class MultiWidget(Widget):
     def update(self):
         """See z3c.form.interfaces.IWidget."""
         # Ensure that updateWidgets is called.
-        super(MultiWidget, self).update()
+        super().update()
         if not self._widgets_updated:
             self.update_widgets()
 
@@ -569,7 +569,7 @@ class MultiWidget(Widget):
         return values
 
     def json_data(self):
-        data = super(MultiWidget, self).json_data()
+        data = super().json_data()
         data['widgets'] = [widget.json_data() for widget in self.widgets]
         data['type'] = 'multi'
         return data

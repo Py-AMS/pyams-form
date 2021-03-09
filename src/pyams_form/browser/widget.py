@@ -165,7 +165,7 @@ class HTMLFormElement(WidgetLayoutSupport):
 
     def update(self):
         """See z3c.form.IWidget"""
-        super(HTMLFormElement, self).update()  # pylint: disable=no-member
+        super().update()  # pylint: disable=no-member
         if self.mode == INPUT_MODE and self.required:  # pylint: disable=no-member
             self.add_class('required')
 

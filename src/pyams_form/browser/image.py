@@ -53,7 +53,7 @@ class ImageWidget(ButtonWidget):
         }
 
     def json_data(self):
-        data = super(ImageWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'image'
         data['src'] = self.src
         return data

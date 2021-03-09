@@ -264,7 +264,7 @@ class ObjectWidget(Widget):
         # very-very-nasty: skip raising exceptions in extract while we're updating
         self._updating = True
         try:
-            super(ObjectWidget, self).update()
+            super().update()
             # create the subwidgets and set their values
             self.update_widgets(set_errors=False)
         finally:

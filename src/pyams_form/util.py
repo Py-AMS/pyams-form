@@ -235,7 +235,7 @@ class Manager(OrderedDict):
             except AttributeError:
                 # make sure a KeyError is raised later
                 pass
-        return super(Manager, self).__getitem__(key)
+        return super().__getitem__(key)
 
 
 @implementer(ISelectionManager)

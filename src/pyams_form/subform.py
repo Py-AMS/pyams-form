@@ -35,7 +35,7 @@ class BaseInnerForm(BaseForm):
     """Base inner subform"""
 
     def __init__(self, context, request, parent_form):
-        super(BaseInnerForm, self).__init__(context, request)
+        super().__init__(context, request)
         self.parent_form = self.__parent__ = parent_form
 
 
@@ -64,7 +64,7 @@ class EditSubForm(BaseForm):
     no_changes_message = _('No changes were applied.')
 
     def __init__(self, context, request, parent_form):
-        super(EditSubForm, self).__init__(context, request)
+        super().__init__(context, request)
         self.parent_form = self.__parent__ = parent_form
 
     @handler(EditForm.buttons['apply'])
@@ -84,7 +84,7 @@ class EditSubForm(BaseForm):
             self.status = self.no_changes_message
 
     def update(self):
-        super(EditSubForm, self).update()
+        super().update()
         registry = self.request.registry
         for action in self.parent_form.actions.executed_actions:
             adapter = registry.queryMultiAdapter((self, self.request, self.get_content(), action),

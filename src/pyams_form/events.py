@@ -29,7 +29,7 @@ class FormCreatedEvent(ObjectCreatedEvent):
     """Form created event"""
 
     def __init__(self, form):
-        super(FormCreatedEvent, self).__init__(form)
+        super().__init__(form)
         self.request = form.request
 
 

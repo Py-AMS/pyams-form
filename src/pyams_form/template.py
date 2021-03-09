@@ -45,7 +45,7 @@ class WidgetTemplate(ViewTemplate):
     """Widget template class"""
 
     def __init__(self, provides):
-        super(WidgetTemplate, self).__init__(provides)
+        super().__init__(provides)
 
     def __call__(self, instance, *args, **keywords):
         request = instance.request
@@ -67,7 +67,7 @@ class GetWidgetTemplate(WidgetTemplate):
     """Get widget template"""
 
     def __init__(self):
-        super(GetWidgetTemplate, self).__init__(IPageTemplate)
+        super().__init__(IPageTemplate)
 
 
 get_widget_template = GetWidgetTemplate  # pylint: disable=invalid-name
@@ -77,7 +77,7 @@ class GetWidgetLayout(WidgetTemplate):
     """Layout template getter class"""
 
     def __init__(self):
-        super(GetWidgetLayout, self).__init__(IWidgetLayoutTemplate)
+        super().__init__(IWidgetLayoutTemplate)
 
 
 get_widget_layout = GetWidgetLayout  # pylint: disable=invalid-name

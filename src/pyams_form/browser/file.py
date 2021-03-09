@@ -41,7 +41,7 @@ class FileWidget(TextWidget):
     filename = None
 
     def json_data(self):
-        data = super(TextWidget, self).json_data()  # pylint: disable=bad-super-call
+        data = super().json_data()  # pylint: disable=bad-super-call
         data['type'] = 'file'
         return data
 

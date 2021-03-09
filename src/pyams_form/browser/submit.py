@@ -36,7 +36,7 @@ class SubmitWidget(ButtonWidget):
     css = 'submit'
 
     def json_data(self):
-        data = super(SubmitWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'submit'
         return data
 

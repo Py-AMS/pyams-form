@@ -102,7 +102,7 @@ if sys.argv[-1].endswith('/bin/test'):
                     value = base64.b64decode(value)
                 self.widget.request.POST[self.widget.name] = value
 
-            return super(TestingFileUploadDataConverter, self).to_field_value(value)
+            return super().to_field_value(value)
 
 
     @implementer(IInteraction)

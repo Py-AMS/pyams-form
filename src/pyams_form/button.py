@@ -73,7 +73,7 @@ class Button(Field):
         self.access_key = kwargs.pop('access_key', None)
         self.condition = kwargs.pop('condition', None)
         # Initialize the button
-        super(Button, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<%s %r %r>' %(
@@ -88,7 +88,7 @@ class ImageButton(Button):
 
     def __init__(self, image, *args, **kwargs):
         self.image = image
-        super(ImageButton, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<%s %r %r>' %(
@@ -117,7 +117,7 @@ class Buttons(SelectionManager):
                 buttons.append((arg.__name__, arg))
             else:
                 raise TypeError("Unrecognized argument type", arg)
-        super(Buttons, self).__init__(buttons)
+        super().__init__(buttons)
 
 
 @implementer(IButtonHandlers)

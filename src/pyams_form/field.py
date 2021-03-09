@@ -47,18 +47,18 @@ class WidgetFactories(dict):
     """Widget factories"""
 
     def __init__(self):
-        super(WidgetFactories, self).__init__()
+        super().__init__()
         self.default = None
 
     def __getitem__(self, key):
         if key not in self and self.default:
             return self.default
-        return super(WidgetFactories, self).__getitem__(key)
+        return super().__getitem__(key)
 
     def get(self, key, default=None):
         if key not in self and self.default:
             return self.default
-        return super(WidgetFactories, self).get(key, default)
+        return super().get(key, default)
 
 
 class WidgetFactoryProperty:
@@ -133,7 +133,7 @@ class Fields(SelectionManager):
             else:
                 raise TypeError("Unrecognized argument type", arg)
 
-        super(Fields, self).__init__()
+        super().__init__()
         for name, field, iface in fields:
             if isinstance(field, Field):
                 form_field = field
@@ -195,7 +195,7 @@ class FieldWidgets(Manager):
     set_errors = True
 
     def __init__(self, form, request, content):
-        super(FieldWidgets, self).__init__()
+        super().__init__()
         self.form = form
         self.request = request
         self.content = content

@@ -344,7 +344,7 @@ class Form(BaseForm):
     form_errors_message = _('There were some errors.')
 
     def __init__(self, context, request):
-        super(Form, self).__init__(context, request)
+        super().__init__(context, request)
         self.finished_state = {}
 
     @property
@@ -370,7 +370,7 @@ class Form(BaseForm):
         self.actions.update()
 
     def update(self):
-        super(Form, self).update()
+        super().update()
         self.update_actions()
         self.actions.execute()
         if self.refresh_actions:
@@ -426,12 +426,12 @@ class AddForm(Form):
         self.add(obj)
         return obj
 
-    def create(self, data):
+    def create(self, data):  # pylint: disable=unused-argument
         """Create new content from form data"""
         if self.content_factory is not None:
             factory = get_object_factory(self.content_factory) \
                 if is_interface(self.content_factory) else self.content_factory
-            return factory()
+            return factory()  # pylint: disable=not-callable
         raise NotImplementedError
 
     def add(self, obj):  # pylint: disable=redefined-builtin
@@ -456,7 +456,7 @@ class AddForm(Form):
             self.request.response.location = self.next_url()
             self.request.response.status = 302
             return ''
-        return super(AddForm, self).render()
+        return super().render()
 
 
 @implementer(IEditForm)

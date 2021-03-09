@@ -52,7 +52,7 @@ class SelectWidget(HTMLSelectWidget, SequenceWidget):
 
     def update(self):
         """See pyams_form.interfaces.widget.IWidget."""
-        super(SelectWidget, self).update()
+        super().update()
         add_field_class(self)
 
     @property
@@ -106,7 +106,7 @@ class SelectWidget(HTMLSelectWidget, SequenceWidget):
         return items
 
     def json_data(self):
-        data = super(SelectWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'select'
         data['options'] = self.items
         return data

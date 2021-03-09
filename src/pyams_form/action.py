@@ -42,7 +42,7 @@ class ActionErrorOccurred(ActionEvent):
     execution."""
 
     def __init__(self, action, error):
-        super(ActionErrorOccurred, self).__init__(action)
+        super().__init__(action)
         self.error = error
 
 
@@ -78,7 +78,7 @@ class Actions(Manager):
     __name__ = __parent__ = None
 
     def __init__(self, form, request, content):
-        super(Actions, self).__init__()
+        super().__init__()
         self.form = form
         self.request = request
         self.content = content

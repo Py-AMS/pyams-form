@@ -54,7 +54,7 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
 
     def update(self):
         """See pyams_form.interfaces.widget.IWidget."""
-        super(OrderedSelectWidget, self).update()
+        super().update()
         add_field_class(self)
         self.items = [self.get_item(term, count)
                       for count, term in enumerate(self.terms)]
@@ -77,7 +77,7 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
 
     def json_data(self):
         """Get widget data in JSON format"""
-        data = super(OrderedSelectWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'multi_select'
         data['options'] = self.items
         data['selected'] = self.selected_items

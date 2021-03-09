@@ -60,7 +60,7 @@ class MultiWidget(HTMLFormElement, MultiWidgetBase, FormMixin):
 
     def update(self):
         """See pyams_form.interfaces.widget.IWidget."""
-        super(MultiWidget, self).update()
+        super().update()
         self.update_actions()
         self.actions.execute()
         self.update_actions()  # Update again, as conditions may change

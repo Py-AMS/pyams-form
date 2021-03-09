@@ -97,12 +97,12 @@ class RadioWidget(HTMLInputWidget, SequenceWidget):
 
     def update(self):
         """See z3c.form.interfaces.IWidget."""
-        super(RadioWidget, self).update()
+        super().update()
         add_field_class(self)
 
     def json_data(self):
         """Get widget data in JSON format"""
-        data = super(RadioWidget, self).json_data()
+        data = super().json_data()
         data['options'] = list(self.items)
         data['type'] = 'radio'
         return data

@@ -98,7 +98,7 @@ class SimpleFieldValidator(StrictSimpleFieldValidator):
         if value is self.field.missing_value:
             # let missing values run into stricter validation
             # most important case is not let required fields pass
-            return super(SimpleFieldValidator, self).validate(value, force)
+            return super().validate(value, force)
 
         if not force:
             if value is NOT_CHANGED:
@@ -111,7 +111,7 @@ class SimpleFieldValidator(StrictSimpleFieldValidator):
                 return None
 
         # otherwise StrictSimpleFieldValidator will do the job
-        return super(SimpleFieldValidator, self).validate(value, force)
+        return super().validate(value, force)
 
 
 @adapter_config(required=(Interface, Interface, Interface, IBytes, IFileWidget),
@@ -166,8 +166,8 @@ class Data:
         data = self._Data_data___
         try:
             field = schema[name]
-        except KeyError:
-            raise AttributeError(name)
+        except KeyError as err:
+            raise AttributeError(name) from err
         # If the found field is a method, then raise an error.
         if IMethod.providedBy(field):
             raise RuntimeError("Data value is not a schema field", name)

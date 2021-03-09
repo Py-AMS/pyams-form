@@ -58,7 +58,7 @@ class GroupManager:  # pylint: disable=no-member
 
     def extract_data(self, set_errors=True):
         """See interfaces.IForm"""
-        data, errors = super(GroupManager, self).extract_data(set_errors=set_errors)
+        data, errors = super().extract_data(set_errors=set_errors)
         for group in self.groups:
             group_data, group_errors = group.extract_data(set_errors=set_errors)
             data.update(group_data)

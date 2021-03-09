@@ -37,11 +37,11 @@ class TextAreaWidget(HTMLTextAreaWidget, Widget):
     value = ''
 
     def update(self):
-        super(TextAreaWidget, self).update()
+        super().update()
         add_field_class(self)
 
     def json_data(self):
-        data = super(TextAreaWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'textarea'
         return data
 

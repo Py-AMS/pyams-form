@@ -38,7 +38,7 @@ class TextWidget(HTMLTextInputWidget, Widget):
     value = ''
 
     def update(self):
-        super(TextWidget, self).update()
+        super().update()
         add_field_class(self)
 
 

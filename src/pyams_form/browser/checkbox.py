@@ -66,12 +66,12 @@ class CheckBoxWidget(HTMLInputWidget, SequenceWidget):
 
     def update(self):
         """See pyams_form.interfaces.widget.IWidget."""
-        super(CheckBoxWidget, self).update()
+        super().update()
         add_field_class(self)
 
     def json_data(self):
         """Get widget data in JSON format"""
-        data = super(CheckBoxWidget, self).json_data()
+        data = super().json_data()
         data['type'] = 'check'
         data['options'] = list(self.items)
         return data

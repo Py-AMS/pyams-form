@@ -99,7 +99,7 @@ class FieldDataConverter(BaseDataConverter):
     """A data converter using the field's ``fromUnicode()`` method."""
 
     def __init__(self, field, widget):
-        super(FieldDataConverter, self).__init__(field, widget)
+        super().__init__(field, widget)
         if not IFromUnicode.providedBy(field):
             field_name = ''
             if field.__name__:
@@ -134,7 +134,7 @@ class NumberDataConverter(BaseDataConverter):
     error_message = None
 
     def __init__(self, field, widget):
-        super(NumberDataConverter, self).__init__(field, widget)
+        super().__init__(field, widget)
         locale = self.widget.request.locale
         self.formatter = locale.numbers.getFormatter('decimal')
         self.formatter.type = self.type
@@ -151,8 +151,8 @@ class NumberDataConverter(BaseDataConverter):
             return self.field.missing_value
         try:
             return self.formatter.parse(value)
-        except NumberParseError:
-            raise FormatterValidationError(self.error_message, value)
+        except NumberParseError as exc:
+            raise FormatterValidationError(self.error_message, value) from exc
 
 
 @adapter_config(required=(IInt, IWidget), provides=IDataConverter)
@@ -186,7 +186,7 @@ class CalendarDataConverter(BaseDataConverter):
     length = 'short'
 
     def __init__(self, field, widget):
-        super(CalendarDataConverter, self).__init__(field, widget)
+        super().__init__(field, widget)
         locale = self.widget.request.locale
         self.formatter = locale.dates.getFormatter(self.type, self.length)
 
@@ -203,7 +203,7 @@ class CalendarDataConverter(BaseDataConverter):
         try:
             return self.formatter.parse(value)
         except DateTimeParseError as err:
-            raise FormatterValidationError(err.args[0], value)
+            raise FormatterValidationError(err.args[0], value) from err
 
 
 @adapter_config(required=(IDate, IWidget), provides=IDataConverter)
@@ -292,7 +292,7 @@ class FileUploadDataConverter(BaseDataConverter):
                     seek = value.seek
                     read = value.read
             except AttributeError as e:  # pylint: disable=invalid-name
-                raise ValueError(_('Bytes data are not a file object'), e)
+                raise ValueError(_('Bytes data are not a file object')) from e
             else:
                 seek(0)
                 data = read()
@@ -390,7 +390,7 @@ class TextLinesConverter(BaseDataConverter):
             try:
                 items.append(value_type(val))
             except ValueError as err:
-                raise FormatterValidationError(str(err), val)
+                raise FormatterValidationError(str(err), val) from err
         return collection_type(items)
 
 
