@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.1
+-----
+ - Gitlab-CI pylint test update
+
 1.4.0
 -----
  - removed support for Python < 3.7
