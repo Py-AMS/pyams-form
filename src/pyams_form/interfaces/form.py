@@ -17,7 +17,7 @@ Form related interfaces module.
 
 from zope.interface import Attribute, Interface
 from zope.lifecycleevent import IObjectCreatedEvent
-from zope.schema import ASCIILine, Bool, Choice, Field, Object, Text, TextLine, Tuple, URI, Dict
+from zope.schema import ASCIILine, Bool, Choice, Dict, Field, Object, Text, TextLine, Tuple, URI
 
 from pyams_form.interfaces import DISPLAY_MODE, IContentProviders, IFields, INPUT_MODE
 from pyams_form.interfaces.button import IActions, IButtonHandlers, IButtons
@@ -368,12 +368,6 @@ class IGroup(IGroupManager):
 
 class IGroupForm(IGroupManager):
     """A form that supports groups."""
-
-
-class IFormSecurityContext(Interface):
-    """Interface used to get security context of a given object"""
-
-    context = Attribute("Object security context")
 
 
 class IFormCreatedEvent(IObjectCreatedEvent):
