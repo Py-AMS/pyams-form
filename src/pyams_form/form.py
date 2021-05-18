@@ -179,7 +179,7 @@ class BaseForm(ContextRequestAdapter):
                 mode = DISPLAY_MODE
             else:
                 content = self.get_content()
-                if not self.request.has_permission(permission, content):
+                if not self.request.has_permission(permission, context=content):
                     mode = DISPLAY_MODE
         return mode
 
