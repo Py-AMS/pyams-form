@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.4.2
+-----
+ - added missing "context" argument to permission check
+ - added missing widget factory for text lines list field
+ - removed unused interface
+
 1.4.1
 -----
  - Gitlab-CI pylint test update
