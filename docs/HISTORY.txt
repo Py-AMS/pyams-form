@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5.0
+-----
+ - updated sequence widget behaviour to be able to extract data from single
+   value using a separator
+ - updated default AJAX renderer to merge outputs of inner forms renderers
+
 1.4.3
 -----
  - version mismatch
