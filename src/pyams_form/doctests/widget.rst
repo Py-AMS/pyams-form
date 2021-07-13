@@ -62,6 +62,8 @@ instantiate it using the request:
   >>> include_site(config)
   >>> from pyams_i18n import includeme as include_i18n
   >>> include_i18n(config)
+  >>> from pyams_security import includeme as include_security
+  >>> include_security(config)
   >>> from pyams_layer import includeme as include_layer
   >>> include_layer(config)
   >>> from pyams_form import includeme as include_form
