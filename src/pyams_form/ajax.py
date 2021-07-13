@@ -35,6 +35,7 @@ from pyams_layer.interfaces import IFormLayer
 from pyams_pagelet.interfaces import IPagelet
 from pyams_pagelet.pagelet import Pagelet
 from pyams_utils.adapter import adapter_config
+from pyams_utils.dict import merge_dict
 from pyams_utils.list import boolean_iter
 
 
@@ -50,7 +51,7 @@ class AJAXForm:
     """A form mix-in class used to support form's submit through AJAX
 
     You don't have to inherit from AJAXForm or one of it's subclasses; they are used
-    autoamtically when using the "ajax_form_config" class decorator.
+    automatically when using the "ajax_form_config" class decorator.
     """
 
     def __call__(self):
@@ -173,10 +174,7 @@ class AJAXFormRenderer:
             if renderer is not None:
                 form_output = renderer.render(changes)
                 if form_output:
-                    for key, value in form_output.items():
-                        if isinstance(value, (list, tuple)) and (key in result):
-                            form_output[key] += result[key]
-                    result.update(form_output)
+                    merge_dict(form_output, result)
         return result
 
 
@@ -195,6 +193,7 @@ class AJAXErrorRenderer:
     @classmethod
     def get_widget_error(cls, error, status, translate):
         """Get widget for a given error"""
+        message = translate(error.message)
         if hasattr(error, 'widget'):
             widget = error.widget
             if widget is not None:
@@ -202,14 +201,15 @@ class AJAXErrorRenderer:
                     'id': widget.id,
                     'name': widget.name,
                     'label': translate(widget.label),
-                    'message': translate(error.message)
+                    'message': message
                 })
             else:
-                status.setdefault('messages', []).append({
-                    'message': translate(error.message)
-                })
+                error_message = {'message': message}
+                if error_message not in status.get('messages', ()):
+                    status.setdefault('messages', []).append(error_message)
         else:
-            status.setdefault('messages', []).append(translate(error.message))
+            if message not in status.get('messages', ()):
+                status.setdefault('messages', []).append(message)
 
     def render(self, errors):
         """Return status as JSON message"""
