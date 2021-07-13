@@ -241,6 +241,7 @@ class SequenceWidget(Widget):
 
     value = ()
     terms = None
+    separator = ','
 
     no_value_token = '--NOVALUE--'
 
@@ -290,13 +291,13 @@ class SequenceWidget(Widget):
         except AttributeError:
             value = params.get(self.name, default)
         if value != default:
+            values = []
             if not isinstance(value, (tuple, list)):
                 # this is here to make any single value a tuple
                 value = (value,)
-            if not isinstance(value, tuple):
-                # this is here to make a non-tuple (just a list at this point?)
-                # a tuple. the dance is about making return values uniform
-                value = tuple(value)
+            for val in value:
+                values.extend(val.split(self.separator))
+            value = tuple(values)
             # do some kind of validation, at least only use existing values
             for token in value:
                 if token == self.no_value_token:
