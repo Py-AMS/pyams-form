@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.1
+-----
+ - updated doctests
+
 1.6.0
 -----
  - added optional *ajax_require_csrf* argument to *ajax_form_config* decorator
