@@ -307,6 +307,10 @@ class ajax_form_config:  # pylint: disable=invalid-name
                 ajax_settings['xhr'] = xhr
         else:
             ajax_settings['xhr'] = True
+        if 'ajax_require_csrf' in settings:
+            csrf = settings.pop('ajax_require_csrf')
+            if csrf is not None:
+                ajax_settings['require_csrf'] = csrf
         self.__dict__.update(settings)
 
     def __call__(self, wrapped):
