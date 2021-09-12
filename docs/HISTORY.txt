@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.0
+-----
+ - added optional *ajax_require_csrf* argument to *ajax_form_config* decorator
+
 1.5.0
 -----
  - updated sequence widget behaviour to be able to extract data from single
