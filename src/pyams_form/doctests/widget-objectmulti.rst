@@ -1351,11 +1351,11 @@ Let's see our event log:
   >>> printEvents()
   <zope...ObjectCreatedEvent object at ...>
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObjectMulti>
+  pyams_form.testing.IMySubObjectMulti
   ['barfield', 'foofield']
   <zope...ObjectCreatedEvent object at ...>
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObjectMulti>
+  pyams_form.testing.IMySubObjectMulti
   ['barfield', 'foofield']
   <zope...ObjectCreatedEvent object at ...>
 
@@ -1496,14 +1496,14 @@ Let's see our event log:
   >>> printEvents()
   <zope...ObjectCreatedEvent object at ...>
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObjectMulti>
+  pyams_form.testing.IMySubObjectMulti
   ['barfield', 'foofield']
   <zope...ObjectCreatedEvent object at ...>
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObjectMulti>
+  pyams_form.testing.IMySubObjectMulti
   ['barfield', 'foofield']
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMyMultiObject>
+  pyams_form.testing.IMyMultiObject
   ['list_of_objects']
 
   >>> eventlog=[]

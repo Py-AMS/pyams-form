@@ -488,7 +488,7 @@ Let's see our event log:
   >>> printEvents()
   <zope...ObjectCreatedEvent object at ...>
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObject>
+  pyams_form.testing.IMySubObject
   ['barfield', 'foofield']
   <zope...ObjectCreatedEvent object at ...>
 
@@ -590,10 +590,10 @@ Let's see our event log:
 
   >>> printEvents()
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObject>
+  pyams_form.testing.IMySubObject
   ['barfield', 'foofield']
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMyObject>
+  pyams_form.testing.IMyObject
   ['subobject']
 
 
@@ -1047,10 +1047,10 @@ Until updating the form:
   2
   >>> printEvents()
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMySubObject>
+  pyams_form.testing.IMySubObject
   ['barfield', 'foofield']
   <zope...ObjectModifiedEvent object at ...>
-  <InterfaceClass pyams_form.testing.IMyObject>
+  pyams_form.testing.IMyObject
   ['name', 'subobject']
 
 
