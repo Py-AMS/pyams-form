@@ -119,7 +119,7 @@ Some valid default values
   [ ]
   Int label *
   [-100]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -135,7 +135,7 @@ Some valid default values
   [ ]
   Int label *
   [42]
-  Bool label
+  Bool label *
   (O) yes ( ) no
   Choice label *
   [one]
@@ -174,7 +174,7 @@ for "foobar" and a new input.
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -196,6 +196,7 @@ Submit again with the empty field:
   Required input is missing.
   Required input is missing.
   Required input is missing.
+  Required input is missing.
 
   >>> print(format_html(testing.plain_text(content,
   ...     './/div[@id="form-widgets-dict_of_objects-1-row"]//div[@class="error"]')))
@@ -212,7 +213,8 @@ Submit again with the empty field:
   Int label *
   Required input is missing.
   []
-  Bool label
+  Bool label *
+  Required input is missing.
   ( ) yes ( ) no
   Choice label *
   [one]
@@ -242,7 +244,7 @@ Let's remove some items:
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -300,7 +302,7 @@ for "foo\nbar" and a new input.
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -321,6 +323,7 @@ Submit again with the empty field:
 
   >>> print(format_html(testing.plain_text(content,
   ...     './/div[@id="form-widgets-dict_of_objects-0-row"]//div[@class="error"]')))
+  Required input is missing.
   Required input is missing.
   Required input is missing.
   Required input is missing.
@@ -348,7 +351,7 @@ Let's remove some items:
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -407,7 +410,7 @@ for "foobar" and a new input.
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -426,7 +429,7 @@ for "foobar" and a new input.
   [ ]
   Int label *
   []
-  Bool label
+  Bool label *
   ( ) yes ( ) no
   Choice label *
   [[    ]]
@@ -466,7 +469,8 @@ Fill in a valid value:
   Int label *
   Required input is missing.
   []
-  Bool label
+  Bool label *
+  Required input is missing.
   ( ) yes ( ) no
   Choice label *
   [one]
@@ -485,7 +489,7 @@ Fill in a valid value:
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -517,7 +521,7 @@ Let's remove some items:
   Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -568,7 +572,7 @@ Fix values
   [ ]
   Int label *
   [1,042]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -613,7 +617,7 @@ And apply
   [ ]
   Int label *
   [1,042]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]

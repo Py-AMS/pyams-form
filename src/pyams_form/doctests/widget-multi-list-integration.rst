@@ -110,13 +110,13 @@ Some valid default values
   [ ]
   [100]
   [Add] [Remove selected]
-  ListOfBool label Bool label
+  ListOfBool label Bool label *
   [ ]
   (O) yes ( ) no
-  Bool label
+  Bool label *
   [ ]
   ( ) yes (O) no
-  Bool label
+  Bool label *
   [ ]
   (O) yes ( ) no
   [Add] [Remove selected]
@@ -234,19 +234,19 @@ Important is that we get a new input.
   ...     './/div[@id="row-form-widgets-list_of_bool"]'))
   ListOfBool label
   <BLANKLINE>
-  Bool label
+  Bool label *
   <BLANKLINE>
   [ ]
   (O) yes ( ) no
-  Bool label
+  Bool label *
   <BLANKLINE>
   [ ]
   ( ) yes (O) no
-  Bool label
+  Bool label *
   <BLANKLINE>
   [ ]
   (O) yes ( ) no
-  Bool label
+  Bool label *
   <BLANKLINE>
   [ ]
   ( ) yes ( ) no
@@ -260,7 +260,7 @@ Submit again with the empty field:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-list_of_bool"]//div[@class="error"]'))
-  <BLANKLINE>
+  Required input is missing.
 
 Let's remove some items:
 
@@ -272,10 +272,11 @@ Let's remove some items:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-list_of_bool"]'))
-  ListOfBool label Bool label
+  ListOfBool label Bool label *
   [ ]
   (O) yes ( ) no
-  Bool label
+  Bool label *
+  Required input is missing.
   [ ]
   ( ) yes ( ) no
   [Add] [Remove selected]
@@ -486,6 +487,7 @@ And apply
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
   There were some errors.* ListOfInt label: Wrong contained type
+  * ListOfBool label: Wrong contained type
   * ListOfTextLine label: Constraint not satisfied
   * ListOfDate label: The datetime string did not match the pattern 'M/d/yy'...
   ...

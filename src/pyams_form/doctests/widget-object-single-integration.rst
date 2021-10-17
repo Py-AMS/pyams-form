@@ -76,7 +76,7 @@ All blank and empty values:
   Object label
   Int label *
   []
-  Bool label
+  Bool label *
   ( ) yes ( ) no
   Choice label *
   [[    ]]
@@ -107,7 +107,7 @@ Some valid default values
   >>> print(testing.plain_text(content))
   Object label Int label *
   [-100]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -164,7 +164,7 @@ We should get lots of errors:
   Object label Int label *
   The entered value is not a valid integer literal.
   [foobar]
-  Bool label
+  Bool label *
   ( ) yes (O) no
   Choice label *
   [two]
@@ -199,7 +199,7 @@ Let's fix the values:
   >>> print(testing.plain_text(content))
   Data successfully updated.Object label Int label *
   [1,042]
-  Bool label
+  Bool label *
   (O) yes ( ) no
   Choice label *
   [three]

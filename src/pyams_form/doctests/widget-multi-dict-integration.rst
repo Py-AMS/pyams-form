@@ -120,14 +120,14 @@ Some valid default values
   [ ]
   [100]
   [Add] [Remove selected]
-  DictOfBool label Bool key
+  DictOfBool label Bool key *
   ( ) yes (O) no
-  Bool label
+  Bool label *
   [ ]
   (O) yes ( ) no
-  Bool key
+  Bool key *
   (O) yes ( ) no
-  Bool label
+  Bool label *
   [ ]
   ( ) yes (O) no
   [Add] [Remove selected]
@@ -167,7 +167,7 @@ Some valid default values
   [Apply]
 
 dict_of_int
-#########
+###########
 
 Set a wrong value and add a new input:
 
@@ -293,19 +293,19 @@ Important is that we get a new input.
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
-  DictOfBool label Bool key
+  DictOfBool label Bool key *
   ( ) yes (O) no
-  Bool label
+  Bool label *
   [ ]
   (O) yes ( ) no
-  Bool key
+  Bool key *
   (O) yes ( ) no
-  Bool label
+  Bool label *
   [ ]
   ( ) yes (O) no
-  Bool key
+  Bool key *
   ( ) yes ( ) no
-  Bool label
+  Bool label *
   [ ]
   ( ) yes ( ) no
   [Add] [Remove selected]
@@ -317,7 +317,9 @@ Submit again with the empty field:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]//div[@class="error"]'))
+  Required input is missing.
   <BLANKLINE>
+  Required input is missing.
 
 Let's remove some items:
 
@@ -329,9 +331,11 @@ Let's remove some items:
   >>> content = getForm(request)
   >>> print(testing.plain_text(content,
   ...     './/div[@id="row-form-widgets-dict_of_bool"]'))
-  DictOfBool label Bool key
+  DictOfBool label Bool key *
+  Required input is missing.
   ( ) yes ( ) no
-  Bool label
+  Bool label *
+  Required input is missing.
   [ ]
   ( ) yes ( ) no
   [Add] [Remove selected]
@@ -693,6 +697,7 @@ And apply
   >>> content = getForm(request)
   >>> print(testing.plain_text(content))
   There were some errors.* DictOfInt label: Wrong contained type
+  * DictOfBool label: Wrong contained type
   * DictOfTextLine label: Constraint not satisfied
   * DictOfDate label: The datetime string did not match the pattern 'M/d/yy'...
   ...
