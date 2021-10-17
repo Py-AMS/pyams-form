@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.2
+-----
+ - updated doctests for *zope.schema* package >= 6.1.1, where boolean schema fields are
+   automatically set as required
+
 1.6.1
 -----
  - updated doctests
