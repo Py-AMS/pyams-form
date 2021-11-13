@@ -106,7 +106,7 @@ class AJAXAddForm(AJAXForm):
             result = renderer.render(changes)
             if result:
                 return result
-        if not changes:
+        if changes is None:
             return {
                 'status': 'info',
                 'message': request.localizer.translate(self.no_changes_message)
