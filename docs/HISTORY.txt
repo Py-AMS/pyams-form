@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.3
+-----
+ - changed test in AJAX add form to check changes against *None* instead of boolean *false*
+   value to handle use case where created object is an empty container
+
 1.6.2
 -----
  - updated doctests for *zope.schema* package >= 6.1.1, where boolean schema fields are
