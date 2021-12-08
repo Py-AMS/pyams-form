@@ -382,6 +382,100 @@ We can now provide correct values, but we have to restore the default form rende
   'PyAMS form'
 
 
+AJAX form decorator
+-------------------
+
+PyAMS provides a custom decorator, which can be used to register a pagelet to handle HTML form
+and a Pyramid view to handle JSON submit:
+
+    >>> from pyramid.interfaces import IRequest
+    >>> from pyams_utils.testing import call_decorator
+    >>> from pyams_form.ajax import ajax_form_config
+    >>> from pyams_pagelet.interfaces import IPagelet
+
+    >>> call_decorator(config, ajax_form_config, TestEditForm,
+    ...                name='test.html', context=None)
+
+    >>> config.registry.queryMultiAdapter((content, request), IPagelet, name='test.html')
+    <pyams_form.testing.TestEditForm object at 0x...>
+
+    >>> from pyramid.view import _find_views
+    >>> _find_views(config.registry, IRequest, Interface, view_name='test.html')
+    [<function rendered_view.<locals>.viewresult_to_response at 0x...>]
+    >>> _find_views(config.registry, IRequest, Interface, view_name='test.json')
+    [<function attr_wrapped_view.<locals>.attr_view at 0x...>]
+
+Many decorator settings are automatically based on form attributes, but can be overriden using
+an *ajax_* prefix:
+
+    >>> call_decorator(config, ajax_form_config, TestEditForm,
+    ...                name='test-2.html', ajax_name='another-name.json',
+    ...                ajax_method='POST', ajax_permission='forbidden', ajax_xhr=False,
+    ...                ajax_require_csrf=False)
+
+    >>> _find_views(config.registry, IRequest, Interface, view_name='another-name.json')
+    [<function attr_wrapped_view.<locals>.attr_view at 0x...>]
+
+
+AJAX rendering with inner forms
+-------------------------------
+
+By default, when a form is containing sub-forms, the default AJAXFormRenderer is only calling
+the form renderer of each subform before merging the output. But it is sometimes required to
+override this default behaviour!
+
+Let's get an example where:
+ - if an attribute of the main form is modified, you need to reload the page
+ - if another attribute of the main form is modified, you need to update widgets
+ - if another attribute of the subform is modified, you need to update widgets.
+
+    >>> from pyams_utils.adapter import adapter_config
+
+    >>> class TestFormRenderer(AJAXFormRenderer):
+    ...     def render(self, changes):
+    ...         if 'name' in changes.get(IAJAXTestContent, ()):
+    ...             return {'status': 'reload'}
+    ...         return super().render(changes)
+
+    >>> call_decorator(config, adapter_config, TestFormRenderer,
+    ...                required=(IAJAXTestContent, IRequest, TestEditForm),
+    ...                provides=IAJAXFormRenderer)
+
+    >>> class MainTestFormRenderer(ContextRequestViewAdapter):
+    ...     def render(self, changes):
+    ...         if not changes:
+    ...             return None
+    ...         if 'value' in changes.get(IAJAXTestContent, ()):
+    ...             return {'callback': 'MyAPP.handlers.refreshWidget'}
+    ...         return None
+
+    >>> call_decorator(config, adapter_config, MainTestFormRenderer,
+    ...                name='main',
+    ...                required=(IAJAXTestContent, IRequest, TestEditForm),
+    ...                provides=IAJAXFormRenderer)
+
+    >>> request = testing.TestRequest(params={'form.widgets.name': 'PyAMS form',
+    ...                                       'form.widgets.value': '2021',
+    ...                                       'element.widgets.label': 'PyAMS form',
+    ...                                       'form.buttons.apply': 'Apply'})
+    >>> result = render_view(content, request, 'test-edit-form.json')
+    >>> pprint.pprint(json.loads(result.decode()))
+    {'status': 'reload'}
+
+    >>> request = testing.TestRequest(params={'form.widgets.name': 'PyAMS form',
+    ...                                       'form.widgets.value': '2022',
+    ...                                       'element.widgets.label': 'PyAMS form',
+    ...                                       'form.buttons.apply': 'Apply'})
+    >>> result = render_view(content, request, 'test-edit-form.json')
+    >>> pprint.pprint(json.loads(result.decode()))
+    {'callback': 'MyAPP.handlers.refreshWidget',
+     'events': [{'event_type': 'refresh',
+                 'source': 'element.widgets.label',
+                 'value': 'PyAMS form'}],
+     'message': 'Data successfully updated.',
+     'status': 'success'}
+
+
 Tests cleanup:
 
   >>> tearDown()

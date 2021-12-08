@@ -153,7 +153,8 @@ class AJAXEditForm(AJAXForm):
         return result
 
 
-@adapter_config(required=(None, IFormLayer, IAJAXForm), provides=IAJAXFormRenderer)
+@adapter_config(required=(None, IFormLayer, IAJAXForm),
+                provides=IAJAXFormRenderer)
 class AJAXFormRenderer:
     """Render an AJAX form's response into JSON format"""
 
@@ -166,6 +167,11 @@ class AJAXFormRenderer:
         """Render form status and changes in JSON format"""
         registry = self.request.registry
         result = {}
+        renderer = registry.queryMultiAdapter((self.context, self.request, self.form),
+                                              IAJAXFormRenderer,
+                                              name='main')
+        if renderer is not None:
+            result = renderer.render(changes)
         for form in self.form.get_forms(include_self=False):
             if form.mode == DISPLAY_MODE:
                 continue
@@ -178,7 +184,8 @@ class AJAXFormRenderer:
         return result
 
 
-@adapter_config(required=(Interface, IFormLayer, IForm), provides=IAJAXErrorsRenderer)
+@adapter_config(required=(Interface, IFormLayer, IForm),
+                provides=IAJAXErrorsRenderer)
 class AJAXErrorRenderer:
     """Default AJAX error renderer
 
@@ -357,11 +364,17 @@ class ajax_form_config:  # pylint: disable=invalid-name
                 form_settings.get('name'),
                 str(form_settings.get('context', Interface)),
                 str(form_class)))
-            registry = form_settings.get('registry') or config.registry
+            registry = form_settings.get('registry')
+            if registry is None:
+                config = context.config.with_package(info.module)  # pylint: disable=no-member
+                registry = config.registry
             registry.registerAdapter(form_class,
                                      (form_settings.get('context', Interface),
                                       form_settings.get('request_type', IRequest)),
                                      IPagelet, form_settings.get('name'))
+            # remove testing settings properties
+            form_settings.pop('registry', None)
+            form_settings.pop('venusian', None)
             config.add_view(view=form_class, **form_settings)
 
             ajax_class = type('AJAX' + obj.__name__, (base, obj), ajax_cdict)
@@ -369,9 +382,12 @@ class ajax_form_config:  # pylint: disable=invalid-name
                 ajax_settings.get('name'),
                 str(ajax_settings.get('context', Interface)),
                 str(ajax_class)))
+            # remove testing settings properties
+            ajax_settings.pop('registry', None)
+            ajax_settings.pop('venusian', None)
             config.add_view(view=ajax_class, **ajax_settings)
 
-        info = self.venusian.attach(wrapped, callback, category='pyams_form',
+        info = self.venusian.attach(wrapped, callback, category='pyramid',
                                     depth=depth + 1)
         if info.scope == 'class':  # pylint: disable=no-member
             # if the decorator was attached to a method in a class, or
