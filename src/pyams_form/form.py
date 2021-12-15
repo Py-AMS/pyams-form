@@ -46,6 +46,7 @@ from pyams_utils.factory import get_object_factory, is_interface
 from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
 from pyams_utils.url import absolute_url
+from pyams_utils.zodb import volatile_property
 
 
 __docformat__ = 'restructuredtext'
@@ -116,8 +117,7 @@ def merge_changes(source, changes):
 def handle_action_error(event):
     """Action error subscriber"""
     # Only react to the event, if the form is a standard form.
-    if not (IFormAware.providedBy(event.action) and
-            IForm.providedBy(event.action.form)):
+    if not (IFormAware.providedBy(event.action) and IForm.providedBy(event.action.form)):
         return
     # If the error was widget-specific, look up the widget.
     widget = None
@@ -188,7 +188,7 @@ class BaseForm(ContextRequestAdapter):
         """Form mode setter"""
         self._mode = value
 
-    @property
+    @volatile_property
     def edit_permission(self):
         """Permission required to access form in input mode"""
         permission = self._edit_permission

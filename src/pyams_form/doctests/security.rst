@@ -85,12 +85,21 @@ including the system manager:
   >>> my_form._edit_permission = FORBIDDEN_PERMISSION
   >>> my_form.update()
   >>> my_form.edit_permission == FORBIDDEN_PERMISSION
+  False
+
+What? That's because the "edit_permission" attribute is stored in a volatile attribute!
+So don't forget to delete attribute after updating internal value:
+
+  >>> del my_form.edit_permission
+  >>> my_form.edit_permission == FORBIDDEN_PERMISSION
   True
+
   >>> my_form.mode
   'display'
 
 Let's try to use another permission:
 
+  >>> del my_form.edit_permission
   >>> my_form._edit_permission = 'manage'
   >>> my_form.update()
   >>> my_form.edit_permission
@@ -143,6 +152,7 @@ We are now going to use a form context security checker adapter:
   ...       required=(IMyContext,),
   ...       provided=IViewContextPermissionChecker)
 
+  >>> del my_form.edit_permission
   >>> my_form._edit_permission = None
   >>> my_form.update()
   >>> my_form.edit_permission == FORBIDDEN_PERMISSION
@@ -162,6 +172,7 @@ If a security checker returns a null permission, it's always granted:
   ...       required=(IMyContext,),
   ...       provided=IViewContextPermissionChecker)
 
+  >>> del my_form.edit_permission
   >>> my_form.update()
   >>> my_form.edit_permission is None
   True
