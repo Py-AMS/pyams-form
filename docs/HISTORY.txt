@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.4
+-----
+ - small updates in default AJAX form renderer
+ - reified form edit permission getter
+
 1.6.3
 -----
  - changed test in AJAX add form to check changes against *None* instead of boolean *false*
