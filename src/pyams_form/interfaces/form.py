@@ -16,6 +16,7 @@ Form related interfaces module.
 """
 
 from zope.interface import Attribute, Interface
+from zope.interface.interfaces import IObjectEvent
 from zope.lifecycleevent import IObjectCreatedEvent
 from zope.schema import ASCIILine, Bool, Choice, Dict, Field, Object, Text, TextLine, Tuple, URI
 
@@ -83,6 +84,8 @@ class IFormAware(Interface):
 
 class IForm(Interface):
     """Form interface"""
+
+    fields = Attribute("Form fields")
 
     mode = Choice(title=_('Mode'),
                   description=_('The mode in which to render the widgets.'),
@@ -374,6 +377,17 @@ class IFormCreatedEvent(IObjectCreatedEvent):
     """Form created event interface"""
 
     request = Attribute("Form request")
+
+
+class IFormUpdatedEvent(IObjectEvent):
+    """Form updated event interface"""
+
+    form = Attribute("Form")
+    request = Attribute("Form request")
+
+
+class IFormFields(Interface):
+    """Optional adapter interface used to get form fields"""
 
 
 class IDataExtractedEvent(Interface):
