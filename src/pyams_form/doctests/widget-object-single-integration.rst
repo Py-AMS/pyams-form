@@ -40,7 +40,7 @@ Checking components on the highest possible level.
 
 
   >>> class EForm(form.EditForm):
-  ...     form.extends(form.EditForm)
+  ...     form.extends(form.EditForm, ignore_fields=True)
   ...     fields = field.Fields(testing.IObjectWidgetSingleIntegration)
 
 Our single content object:

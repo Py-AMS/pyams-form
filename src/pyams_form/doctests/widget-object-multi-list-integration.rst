@@ -34,7 +34,7 @@ a.k.a. list of objects widget
   >>> request = testing.TestRequest()
 
   >>> class EForm(form.EditForm):
-  ...     form.extends(form.EditForm)
+  ...     form.extends(form.EditForm, ignore_fields=True)
   ...     fields = field.Fields(
   ...         testing.IMultiWidgetListIntegration).select('list_of_objects')
 
