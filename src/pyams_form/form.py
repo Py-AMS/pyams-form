@@ -28,7 +28,7 @@ from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_form.button import Buttons, Handlers, button_and_handler
-from pyams_form.events import DataExtractedEvent, FormCreatedEvent
+from pyams_form.events import DataExtractedEvent, FormCreatedEvent, FormUpdatedEvent
 from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
@@ -256,6 +256,7 @@ class BaseForm(ContextRequestAdapter):
         self.update_widgets()
         [subform.update() for subform in self.subforms]  # pylint: disable=expression-not-assigned
         [tabform.update() for tabform in self.tabforms]  # pylint: disable=expression-not-assigned
+        self.request.registry.notify(FormUpdatedEvent(self))
 
     def update_widgets(self, prefix=None):
         """See interfaces.form.IForm"""
