@@ -34,7 +34,7 @@ from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, \
-    IEditForm, IFieldsForm, IForm, IFormAware, IGroup, IGroupManager, IHandlerForm, \
+    IEditForm, IFieldsForm, IForm, IFormAware, IFormFields, IGroup, IGroupManager, IHandlerForm, \
     IInnerSubForm, IInnerTabForm, IInputForm
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
@@ -90,7 +90,11 @@ def apply_changes(form, content, data):
 
 
 def extends(*args, **kwargs):
-    """Extend fields, buttons and handlers"""
+    """Extend fields, buttons and handlers
+
+    Please note that extending fields only works if parent class is using static
+    fields definition!
+    """
     frame = sys._getframe(1)  # pylint: disable=protected-access
     f_locals = frame.f_locals
     if not kwargs.get('ignore_fields', False):
@@ -146,8 +150,6 @@ def handle_action_error(event):
 class BaseForm(ContextRequestAdapter):
     """A base form."""
 
-    fields = Fields()
-
     title = None
     legend = None
     required_label = _('<span class="required">*</span>&ndash; required')
@@ -166,6 +168,15 @@ class BaseForm(ContextRequestAdapter):
     ignore_request = False
     ignore_readonly = False
     ignore_required_on_extract = False
+
+    @volatile_property
+    def fields(self):
+        """Form fields getter"""
+        fields = self.request.registry.queryMultiAdapter((self.context, self.request, self),
+                                                         IFormFields)
+        if fields is None:
+            fields = Fields()
+        return fields
 
     @property
     def mode(self):
