@@ -56,8 +56,10 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
         """See pyams_form.interfaces.widget.IWidget."""
         super().update()
         add_field_class(self)
-        self.items = [self.get_item(term, count)
-                      for count, term in enumerate(self.terms)]
+        self.items = [
+            self.get_item(term, count)
+            for count, term in enumerate(self.terms)
+        ]
         self.selected_items = [
             self.get_item(self.terms.getTermByToken(token), count)
             for count, token in enumerate(self.value)
