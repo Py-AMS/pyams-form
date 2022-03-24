@@ -34,8 +34,8 @@ from pyams_form.interfaces import DISPLAY_MODE, INPUT_MODE
 from pyams_form.interfaces.button import IActionErrorEvent, IActions, WidgetActionExecutionError
 from pyams_form.interfaces.error import IErrorViewSnippet
 from pyams_form.interfaces.form import IActionForm, IAddForm, IButtonForm, IDisplayForm, \
-    IEditForm, IFieldsForm, IForm, IFormAware, IFormFields, IGroup, IGroupManager, IHandlerForm, \
-    IInnerSubForm, IInnerTabForm, IInputForm
+    IEditForm, IFieldsForm, IForm, IFormAware, IFormContent, IFormFields, IGroup, IGroupManager, \
+    IHandlerForm, IInnerSubForm, IInnerTabForm, IInputForm
 from pyams_form.interfaces.widget import IWidgets
 from pyams_form.util import changed_field
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
@@ -210,7 +210,11 @@ class BaseForm(ContextRequestAdapter):
 
     def get_content(self):
         """See interfaces.form.IForm"""
-        return self.context
+        content = self.request.registry.queryMultiAdapter((self.context, self.request, self),
+                                                          IFormContent)
+        if content is None:
+            content = self.context
+        return content
 
     @property
     def required_info(self):

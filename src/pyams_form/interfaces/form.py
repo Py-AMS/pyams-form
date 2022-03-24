@@ -386,6 +386,10 @@ class IFormUpdatedEvent(IObjectEvent):
     request = Attribute("Form request")
 
 
+class IFormContent(Interface):
+    """Optional adapter interface used to get form content"""
+
+
 class IFormFields(Interface):
     """Optional adapter interface used to get form fields"""
 
