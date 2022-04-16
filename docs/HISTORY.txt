@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.7.0
+-----
+ - added interfaces support for form content and form fields adapters
+ - added form update events
+ - added support for Python 3.10
+
 1.6.5
 -----
  - cancelled doctest update
