@@ -208,13 +208,18 @@ class BaseForm(ContextRequestAdapter):
         content = self.get_content()
         return get_edit_permission(self.request, content, self)
 
-    def get_content(self):
-        """See interfaces.form.IForm"""
+    @reify
+    def form_content(self):
+        """Form content getter"""
         content = self.request.registry.queryMultiAdapter((self.context, self.request, self),
                                                           IFormContent)
         if content is None:
             content = self.context
         return content
+
+    def get_content(self):
+        """See interfaces.form.IForm"""
+        return self.form_content
 
     @property
     def required_info(self):
