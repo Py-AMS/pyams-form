@@ -42,7 +42,7 @@ from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
 from pyams_security.permission import get_edit_permission
 from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import ContextRequestAdapter
-from pyams_utils.factory import get_object_factory, is_interface
+from pyams_utils.factory import create_object
 from pyams_utils.interfaces import ICacheKeyValue
 from pyams_utils.interfaces.form import IDataManager, NOT_CHANGED
 from pyams_utils.url import absolute_url
@@ -233,19 +233,21 @@ class BaseForm(ContextRequestAdapter):
     def subforms(self):
         """Get list of internal sub-forms"""
         registry = self.request.registry
-        return sorted((adapter
-                       for name, adapter in registry.getAdapters((self.context, self.request, self),
-                                                                 IInnerSubForm)),
-                      key=get_form_weight)
+        return sorted((
+            adapter
+            for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                      IInnerSubForm)
+        ), key=get_form_weight)
 
     @reify
     def tabforms(self):
         """Get list of internal tab-forms"""
         registry = self.request.registry
-        return sorted((adapter
-                       for name, adapter in registry.getAdapters((self.context, self.request, self),
-                                                                 IInnerTabForm)),
-                      key=get_form_weight)
+        return sorted((
+            adapter
+            for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                      IInnerTabForm)
+        ), key=get_form_weight)
 
     def get_forms(self, include_self=True):
         """Get all forms associated with this form"""
@@ -256,9 +258,11 @@ class BaseForm(ContextRequestAdapter):
             for group in manager.groups:
                 yield from group.get_forms()
         for form in self.subforms:
-            yield from form.get_forms()
+            if IInnerSubForm.providedBy(form):
+                yield from form.get_forms()
         for form in self.tabforms:
-            yield from form.get_forms()
+            if IInnerTabForm.providedBy(form):
+                yield from form.get_forms()
 
     def update(self):
         """See interfaces.form.IForm"""
@@ -450,9 +454,7 @@ class AddForm(Form):
     def create(self, data):  # pylint: disable=unused-argument
         """Create new content from form data"""
         if self.content_factory is not None:
-            factory = get_object_factory(self.content_factory) \
-                if is_interface(self.content_factory) else self.content_factory
-            return factory()  # pylint: disable=not-callable
+            return create_object(self.content_factory)
         raise NotImplementedError
 
     def add(self, obj):  # pylint: disable=redefined-builtin
