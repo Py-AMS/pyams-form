@@ -97,7 +97,7 @@ class Group(GroupManager, BaseForm):
 
 @adapter_config(required=(Interface, IFormLayer, IGroup),
                 provides=IFormContent)
-def get_group_content(context, request, group):
+def get_group_content(context, request, group):  # pylint: disable=unused-argument
     """Group content getter"""
     return group.parent_form.get_content()
 
