@@ -243,12 +243,8 @@ Let's try now to add a subform to this edit form:
   ...       required=(AJAXTestContent,),
   ...       provided=IAJAXTestElement)
 
-  >>> from zope.interface import implementer
-  >>> from pyams_form.interfaces.form import IInnerSubForm
   >>> from pyams_form import field, subform
-
-  >>> @implementer(IInnerSubForm)
-  ... class TestElementEditSubform(subform.InnerEditForm):
+  >>> class TestElementEditSubform(subform.InnerEditForm):
   ...     """Test element edit subform"""
   ...     fields = field.Fields(IAJAXTestElement)
   ...     prefix = 'element.'
@@ -256,6 +252,7 @@ Let's try now to add a subform to this edit form:
   ...     def get_content(self):
   ...         return IAJAXTestElement(self.context)
 
+  >>> from pyams_form.interfaces.form import IInnerSubForm
   >>> config.registry.registerAdapter(TestElementEditSubform,
   ...       required=(None, IFormLayer, TestEditForm),
   ...       provided=IInnerSubForm, name='element')

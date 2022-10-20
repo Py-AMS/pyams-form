@@ -251,7 +251,7 @@ Initially we get an error because the "Ratings" vocabulary is not defined:
   ...     None, request, None, ratingField2, widget)
   Traceback (most recent call last):
   ...
-  NameError: name 'ratings' is not defined
+  zope.schema._field.MissingVocabularyError: Can't validate value without vocabulary named 'Ratings'
 
 Let's now register the vocabulary under this name:
 
