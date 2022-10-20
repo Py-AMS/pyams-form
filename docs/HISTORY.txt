@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.7.1
+-----
+ - updated get_forms method to only get inner forms which are really implementing inner forms
+   interfaces; this can be useful to include inner viewlets which are not forms into a parent
+   form
+
 1.7.0
 -----
  - added interfaces support for form content and form fields adapters
