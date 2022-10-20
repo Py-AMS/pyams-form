@@ -233,19 +233,21 @@ class BaseForm(ContextRequestAdapter):
     def subforms(self):
         """Get list of internal sub-forms"""
         registry = self.request.registry
-        return sorted((adapter
-                       for name, adapter in registry.getAdapters((self.context, self.request, self),
-                                                                 IInnerSubForm)),
-                      key=get_form_weight)
+        return sorted((
+            adapter
+            for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                      IInnerSubForm)
+        ), key=get_form_weight)
 
     @reify
     def tabforms(self):
         """Get list of internal tab-forms"""
         registry = self.request.registry
-        return sorted((adapter
-                       for name, adapter in registry.getAdapters((self.context, self.request, self),
-                                                                 IInnerTabForm)),
-                      key=get_form_weight)
+        return sorted((
+            adapter
+            for name, adapter in registry.getAdapters((self.context, self.request, self),
+                                                      IInnerTabForm)
+        ), key=get_form_weight)
 
     def get_forms(self, include_self=True):
         """Get all forms associated with this form"""
