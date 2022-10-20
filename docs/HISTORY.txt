@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.7.2
+-----
+ - cancelled doctest update
+
 1.7.1
 -----
  - updated get_forms method to only get inner forms which are really implementing inner forms
