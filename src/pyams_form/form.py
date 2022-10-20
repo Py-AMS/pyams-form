@@ -258,9 +258,11 @@ class BaseForm(ContextRequestAdapter):
             for group in manager.groups:
                 yield from group.get_forms()
         for form in self.subforms:
-            yield from form.get_forms()
+            if IInnerSubForm.providedBy(form):
+                yield from form.get_forms()
         for form in self.tabforms:
-            yield from form.get_forms()
+            if IInnerTabForm.providedBy(form):
+                yield from form.get_forms()
 
     def update(self):
         """See interfaces.form.IForm"""

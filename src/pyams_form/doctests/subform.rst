@@ -777,19 +777,22 @@ to edit car parking attributes:
 
 Let's now create and register our subforms:
 
-  >>> class OwnerAddForm(subform.InnerAddForm):
+  >>> from zope.interface import implementer
+  >>> from pyams_form.interfaces.form import IInnerSubForm
+
+  >>> @implementer(IInnerSubForm)
+  ... class OwnerAddForm(subform.InnerAddForm):
   ...     fields = field.Fields(IOwner)
   ...     prefix = 'owner'
   ...     weight = 1
 
-  >>> class ParkingAddForm(subform.InnerAddForm):
+  >>> @implementer(IInnerSubForm)
+  ... class ParkingAddForm(subform.InnerAddForm):
   ...     fields = field.Fields(IParking)
   ...     prefix = 'parking'
   ...     label = 'Parking'
   ...     weight = 2
 
-
-  >>> from pyams_form.interfaces.form import IInnerSubForm
   >>> config.registry.registerAdapter(OwnerAddForm,
   ...       required=(None, IFormLayer, CarAddForm),
   ...       provided=IInnerSubForm, name='owner')
@@ -958,12 +961,14 @@ Let's now create an edit form for our car:
   ...                           'templates', 'simple-caredit-subforms.pt'), 'text/html')
   >>> config.registry.registerAdapter(factory, (None, IFormLayer, CarEditForm), IContentTemplate)
 
-  >>> class OwnerEditForm(subform.InnerEditForm):
+  >>> @implementer(IInnerSubForm)
+  ... class OwnerEditForm(subform.InnerEditForm):
   ...     fields = field.Fields(IOwner)
   ...     prefix = 'owner'
   ...     weight = 1
 
-  >>> class ParkingEditForm(subform.InnerEditForm):
+  >>> @implementer(IInnerSubForm)
+  ... class ParkingEditForm(subform.InnerEditForm):
   ...     fields = field.Fields(IParking)
   ...     prefix = 'parking'
   ...     legend = 'Parking'
