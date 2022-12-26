@@ -40,7 +40,7 @@ Thus, let's create a vocabulary first:
   ...     vocabulary.SimpleVocabulary.createTerm(0, '0', 'bad'),
   ...     vocabulary.SimpleVocabulary.createTerm(1, '1', 'okay'),
   ...     vocabulary.SimpleVocabulary.createTerm(2, '2', 'good')
-  ...     ])
+  ... ])
 
 
 Terms
@@ -251,7 +251,7 @@ Initially we get an error because the "Ratings" vocabulary is not defined:
   ...     None, request, None, ratingField2, widget)
   Traceback (most recent call last):
   ...
-  zope.schema._field.MissingVocabularyError: Can't validate value without vocabulary named 'Ratings'
+  NameError: name 'ratings' is not defined
 
 Let's now register the vocabulary under this name:
 
