@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.7.3
+-----
+ - added support for Python 3.10 and 3.11
+ - updated doctests
+
 1.7.2
 -----
  - cancelled doctest update
