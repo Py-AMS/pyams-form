@@ -38,6 +38,7 @@ from pyams_form.value import ComputedValueCreator, StaticValueCreator
 from pyams_form.widget import AfterWidgetUpdateEvent
 from pyams_layer.interfaces import IFormLayer
 from pyams_utils.adapter import adapter_config
+from pyams_utils.factory import get_object_factory
 
 
 __docformat__ = 'restructuredtext'
@@ -202,7 +203,8 @@ def button_and_handler(title, **kwargs):
     # Extract directly provided interfaces:
     provides = kwargs.pop('provides', ())
     # Create button and add it to the button manager
-    button = Button(**kwargs)
+    factory = get_object_factory(kwargs.pop('factory', Button))
+    button = factory(**kwargs)
     alsoProvides(button, provides)
     frame = sys._getframe(1)  # pylint: disable=protected-access
     f_locals = frame.f_locals
