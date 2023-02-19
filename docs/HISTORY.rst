@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.8.0
+-----
+ - added support for optional *factory* argument when using *form_and_handler* decorator
+ - added optional *notify* argument to form *extract_data* method; you can set this argument
+   to *False* when you don't want to generate extra events on a manual data extraction
+
 1.7.4
 -----
  - reverted doctest
