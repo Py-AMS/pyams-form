@@ -59,11 +59,11 @@ class GroupManager:  # pylint: disable=no-member
         [tabform.update() for tabform in self.tabforms]  # pylint: disable=expression-not-assigned
         self.request.registry.notify(FormUpdatedEvent(self))
 
-    def extract_data(self, set_errors=True):
+    def extract_data(self, set_errors=True, notify=True):
         """See interfaces.IForm"""
-        data, errors = super().extract_data(set_errors=set_errors)
+        data, errors = super().extract_data(set_errors=set_errors, notify=notify)
         for group in self.groups:
-            group_data, group_errors = group.extract_data(set_errors=set_errors)
+            group_data, group_errors = group.extract_data(set_errors=set_errors, notify=notify)
             data.update(group_data)
             if group_errors:
                 if errors:

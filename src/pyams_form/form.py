@@ -284,12 +284,13 @@ class BaseForm(ContextRequestAdapter):
         self.widgets.ignore_readonly = self.ignore_readonly
         self.widgets.update()
 
-    def extract_data(self, set_errors=True):
+    def extract_data(self, set_errors=True, notify=True):
         """See interfaces.form.IForm"""
         self.widgets.set_errors = set_errors
         self.widgets.ignore_required_on_extract = self.ignore_required_on_extract
         data, errors = self.widgets.extract()
-        self.request.registry.notify(DataExtractedEvent(data, errors, self))
+        if notify:
+            self.request.registry.notify(DataExtractedEvent(data, errors, self))
         if not errors:
             errors = self.widgets.errors
         return data, errors

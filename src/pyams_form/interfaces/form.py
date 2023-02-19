@@ -156,10 +156,11 @@ class IForm(Interface):
         the default value of ``"widgets."``.
         """
 
-    def extract_data(self, set_errors=True):
+    def extract_data(self, set_errors=True, notify=True):
         """Extract the data of the form.
 
-        set_errors: needs to be passed to extract() and to sub-widgets"""
+        set_errors: needs to be passed to extract() and to sub-widgets
+        notify: set to False when you don't want to notify IDataExtractedEvent"""
 
     def update(self):
         """Update the form."""
