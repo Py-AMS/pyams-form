@@ -31,7 +31,7 @@ from pyams_form.interfaces.widget import IAfterWidgetUpdateEvent, IFieldWidget, 
 from pyams_form.template import get_widget_layout, get_widget_template
 from pyams_form.util import sorted_none
 from pyams_form.value import ComputedValueCreator, StaticValueCreator
-from pyams_utils.interfaces.form import IDataManager, NO_VALUE
+from pyams_utils.interfaces.form import IDataManager, NO_VALUE, NO_VALUE_STRING
 from pyams_utils.registry import query_utility
 
 
@@ -243,7 +243,7 @@ class SequenceWidget(Widget):
     terms = None
     separator = ','
 
-    no_value_token = '--NOVALUE--'
+    no_value_token = NO_VALUE_STRING
 
     @property
     def display_value(self):
