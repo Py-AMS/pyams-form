@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.1
+-----
+ - small templates updates
+
 1.8.0
 -----
  - added support for optional *factory* argument when using *form_and_handler* decorator
