@@ -156,7 +156,7 @@ just cry about it in the HTML:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -228,7 +228,7 @@ Let's set acceptable values:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -276,7 +276,7 @@ Let's set acceptable values:
          class="text-widget int-field"
          value="321" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -358,7 +358,7 @@ a new value:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -406,7 +406,7 @@ a new value:
          class="text-widget int-field"
          value="321" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -454,7 +454,7 @@ a new value:
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="foo.2-empty-marker" type="hidden" value="1"/>
+      <input name="foo.2-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -553,7 +553,7 @@ Now let's store the new value:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -601,7 +601,7 @@ Now let's store the new value:
          class="text-widget int-field"
          value="321" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -649,7 +649,7 @@ Now let's store the new value:
          class="text-widget int-field"
          value="98" />
               </div>
-      <input name="foo.2-empty-marker" type="hidden" value="1"/>
+      <input name="foo.2-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -751,7 +751,7 @@ remove an existing value:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -799,7 +799,7 @@ remove an existing value:
          class="text-widget int-field"
          value="98" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -898,7 +898,7 @@ as input for our internal (sub) widget.
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -948,7 +948,7 @@ as input for our internal (sub) widget.
          class="text-widget int-field"
          value="98" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1037,7 +1037,7 @@ if you like to skip the label rendering for all widgets.
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="foo.0-empty-marker" type="hidden" value="1"/>
+      <input name="foo.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1079,7 +1079,7 @@ if you like to skip the label rendering for all widgets.
          class="text-widget int-field"
          value="321" />
               </div>
-      <input name="foo.1-empty-marker" type="hidden" value="1"/>
+      <input name="foo.1-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1271,7 +1271,7 @@ Render the form:
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1422,7 +1422,7 @@ Watch for the widget values in the HTML:
          class="text-widget int-field"
          value="99" />
               </div>
-      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1561,7 +1561,7 @@ values:
          class="text-widget int-field"
          value="55" />
               </div>
-      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>
@@ -1725,7 +1725,7 @@ it has to appear at the field itself and at the top of the form:
          class="text-widget int-field"
          value="bad" />
               </div>
-      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.list_of_objects.0-empty-marker" type="hidden" value="1" />
   </div>
           </div>
         </div>

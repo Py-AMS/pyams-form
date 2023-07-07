@@ -14,5 +14,5 @@
 			${structure:widget.render()}
 		</div>
 	</tal:block>
-	<input name="${view.name}-empty-marker" type="hidden" value="1"/>
+	<input name="${view.name}-empty-marker" type="hidden" value="1" />
 </div>

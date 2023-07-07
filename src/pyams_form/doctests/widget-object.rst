@@ -112,7 +112,7 @@ We can now render the widget:
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="subobject-empty-marker" type="hidden" value="1"/>
+      <input name="subobject-empty-marker" type="hidden" value="1" />
   </div>
 
 
@@ -159,7 +159,7 @@ Let's provide a more meaningful value:
          class="text-widget int-field"
          value="666" />
               </div>
-      <input name="subobject-empty-marker" type="hidden" value="1"/>
+      <input name="subobject-empty-marker" type="hidden" value="1" />
   </div>
 
 
@@ -201,7 +201,7 @@ Let's fill in some values via the request:
          class="text-widget int-field"
          value="999" />
               </div>
-      <input name="subobject-empty-marker" type="hidden" value="1"/>
+      <input name="subobject-empty-marker" type="hidden" value="1" />
   </div>
 
 Widget value comes from the request:
@@ -291,7 +291,7 @@ Default values get rendered:
          class="text-widget int-field"
          value="999" />
               </div>
-      <input name="subobject-empty-marker" type="hidden" value="1"/>
+      <input name="subobject-empty-marker" type="hidden" value="1" />
   </div>
 
 But on the return we get default values back:
@@ -422,7 +422,7 @@ Now rendering the addform renders the subform as well:
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -537,7 +537,7 @@ Watch for the widget values in the HTML:
          class="text-widget int-field"
          value="99" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -634,7 +634,7 @@ values:
          class="text-widget int-field"
          value="55" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -748,7 +748,7 @@ it has to appear at the field itself and at the top of the form:
          class="text-widget int-field"
          value="bad" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -830,7 +830,7 @@ Both errors must appear at the top of the form:
          class="text-widget int-field"
          value="bad" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -995,7 +995,7 @@ Watch for the widget values in the HTML:
          class="text-widget int-field"
          value="87" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
@@ -1142,7 +1142,7 @@ Now rendering the addform renders the subform as well:
          class="text-widget int-field"
          value="2,222" />
               </div>
-      <input name="form.widgets.subobject.widgets.subfield-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject.widgets.subfield-empty-marker" type="hidden" value="1" />
   </div>
               </div>
               <div class="label">
@@ -1158,7 +1158,7 @@ Now rendering the addform renders the subform as well:
          class="text-widget required textline-field"
          value="" />
               </div>
-      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1"/>
+      <input name="form.widgets.subobject-empty-marker" type="hidden" value="1" />
   </div>
     </div>
     <div class="row">
