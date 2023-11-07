@@ -82,14 +82,16 @@ class Group(GroupManager, BaseForm):
         self.request = request
         self.parent_form = self.__parent__ = parent_form
 
-    def update_widgets(self, prefix=None):
+    def update_widgets(self, prefix=None, use_form_mode=True):
         """See interfaces.IForm"""
         registry = self.request.registry
         self.widgets = registry.getMultiAdapter((self, self.request, self.get_content()),
                                                 IWidgets)
-        for attr_name in ('mode', 'ignore_request', 'ignore_context', 'ignore_readonly'):
-            value = getattr(self.parent_form.widgets, attr_name)
-            setattr(self.widgets, attr_name, value)
+        self.widgets.mode = self.mode
+        if use_form_mode:
+            for attr_name in ('ignore_request', 'ignore_context', 'ignore_readonly'):
+                value = getattr(self.parent_form.widgets, attr_name)
+                setattr(self.widgets, attr_name, value)
         if prefix is not None:
             self.widgets.prefix = prefix
         self.widgets.update()
