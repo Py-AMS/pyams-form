@@ -247,11 +247,15 @@ vocabulary is looked up at run time.
 
 Initially we get an error because the "Ratings" vocabulary is not defined:
 
-  >>> terms = term.ChoiceTerms(
-  ...     None, request, None, ratingField2, widget)
+  >>> from zope.schema._field import MissingVocabularyError
+  >>> try:
+  ...     terms = term.ChoiceTerms(
+  ...         None, request, None, ratingField2, widget)
+  ... except MissingVocabularyError:
+  ...     raise NameError("name 'ratings' is not defined")
   Traceback (most recent call last):
   ...
-  zope.schema._field.MissingVocabularyError: Can't validate value without vocabulary named 'Ratings'
+  NameError: name 'ratings' is not defined
 
 Let's now register the vocabulary under this name:
 

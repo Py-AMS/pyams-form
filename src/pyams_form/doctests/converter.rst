@@ -1006,7 +1006,7 @@ for instance zope.schema.Int declares its type as (int, long).
 
 Let's illustrate the problem:
 
-  >>> zope.schema.Int._type == zope.schema._compat.integer_types
+  >>> zope.schema.Int._type == int
   True
 
   Note: Should be int and long in Python 2.

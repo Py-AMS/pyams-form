@@ -111,21 +111,17 @@ The form is always in input mode because request's permissions can't be verified
 without an authentication and an authorization policies; we are going to create fake policies
 for testing (which will always deny permissions):
 
-  >>> from pyramid.interfaces import IAuthenticationPolicy, IAuthorizationPolicy
-  >>> from pyramid.security import Everyone
-  >>> class AuthenticationPolicy:
-  ...     def effective_principals(self, request, context=None):
-  ...         return {Everyone}
+  >>> from pyramid.interfaces import ISecurityPolicy
+  >>> from pyramid.authorization import ACLDenied
 
-  >>> from pyramid.security import ACLDenied
-  >>> class AuthorizationPolicy:
+  >>> class SecurityPolicy:
+  ...     def identity(self, request):
+  ...         return None
   ...     def permits(self, context, principals, permission):
   ...         return ACLDenied(None, None, None, permission, context)
 
-  >>> policy = AuthenticationPolicy()
-  >>> config.registry.registerUtility(policy, IAuthenticationPolicy)
-  >>> policy = AuthorizationPolicy()
-  >>> config.registry.registerUtility(policy, IAuthorizationPolicy)
+  >>> policy = SecurityPolicy()
+  >>> config.registry.registerUtility(policy, ISecurityPolicy)
 
   >>> my_form.update()
   >>> my_form.mode
