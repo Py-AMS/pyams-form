@@ -137,7 +137,7 @@ class base_widget_template_config:  # pylint: disable=invalid-name
                 registry = config.registry
             register_widget_template(template, widget, settings, self.interface, registry)
 
-        info = self.venusian.attach(wrapped, callback, category='pyams_form')
+        info = self.venusian.attach(wrapped, callback, category='pyramid')
         if info.scope == 'class':  # pylint: disable=no-member
             # if the decorator was attached to a method in a class, or
             # otherwise executed at class scope, we need to set an
