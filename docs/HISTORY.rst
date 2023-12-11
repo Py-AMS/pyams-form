@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.2
+-----
+ - added mising interfaces attributes
+
 2.0.1
 -----
  - updated Buildout configuration
