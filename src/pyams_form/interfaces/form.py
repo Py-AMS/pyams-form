@@ -123,6 +123,8 @@ class IForm(Interface):
                      description=_('Main form title'),
                      required=False)
 
+    subtitle = Attribute("Form subtitle")
+
     legend = TextLine(title=_('Legend'),
                       description=_('A human readable text describing the form that can be '
                                     'used in the UI.'),
@@ -294,6 +296,8 @@ class IInputForm(Interface):
 
 class IAddForm(IForm):
     """A form to create and add a new component."""
+
+    content_factory = Attribute("Form new content factory")
 
     def create_and_add(self, data):
         """Call create and add.
