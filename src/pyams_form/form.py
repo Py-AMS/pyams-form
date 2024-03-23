@@ -17,6 +17,11 @@ This module defines all main forms management classes.
 
 import json
 import sys
+try:
+    from typing import final
+except ImportError:
+    def final(func):
+        return func
 
 from persistent import IPersistent
 from pyramid.decorator import reify
@@ -217,8 +222,14 @@ class BaseForm(ContextRequestAdapter):
             content = self.context
         return content
 
+    @final
     def get_content(self):
-        """See interfaces.form.IForm"""
+        """See interfaces.form.IForm
+
+        You should not override this method!
+        If you need custom content getter in your form, just add
+        a custom IFormContent adapter (see "form_content" getter above).
+        """
         return self.form_content
 
     @property
