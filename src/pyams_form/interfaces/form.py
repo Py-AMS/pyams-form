@@ -367,6 +367,9 @@ class IGroupManager(IForm):
                                 'converted to group instances when the form is '
                                 'updated.'))
 
+    def get_groups(self):
+        """Internal groups iterator getter"""
+
 
 class IGroup(IGroupManager):
     """A group of fields/widgets within a form."""

@@ -33,6 +33,13 @@ class GroupManager:  # pylint: disable=no-member
 
     groups = ()
 
+    def get_groups(self):
+        """Internal groups iterator getter"""
+        registry = self.request.registry
+        yield from sorted((adapter for name, adapter in
+                           registry.getAdapters((self.context, self.request, self), IGroup)),
+                          key=get_form_weight)
+
     def update(self):
         """See interfaces.IForm"""
         self.update_widgets()
@@ -47,10 +54,7 @@ class GroupManager:  # pylint: disable=no-member
                 group = group_class(self.context, self.request, self)
             groups.append(group)
         # groups can also be added dynamically using adapters
-        registry = self.request.registry
-        for group in sorted((adapter for name, adapter in
-                             registry.getAdapters((self.context, self.request, self), IGroup)),
-                            key=get_form_weight):
+        for group in self.get_groups():
             groups.append(group)
         # update all groups
         [group.update() for group in groups]  # pylint: disable=expression-not-assigned
