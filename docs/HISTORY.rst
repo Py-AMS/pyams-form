@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.0
+-----
+ - added final decorator to form content getter (using only adapters)
+ - added form groups getter method
+
 2.0.2
 -----
  - added mising interfaces attributes
