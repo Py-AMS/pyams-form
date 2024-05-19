@@ -60,22 +60,10 @@ class OrderedSelectWidget(HTMLSelectWidget, SequenceWidget):
             self.get_item(term, count)
             for count, term in enumerate(self.terms)
         ]
-        self.selected_items = [
-            self.get_item(self.terms.getTermByToken(token), count)
-            for count, token in enumerate(self.value)
-        ]
-        self.notselected_items = self.deselect()
-
-    def deselect(self):
-        """Get unselected items"""
-        selected_items = []
-        notselected_items = []
-        for selected_item in self.selected_items:
-            selected_items.append(selected_item['value'])
-        for item in self.items:
-            if item['value'] not in selected_items:
-                notselected_items.append(item)
-        return notselected_items
+        self.selected_items = list(filter(lambda x: x['value'] in self.value,
+                                          self.items))
+        self.notselected_items = list(filter(lambda x: x['value'] not in self.value,
+                                             self.items))
 
     def json_data(self):
         """Get widget data in JSON format"""

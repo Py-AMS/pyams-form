@@ -88,7 +88,7 @@ If we render the widget we get an empty widget:
     </tr>
   </table>
 
-The json data representing the oredered select widget:
+The json data representing the ordered select widget:
   >>> from pprint import pprint
   >>> pprint(widget.json_data())
   {'error': '',
@@ -104,7 +104,7 @@ The json data representing the oredered select widget:
    'value': ()}
 
 Let's provide some values for this widget. We can do this by defining a source
-providing ``ITerms``. This source uses descriminators wich will fit our setup.
+providing ``ITerms``. This source uses discriminators which will fit our setup.
 
   >>> import zope.schema.interfaces
   >>> from zope.schema.vocabulary import SimpleVocabulary
@@ -155,7 +155,7 @@ If we select item "b", then it should be selected:
             <option value="b">B</option>
         </select>
 
-The json data representing the oredered select widget:
+The json data representing the ordered select widget:
   >>> from pprint import pprint
   >>> pprint(widget.json_data())
   {'error': '',
@@ -171,7 +171,7 @@ The json data representing the oredered select widget:
                {'content': 'C', 'id': 'widget-id-2', 'value': 'c'},
                {'content': 'A', 'id': 'widget-id-3', 'value': 'd'}],
    'required': False,
-   'selected': [{'content': 'B', 'id': 'widget-id-0', 'value': 'b'}],
+   'selected': [{'content': 'B', 'id': 'widget-id-1', 'value': 'b'}],
    'type': 'multi_select',
    'value': ['b']}
 
