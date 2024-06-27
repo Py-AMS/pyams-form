@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.1
+-----
+ - updated OrderedSelect selected terms getter
+
 2.1.0
 -----
  - added final decorator to form content getter (using only adapters)
