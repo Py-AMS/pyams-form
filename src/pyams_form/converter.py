@@ -36,8 +36,7 @@ from pyams_form.interfaces.widget import IFieldWidget, IMultiWidget, ISequenceWi
     ISingleCheckBoxWidget, ITextLinesWidget, IWidget, IFileWidget
 from pyams_form.util import to_bytes, to_unicode
 from pyams_utils.adapter import adapter_config
-from pyams_utils.interfaces.form import NOT_CHANGED
-
+from pyams_utils.interfaces.form import NOT_CHANGED, NO_VALUE
 
 __docformat__ = 'restructuredtext'
 
@@ -351,6 +350,8 @@ class CollectionSequenceDataConverter(BaseDataConverter):
 
     def to_field_value(self, value):
         """See interfaces.IDataConverter"""
+        if value is NO_VALUE:
+            value = []
         widget = self.widget
         if widget.terms is None:
             widget.update_terms()
