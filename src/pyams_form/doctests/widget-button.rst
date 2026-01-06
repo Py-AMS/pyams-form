@@ -12,6 +12,8 @@ http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-INPUT
 
   >>> from cornice import includeme as include_cornice
   >>> include_cornice(config)
+  >>> from cornice_swagger import includeme as include_swagger
+  >>> include_swagger(config)
   >>> from pyams_utils import includeme as include_utils
   >>> include_utils(config)
   >>> from pyams_site import includeme as include_site
