@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.3
+-----
+ - updated doctests for Python 3.12
+
 2.1.2
 -----
  - updated doctests
