@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.2
+-----
+ - updated doctests
+ - updated Gitlab-CI for Python 3.12 support
+
 2.1.1
 -----
  - updated OrderedSelect selected terms getter
